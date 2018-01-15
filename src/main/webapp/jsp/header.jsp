@@ -22,6 +22,11 @@
                             class="material-icons right">arrow_drop_down</i>
                     </a></li>
 
+                    <li>
+                        <i class="material-icons header-icon">account_box</i>
+                    </li>
+
+
                     <c:if test="${empty user}">
                         <li><a class="modal-trigger" href="#modal"><fmt:message key="login.button"
                                                                                 bundle="${bndl}"/></a>

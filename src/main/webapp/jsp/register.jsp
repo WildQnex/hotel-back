@@ -18,10 +18,11 @@
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
 </head>
+<body>
+
 <jsp:include page="header.jsp"/>
+
 <main>
-
-
     <div class="container">
         <div class="row 20"></div>
         <div class="row">
@@ -80,6 +81,7 @@
 
 <jsp:include page="footer.jsp"/>
 
+</body>
 <!--  Scripts-->
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>

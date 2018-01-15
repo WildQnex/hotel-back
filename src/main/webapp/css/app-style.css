@@ -1,9 +1,13 @@
 body {
-    display: flex !important;
-    min-height: 100vh !important;
-    flex-direction: column !important;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
 main {
-    flex: 1 0 auto !important;
+    flex: 1 0 auto;
+}
+
+.header-icon {
+    color: #5d4037 !important;
 }

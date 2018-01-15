@@ -38,8 +38,8 @@ public class ApartmentDaoImpl implements ApartmentDao {
                         resultSet.getInt("smoking_allowed") != 0,
                         new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                                 resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
-                                resultSet.getInt("cost_per_night"), resultSet.getInt("cost_per_person"),
-                                resultSet.getInt("animal_cost"), resultSet.getString("image_path"))));
+                                resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
+                                resultSet.getBigDecimal("animal_cost"), resultSet.getString("image_path"))));
             }
         } catch (SQLException e) {
             throw new DaoException("SQL exception (request or table failed): " + e, e);

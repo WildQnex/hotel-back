@@ -2,18 +2,21 @@ package by.martyniuk.hotelbooking.pool;
 
 import by.martyniuk.hotelbooking.exception.ConnectionPoolException;
 import com.mysql.cj.jdbc.Driver;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class ConnectionPool {
 
-    private static final Logger LOG = LogManager.getLogger(ConnectionPool.class);
+    private static final Logger LOGGER = LogManager.getLogger(ConnectionPool.class);
     private static final Driver DRIVER;
 
     static {
@@ -79,16 +82,24 @@ public class ConnectionPool {
         try {
             DriverManager.deregisterDriver(DRIVER);
         } catch (SQLException e) {
-            LOG.info("Can't close connection", e);
+            LOGGER.log(Level.INFO,"Can't close connection", e);
         }
-        LOG.info("Connections in the amount of " + count + " pieces successfully closed.");
+        LOGGER.log(Level.INFO,"Connections in the amount of " + count + " pieces successfully closed.");
     }
 
     private void makeConnection(final int POOL_SIZE) throws SQLException {
         emptyConnectionQueue = new LinkedBlockingDeque<>(POOL_SIZE);
         busyConnectionQueue = new LinkedBlockingDeque<>(POOL_SIZE);
+        Properties properties = new Properties();
+        try{
+        properties.load(ConnectionPool.class.getResourceAsStream("/db.properties"));
+        } catch (IOException e){
+            LOGGER.log(Level.INFO, "Can't open property file");
+            throw new RuntimeException(e);
+        }
         for (int i = 0; i < POOL_SIZE; i++) {
-            Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+            Connection connection = DriverManager.getConnection(JDBC_URL, properties.getProperty("jdbc.username"),
+                    properties.getProperty("jdbc.password"));
             emptyConnectionQueue.offer(new ProxyConnection(connection));
         }
     }
