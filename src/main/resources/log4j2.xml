@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" strict="true">
+
+    <Properties>
+        <Property name="filename">logs/log.txt</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Appender type="Console" name="ConsoleAppender">
+            <Layout type="PatternLayout">
+                <Pattern>%d{dd.MM.yyyy HH:mm:ss} : Class - %c, method - %M , at Line %L, type %-5p. Message: %m%n
+                </Pattern>
+            </Layout>
+        </Appender>
+
+        <Appender type="File" name="FileAppender" fileName="${filename}">
+            <Layout type="PatternLayout">
+                <Pattern>%d{dd.MM.yyyy HH:mm:ss} : Class - %c, method - %M , at Line %L, type %-5p. Message: %m%n
+                </Pattern>
+            </Layout>
+        </Appender>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>
