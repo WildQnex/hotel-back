@@ -82,18 +82,18 @@ public class ConnectionPool {
         try {
             DriverManager.deregisterDriver(DRIVER);
         } catch (SQLException e) {
-            LOGGER.log(Level.INFO,"Can't close connection", e);
+            LOGGER.log(Level.INFO, "Can't close connection", e);
         }
-        LOGGER.log(Level.INFO,"Connections in the amount of " + count + " pieces successfully closed.");
+        LOGGER.log(Level.INFO, "Connections in the amount of " + count + " pieces successfully closed.");
     }
 
     private void makeConnection(final int POOL_SIZE) throws SQLException {
         emptyConnectionQueue = new LinkedBlockingDeque<>(POOL_SIZE);
         busyConnectionQueue = new LinkedBlockingDeque<>(POOL_SIZE);
         Properties properties = new Properties();
-        try{
-        properties.load(ConnectionPool.class.getResourceAsStream("/db.properties"));
-        } catch (IOException e){
+        try {
+            properties.load(ConnectionPool.class.getResourceAsStream("/db.properties"));
+        } catch (IOException e) {
             LOGGER.log(Level.INFO, "Can't open property file");
             throw new RuntimeException(e);
         }

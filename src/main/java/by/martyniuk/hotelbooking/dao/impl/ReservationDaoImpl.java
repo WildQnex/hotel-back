@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 public class ReservationDaoImpl implements ReservationDao {
 
@@ -28,7 +27,7 @@ public class ReservationDaoImpl implements ReservationDao {
 
 
     @Override
-    public boolean addReservation(Apartment apartment, User user, LocalDate checkInDate, LocalDate checkOutDate, int personsAmount) throws DaoException{
+    public boolean addReservation(Apartment apartment, User user, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalCost, int personsAmount) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection();
              PreparedStatement ps = cn.prepareStatement(SQL_RESERVE_APARTMENT)) {
             ps.setDate(1, Date.valueOf(checkInDate));
@@ -38,11 +37,6 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setBigDecimal(5, apartment.getApartmentClass().getCostPerPerson());
             ps.setBigDecimal(6, apartment.getApartmentClass().getCostPerNight());
             ps.setBigDecimal(7, apartment.getApartmentClass().getAnimalCost());
-            BigDecimal totalCost = apartment.getApartmentClass().getCostPerPerson().multiply(new BigDecimal(personsAmount));
-            totalCost = totalCost.add((new BigDecimal(ChronoUnit.DAYS.between(checkInDate, checkOutDate))).multiply(apartment.getApartmentClass().getCostPerNight()));
-            if(apartment.isAnimalsAllowed()){
-                totalCost = totalCost.add(apartment.getApartmentClass().getAnimalCost());
-            }
             ps.setBigDecimal(8, totalCost);
             ps.setLong(9, user.getId());
             ps.setLong(10, apartment.getId());
@@ -54,11 +48,11 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public boolean isApartmentAvailable(Apartment apartment, LocalDate checkInDate, LocalDate checkOutDate)  throws DaoException{
-        if(checkInDate.compareTo(checkOutDate) <= 0){
+    public boolean isApartmentAvailable(Apartment apartment, LocalDate checkInDate, LocalDate checkOutDate) throws DaoException {
+        if (checkInDate.compareTo(checkOutDate) <= 0) {
             return false;
         }
-        try (Connection connection = ConnectionPool.getInstance().getConnection()){
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement ps = connection.prepareStatement(SQL_CHECK_AVAILABILITY);
             Date checkIn = Date.valueOf(checkInDate);
             Date checkOut = Date.valueOf(checkOutDate);
@@ -66,12 +60,12 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setDate(2, checkOut);
             ps.setDate(3, checkIn);
             ps.setDate(4, checkOut);
-            ResultSet rs = ps.executeQuery() ;
-            if(rs.next()){
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
                 return false;
             }
             return true;
-         } catch (SQLException e){
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }

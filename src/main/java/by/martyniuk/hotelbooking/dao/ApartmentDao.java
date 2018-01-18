@@ -8,7 +8,7 @@ import java.util.List;
 public interface ApartmentDao {
     List<Apartment> findAllApartments() throws DaoException;
 
-    Apartment findApartmentByNumber(String number) throws DaoException;
+    Apartment findApartmentById(long id) throws DaoException;
 
     boolean addApartment(Apartment user) throws DaoException;
 }

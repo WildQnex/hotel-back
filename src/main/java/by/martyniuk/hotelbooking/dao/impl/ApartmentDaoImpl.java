@@ -22,9 +22,12 @@ public class ApartmentDaoImpl implements ApartmentDao {
             " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk`";
 
 
-    private static final String SQL_FIND_APARTMENT = "SELECT * FROM apartment WHERE `number`=?";
+    private static final String SQL_FIND_APARTMENT_BY_ID = "SELECT `id_apartment`, `number`, `floor`, `animals_allowed`," +
+            " `smoking_allowed`, `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
+            " `animal_cost`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
+            " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `id_apartment` = ?";
 
-    private static final String SQL_INSERT_APARTMENT = "INSERT INTO apartment(class,`number`) VALUES(?,?)";
+    private static final String SQL_INSERT_APARTMENT = "INSERT INTO apartment(`class`,`number`) VALUES(?,?)";
 
     @Override
     public List<Apartment> findAllApartments() throws DaoException {
@@ -42,23 +45,29 @@ public class ApartmentDaoImpl implements ApartmentDao {
                                 resultSet.getBigDecimal("animal_cost"), resultSet.getString("image_path"))));
             }
         } catch (SQLException e) {
-            throw new DaoException("SQL exception (request or table failed): " + e, e);
+            throw new DaoException(e);
         }
         return apartments;
     }
 
 
     @Override
-    public Apartment findApartmentByNumber(String number) throws DaoException {
-        try (Connection cn = ConnectionPool.getInstance().getConnection();
-             PreparedStatement ps = cn.prepareStatement(SQL_FIND_APARTMENT)) {
-            ps.setString(1, number);
+    public Apartment findApartmentById(long id) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection()) {
+            PreparedStatement ps = cn.prepareStatement(SQL_FIND_APARTMENT_BY_ID);
+            ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
-            if (resultSet.next()) {
-                //return new Apartment(resultSet.getLong("id"), ApartmentClass.valueOf(resultSet.getNString("class").toUpperCase()), resultSet.getNString("number"));
+            while (resultSet.next()) {
+                return new Apartment(resultSet.getLong("id_apartment"), resultSet.getString("number"),
+                        resultSet.getInt("floor"), resultSet.getInt("animals_allowed") != 0,
+                        resultSet.getInt("smoking_allowed") != 0,
+                        new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
+                                resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
+                                resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
+                                resultSet.getBigDecimal("animal_cost"), resultSet.getString("image_path")));
             }
         } catch (SQLException e) {
-            throw new DaoException("SQL exception (request or table failed): " + e, e);
+            throw new DaoException(e);
         }
         return null;
     }
@@ -71,7 +80,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
             ps.setString(2, apartment.getNumber());
             return (ps.executeUpdate() != 0);
         } catch (SQLException e) {
-            throw new DaoException("SQL exception (request or table failed): " + e, e);
+            throw new DaoException(e);
         }
     }
 }

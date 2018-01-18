@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApartmentClass implements Serializable, Cloneable{
+public class ApartmentClass implements Serializable, Cloneable {
     private long id;
     private String type;
     private int roomsAmount;

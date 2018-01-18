@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation implements Serializable, Cloneable{
+public class Reservation implements Serializable, Cloneable {
     private long id;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;

@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Apartment implements Serializable, Cloneable{
+public class Apartment implements Serializable, Cloneable {
     private long id;
     private String number;
     private int floor;
