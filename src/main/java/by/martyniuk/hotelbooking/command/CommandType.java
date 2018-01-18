@@ -9,8 +9,12 @@ import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.memento.Memento;
 import by.martyniuk.hotelbooking.service.AuthorizationService;
+import by.martyniuk.hotelbooking.service.ReservationService;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 
 public enum CommandType {
@@ -35,8 +39,23 @@ public enum CommandType {
         @Override
         public ActionCommand receiveCommand() {
             return (request -> {
+                try {
+                    HttpSession session = request.getSession();
+                    Long apartmentId = Long.parseLong(request.getParameter("apartmentId"));
+                    DateTimeFormatter formatter = new DateTimeFormatterBuilder().toFormatter();
+                    LocalDate checkInDate = LocalDate.parse(request.getParameter("checkInDate"), formatter);
+                    LocalDate checkOutDate = LocalDate.parse(request.getParameter("checkOutDate"), formatter);
+                    boolean result = ReservationService.bookApartment((User) session.getAttribute("user"), apartmentId,
+                            checkInDate, checkOutDate, Integer.parseInt(request.getParameter("personsAmount")));
+                    if (result) {
+                        return "jsp/apartments.jsp";
+                    } else {
+                        return "jsp/main.jsp";
+                    }
 
-                return "jsp/apartments.jsp";
+                } catch (ServiceException e) {
+                    throw new CommandException(e);
+                }
             });
         }
     },
