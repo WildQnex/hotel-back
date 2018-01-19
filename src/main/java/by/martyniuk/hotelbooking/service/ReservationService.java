@@ -27,6 +27,9 @@ public class ReservationService {
                 totalCost = totalCost.add(apartment.getApartmentClass().getAnimalCost());
             }
             BigDecimal newBalance = user.getBalance().subtract(totalCost);
+            System.out.println(dao.isApartmentAvailable(apartment, checkInDate, checkOutDate));
+            System.out.println(newBalance.compareTo(new BigDecimal(0)) > 0);
+            System.out.println(apartment.getApartmentClass().getMaxCapacity() >= personsAmount);
             if (dao.isApartmentAvailable(apartment, checkInDate, checkOutDate)
                     && newBalance.compareTo(new BigDecimal(0)) > 0
                     && apartment.getApartmentClass().getMaxCapacity() >= personsAmount) {

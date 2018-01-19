@@ -87,4 +87,9 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("SQL exception (request or table failed): " + e, e);
         }
     }
+
+    @Override
+    public boolean updateUser(User user) throws DaoException {
+        return false;
+    }
 }

@@ -13,10 +13,13 @@ import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
 
 import javax.servlet.http.HttpSession;
+import java.time.ZoneId;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
+import java.util.Locale;
 
 public enum CommandType {
     ADD_APARTMENT {
@@ -42,10 +45,13 @@ public enum CommandType {
             return (request -> {
                 try {
                     HttpSession session = request.getSession();
-                    Long apartmentId = Long.parseLong(request.getParameter("apartmentId"));
-                    DateTimeFormatter formatter = new DateTimeFormatterBuilder().toFormatter();
-                    LocalDate checkInDate = LocalDate.parse(request.getParameter("checkInDate"), formatter);
-                    LocalDate checkOutDate = LocalDate.parse(request.getParameter("checkOutDate"), formatter);
+                    long apartmentId = Long.parseLong(request.getParameter("apartmentId"));
+                    String pattern = "dd MMMMM, yyyy";
+                    SimpleDateFormat formatter = new SimpleDateFormat(pattern, new Locale("en"));
+                    Date checkIn = formatter.parse(request.getParameter("checkInDate"));
+                    Date checkOut = formatter.parse(request.getParameter("checkOutDate"));
+                    LocalDate checkInDate = checkIn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate checkOutDate = checkOut.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     boolean result = ReservationService.bookApartment((User) session.getAttribute("user"), apartmentId,
                             checkInDate, checkOutDate, Integer.parseInt(request.getParameter("personsAmount")));
                     if (result) {
@@ -54,7 +60,7 @@ public enum CommandType {
                         return "jsp/main.jsp";
                     }
 
-                } catch (ServiceException e) {
+                } catch (ServiceException | ParseException e) {
                     throw new CommandException(e);
                 }
             });

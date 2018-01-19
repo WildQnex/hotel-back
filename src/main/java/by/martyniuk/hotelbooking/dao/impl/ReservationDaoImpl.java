@@ -32,7 +32,7 @@ public class ReservationDaoImpl implements ReservationDao {
              PreparedStatement ps = cn.prepareStatement(SQL_RESERVE_APARTMENT)) {
             ps.setDate(1, Date.valueOf(checkInDate));
             ps.setDate(2, Date.valueOf(checkOutDate));
-            ps.setTime(3, Time.valueOf(LocalDateTime.now().toLocalTime()));
+            ps.setDate(3, Date.valueOf(LocalDateTime.now().toLocalDate()));
             ps.setInt(4, personsAmount);
             ps.setBigDecimal(5, apartment.getApartmentClass().getCostPerPerson());
             ps.setBigDecimal(6, apartment.getApartmentClass().getCostPerNight());
@@ -49,7 +49,8 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public boolean isApartmentAvailable(Apartment apartment, LocalDate checkInDate, LocalDate checkOutDate) throws DaoException {
-        if (checkInDate.compareTo(checkOutDate) <= 0) {
+        if (checkInDate.compareTo(checkOutDate) >= 0) {
+            System.out.println("1");
             return false;
         }
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
@@ -62,8 +63,10 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setDate(4, checkOut);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                System.out.println("2");
                 return false;
             }
+            System.out.println("3");
             return true;
         } catch (SQLException e) {
             throw new DaoException(e);

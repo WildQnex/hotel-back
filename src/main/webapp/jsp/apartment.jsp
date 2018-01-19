@@ -25,6 +25,31 @@
 
 <main>
     ${apartment.id} | ${apartment.number} | ${apartment.apartmentClass.imagePath}
+    <div class="container">
+        <form class="col s12" name="book" action="invokeServlet" method="POST">
+            <input type="hidden" name="action" value="book_apartment">
+            <input type="hidden" name="apartmentId" value="${apartment.id}">
+            <div class="row">
+                <div class="input-field col s4 m3">
+                    <label for="check-in-date">Check In date</label>
+                    <input name="checkInDate" id="check-in-date" type="text" class="datepicker">
+                </div>
+                <div class="input-field col s4 m3">
+                    <label for="check-out-date">Check Out date</label>
+                    <input name="checkOutDate" id="check-out-date" type="text" class="datepicker">
+                </div>
+                <div class="input-field col s4 m3">
+                    <label for="personsAmount">Persons amount</label>
+                    <input name="personsAmount" id="personsAmount" type="text">
+                </div>
+            </div>
+            <div class="row">
+                <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
+                    Book
+                </button>
+            </div>
+        </form>
+    </div>
 </main>
 
 
@@ -56,5 +81,15 @@
     </c:if>
 </script>
 
+<script>
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15, // Creates a dropdown of 15 years to control year,
+        today: 'Today',
+        clear: 'Clear',
+        close: 'Ok',
+        closeOnSelect: false // Close upon selecting a date,
+    });
+</script>
 
 </html>
