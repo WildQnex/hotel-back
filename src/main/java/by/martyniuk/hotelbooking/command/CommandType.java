@@ -8,6 +8,7 @@ import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.memento.Memento;
+import by.martyniuk.hotelbooking.service.ApartmentService;
 import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
 
@@ -136,6 +137,21 @@ public enum CommandType {
             });
         }
     },
+    SHOW_APARTMENT {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+
+                    long id = Long.parseLong(request.getParameter("id"));
+                    request.setAttribute("apartment", ApartmentService.getApartment(id));
+                    return "jsp/apartment.jsp";
+                } catch (ServiceException e) {
+                    throw new CommandException(e);
+                }
+            });
+        }
+    },
     DEFAULT {
         @Override
         public ActionCommand receiveCommand() {
@@ -145,6 +161,7 @@ public enum CommandType {
             });
         }
     };
+
 
     public abstract ActionCommand receiveCommand();
 }

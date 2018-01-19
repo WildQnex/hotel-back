@@ -20,8 +20,9 @@ public class ActionCommandFactory {
                 return CommandType.FORWARD.receiveCommand();
             case REGISTER:
                 return CommandType.REGISTER.receiveCommand();
+            case SHOW_APARTMENT:
+                return CommandType.SHOW_APARTMENT.receiveCommand();
             default:
-                System.out.println();
                 return CommandType.DEFAULT.receiveCommand();
         }
     }
