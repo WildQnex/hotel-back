@@ -4,24 +4,28 @@ import by.martyniuk.hotelbooking.dao.ApartmentDao;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.User;
-import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.memento.Memento;
 import by.martyniuk.hotelbooking.service.ApartmentService;
 import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public enum CommandType {
+
     ADD_APARTMENT {
         @Override
         public ActionCommand receiveCommand() {
@@ -33,7 +37,9 @@ public enum CommandType {
                     session.setAttribute("apartments", apartmentList);
                     // dao.addApartment(new Apartment(0, ApartmentClass.valueOf(request.getParameter("class").toUpperCase()), request.getParameter("number")));
                 } catch (DaoException e) {
-                    throw new CommandException(e);
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
                 }
                 return "jsp/apartments.jsp";
             });
@@ -65,7 +71,9 @@ public enum CommandType {
                     }
 
                 } catch (ServiceException | ParseException e) {
-                    throw new CommandException(e);
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
                 }
             });
         }
@@ -86,7 +94,9 @@ public enum CommandType {
                     }
                     return ((Memento) session.getAttribute("memento")).getState();
                 } catch (ServiceException e) {
-                    throw new CommandException(e);
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
                 }
             });
         }
@@ -112,7 +122,9 @@ public enum CommandType {
                     System.out.println(dao.findAllApartments());
                     session.setAttribute("apartments", dao.findAllApartments());
                 } catch (DaoException e) {
-                    System.out.println(e.getMessage());
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
                 }
                 return ((Memento) session.getAttribute("memento")).getState();
             });
@@ -142,7 +154,9 @@ public enum CommandType {
                         return "jsp/register.jsp";
                     }
                 } catch (ServiceException e) {
-                    throw new CommandException(e);
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
                 }
             });
         }
@@ -157,7 +171,31 @@ public enum CommandType {
                     request.setAttribute("apartment", ApartmentService.getApartment(id));
                     return "jsp/apartment.jsp";
                 } catch (ServiceException e) {
-                    throw new CommandException(e);
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
+                }
+            });
+        }
+    },
+    UPDATE_PROFILE {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+                    User user = (User) request.getSession().getAttribute("user");
+                    user.setFirstName(request.getParameter("firstName"));
+                    user.setMiddleName(request.getParameter("middleName"));
+                    user.setLastName(request.getParameter("lastName"));
+                    user.setPhoneNumber(request.getParameter("phoneNumber"));
+                    if (AuthorizationService.updateUserProfile(user)) {
+                        request.getSession().setAttribute("user", user);
+                    }
+                    return "jsp/user.jsp";
+                } catch (ServiceException e) {
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
                 }
             });
         }
@@ -166,12 +204,14 @@ public enum CommandType {
         @Override
         public ActionCommand receiveCommand() {
             return (request -> {
-                request.getSession().setAttribute("error", "Command operation not found");
+                LOGGER.log(Level.ERROR, "Command operation not found");
+                request.getSession().setAttribute("errorMessage", "Command operation not found");
                 return "jsp/error.jsp";
             });
         }
     };
 
+    private static final Logger LOGGER = LogManager.getLogger(CommandType.class);
 
     public abstract ActionCommand receiveCommand();
 }

@@ -113,7 +113,7 @@
 </header>
 
 <ul id='dropdown-user' class='dropdown-content'>
-    <li><a href="invokeServlet?action=forward&page=jsp/main.jsp">Профиль</a></li>
+    <li><a href="invokeServlet?action=forward&page=jsp/user.jsp">Профиль</a></li>
     <li class="divider"></li>
     <li><a href="#">${user.role}</a></li>
 </ul>
