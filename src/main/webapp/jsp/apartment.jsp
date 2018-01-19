@@ -24,28 +24,9 @@
 <jsp:include page="header.jsp"/>
 
 <main>
-    <div class="container">
-        <div class="row">
-            <c:forEach items="${apartments}" var="apartment">
-                <div class="col s6 m4">
-                    <div class="card">
-                        <div class="card-image">
-                            <img src="${apartment.apartmentClass.imagePath}">
-                            <span class="card-title">${apartment.number}</span>
-                        </div>
-                        <div class="card-content">
-                            <p>I am a very simple card. I am good at containing small bits of information.
-                                I am convenient because I require little markup to use effectively.</p>
-                        </div>
-                        <div class="card-action center">
-                            <a href="invokeServlet?action=show_apartment&id=${apartment.id}">This is a link</a>
-                        </div>
-                    </div>
-                </div>
-            </c:forEach>
-        </div>
-    </div>
+    ${apartment.id} | ${apartment.number} | ${apartment.apartmentClass.imagePath}
 </main>
+
 
 <jsp:include page="footer.jsp"/>
 
