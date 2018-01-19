@@ -31,7 +31,7 @@ public class ConnectionPool {
     private BlockingDeque<ProxyConnection> busyConnectionQueue;
 
     public static int poolSize = 10;
-    private static final String JDBC_URL = "jdbc:mysql://localhost/hotel_booking?useUnicode=true&useJDBCCompliantTimezoneShift=true&useSSL=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    private static final String JDBC_URL = "jdbc:mysql://localhost/hotel_booking?useUnicode=true&useSSL=true&serverTimezone=GMT";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 

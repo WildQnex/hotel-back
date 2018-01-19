@@ -2,8 +2,10 @@ package by.martyniuk.hotelbooking.service;
 
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
 import by.martyniuk.hotelbooking.dao.ReservationDao;
+import by.martyniuk.hotelbooking.dao.UserDao;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ReservationDaoImpl;
+import by.martyniuk.hotelbooking.dao.impl.UserDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
@@ -15,10 +17,10 @@ import java.time.temporal.ChronoUnit;
 
 public class ReservationService {
     public static boolean bookApartment(User user, long apartmentId, LocalDate checkInDate, LocalDate checkOutDate, int personsAmount) throws ServiceException {
-        ReservationDao dao = new ReservationDaoImpl();
+
         boolean result = false;
         try {
-
+            ReservationDao reservationDao = new ReservationDaoImpl();
             ApartmentDao apartmentDao = new ApartmentDaoImpl();
             Apartment apartment = apartmentDao.findApartmentById(apartmentId);
             BigDecimal totalCost = apartment.getApartmentClass().getCostPerPerson().multiply(new BigDecimal(personsAmount));
@@ -27,16 +29,15 @@ public class ReservationService {
                 totalCost = totalCost.add(apartment.getApartmentClass().getAnimalCost());
             }
             BigDecimal newBalance = user.getBalance().subtract(totalCost);
-            System.out.println(dao.isApartmentAvailable(apartment, checkInDate, checkOutDate));
-            System.out.println(newBalance.compareTo(new BigDecimal(0)) > 0);
-            System.out.println(apartment.getApartmentClass().getMaxCapacity() >= personsAmount);
-            if (dao.isApartmentAvailable(apartment, checkInDate, checkOutDate)
+            if (reservationDao.isApartmentAvailable(apartment, checkInDate, checkOutDate)
                     && newBalance.compareTo(new BigDecimal(0)) > 0
                     && apartment.getApartmentClass().getMaxCapacity() >= personsAmount) {
-                result = dao.addReservation(apartment, user, checkInDate, checkOutDate, totalCost, personsAmount);
+                result = reservationDao.addReservation(apartment, user, checkInDate, checkOutDate, totalCost, personsAmount);
             }
             if (result) {
                 user.setBalance(newBalance);
+                UserDao userDao = new UserDaoImpl();
+                userDao.updateUser(user);
             }
             return result;
         } catch (DaoException e) {

@@ -13,11 +13,11 @@ import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
 
 import javax.servlet.http.HttpSession;
-import java.time.ZoneId;
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,8 +50,12 @@ public enum CommandType {
                     SimpleDateFormat formatter = new SimpleDateFormat(pattern, new Locale("en"));
                     Date checkIn = formatter.parse(request.getParameter("checkInDate"));
                     Date checkOut = formatter.parse(request.getParameter("checkOutDate"));
+                    System.out.println(checkIn);
+                    System.out.println(checkOut);
                     LocalDate checkInDate = checkIn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate checkOutDate = checkOut.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    System.out.println(checkInDate);
+                    System.out.println(checkOutDate);
                     boolean result = ReservationService.bookApartment((User) session.getAttribute("user"), apartmentId,
                             checkInDate, checkOutDate, Integer.parseInt(request.getParameter("personsAmount")));
                     if (result) {

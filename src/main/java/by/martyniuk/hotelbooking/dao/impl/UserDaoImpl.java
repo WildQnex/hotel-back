@@ -28,6 +28,11 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_INSERT_USER = "INSERT INTO `hotel_booking`.`user` (`first_name`, `middle_name`, `last_name`, " +
             "`balance`, `email`, `phone_number`, `password`, `role_id_fk`, `active`)  VALUES (?,?,?,?,?,?,?,(SELECT `id_role` FROM `role` WHERE UPPER(`role`) LIKE UPPER(?)),?)";
 
+    private static final String SQL_UPDATE_USER = "UPDATE `hotel_booking`.`user` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, " +
+            "`balance` = ?, `email` = ?, `phone_number` = ?, `password` = ?, `active` = ?, " +
+            "`role_id_fk` = (SELECT `id_role` FROM `role` WHERE UPPER(`role`) LIKE UPPER(?)) WHERE `id_user` = ?";
+
+
     @Override
     public List<User> findAllUsers() throws DaoException {
         List<User> users = new ArrayList<>();
@@ -64,7 +69,7 @@ public class UserDaoImpl implements UserDao {
                         resultSet.getInt("active") != 0);
             }
         } catch (SQLException e) {
-            throw new DaoException("SQL exception (request or table failed): " + e, e);
+            throw new DaoException(e);
         }
         return null;
     }
@@ -84,12 +89,27 @@ public class UserDaoImpl implements UserDao {
             ps.setInt(9, (user.isActive()) ? 1 : 0);
             return (ps.executeUpdate() != 0);
         } catch (SQLException e) {
-            throw new DaoException("SQL exception (request or table failed): " + e, e);
+            throw new DaoException(e);
         }
     }
 
     @Override
     public boolean updateUser(User user) throws DaoException {
-        return false;
+        try (Connection cn = ConnectionPool.getInstance().getConnection();
+             PreparedStatement ps = cn.prepareStatement(SQL_UPDATE_USER)) {
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getMiddleName());
+            ps.setString(3, user.getLastName());
+            ps.setBigDecimal(4, user.getBalance());
+            ps.setString(5, user.getEmail());
+            ps.setString(6, user.getPhoneNumber());
+            ps.setString(7, user.getPassword());
+            ps.setInt(8, (user.isActive()) ? 1 : 0);
+            ps.setString(9, user.getRole().toString());
+            ps.setLong(10, user.getId());
+            return (ps.executeUpdate() != 0);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 }
