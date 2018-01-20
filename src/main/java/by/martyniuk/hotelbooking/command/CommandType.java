@@ -1,7 +1,9 @@
 package by.martyniuk.hotelbooking.command;
 
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
+import by.martyniuk.hotelbooking.dao.ReservationDao;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
+import by.martyniuk.hotelbooking.dao.impl.ReservationDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
@@ -193,6 +195,22 @@ public enum CommandType {
                     }
                     return "jsp/user.jsp";
                 } catch (ServiceException e) {
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
+                }
+            });
+        }
+    },
+    SHOW_ADMIN_PAGE {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+                    ReservationDao dao = new ReservationDaoImpl();
+                    System.out.println(dao.readAllReservations());
+                    return "jsp/admin.jsp";
+                } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
                     return "jsp/error.jsp";

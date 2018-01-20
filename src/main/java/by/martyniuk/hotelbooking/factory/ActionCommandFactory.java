@@ -7,12 +7,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ActionCommandFactory {
+
     private static final Logger LOGGER = LogManager.getLogger(ActionCommandFactory.class);
 
     public static ActionCommand getActionCommand(String action) {
         try {
             CommandType command = CommandType.valueOf(action.toUpperCase());
-            System.out.println("1111111");
             return command.receiveCommand();
         } catch (IllegalArgumentException e) {
             LOGGER.log(Level.ERROR, e);
