@@ -24,7 +24,27 @@
 <jsp:include page="header.jsp"/>
 
 <main>
-    ADMIN
+    <div class="container">
+        <ul class="collapsible popout" data-collapsible="accordion">
+            <c:forEach items="${reservations}" var="reservation">
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">blur_on</i>${reservation.id} order</div>
+                    <div class="collapsible-body">
+                        <div class="row"> ${reservation.orderTime}, order status - ${reservation.status}</div>
+                        <div class="row divider"></div>
+                        <div class="row">
+                            <button class="col s2 m2 offset-s2 offset-m2 btn waves-effect waves-light center">
+                                Accept
+                            </button>
+                            <button class="col s2 m2 offset-s4 offset-m4 btn waves-effect waves-light center">
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
 </main>
 
 

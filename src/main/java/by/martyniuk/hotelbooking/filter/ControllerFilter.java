@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/invokeServlet"})
+@WebFilter(urlPatterns = {"/booking"})
 public class ControllerFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -28,7 +28,7 @@ public class ControllerFilter implements Filter {
         Memento memento = (Memento) session.getAttribute("memento");
         if (memento == null) {
             memento = new Memento();
-            memento.addState("index.jsp");
+            memento.addState(((HttpServletRequest) request).getContextPath() + "/index.jsp");
             session.setAttribute("memento", memento);
         }
         chain.doFilter(request, response);

@@ -9,11 +9,11 @@
         <nav class="white" role="navigation">
 
             <div class="nav-wrapper container">
-                <a id="logo-container" href="invokeServlet?action=forward&page=jsp/main.jsp"
+                <a id="logo-container" href="booking?action=forward&page=jsp/main.jsp"
                    class="brand-logo"><fmt:message key="header.logo" bundle="${bndl}"/></a>
                 <ul class="right hide-on-med-and-down">
 
-                    <li><a href="invokeServlet?action=forward&page=jsp/apartments.jsp">
+                    <li><a href="booking?action=forward&page=jsp/apartments.jsp">
                         <fmt:message key="header.apartments" bundle="${bndl}"/></a>
                     </li>
 
@@ -31,7 +31,7 @@
                         <li><a class="modal-trigger" href="#modal"><fmt:message key="login.button"
                                                                                 bundle="${bndl}"/></a>
                         </li>
-                        <li><a href="invokeServlet?action=forward&page=jsp/register.jsp"><fmt:message
+                        <li><a href="booking?action=forward&page=jsp/register.jsp"><fmt:message
                                 key="register.button"
                                 bundle="${bndl}"/></a>
                         </li>
@@ -44,9 +44,7 @@
                             <c:out value="${user.firstName}"/><i class="material-icons right">arrow_drop_down</i>
                         </a></li>
 
-                        <li><a href="invokeServlet?action=logout"><fmt:message key="header.logout"
-                                                                               bundle="${bndl}"/></a>
-                        </li>
+
                         <%--<c:if test="${user.role.toString().equalsIgnoreCase('Admin')}">--%>
                         <%--</c:if>--%>
                     </c:if>
@@ -70,7 +68,7 @@
     <div id="modal" class="modal">
         <div class="modal-content">
 
-            <form class="col s12" name="login" action="invokeServlet" method="POST">
+            <form class="col s12" name="login" action="booking" method="POST">
 
                 <div class="row">
                     <div class="col s6 offset-s3 center"><span class="flow-text"><fmt:message key="login.auth"
@@ -113,19 +111,22 @@
 </header>
 
 <ul id='dropdown-user' class='dropdown-content'>
-    <li><a href="invokeServlet?action=forward&page=jsp/user.jsp">Профиль</a></li>
+    <li><a href="booking?action=forward&page=jsp/user.jsp">Профиль</a></li>
+    <li><a href="booking?action=show_admin_page">${user.role}</a></li>
     <li class="divider"></li>
-    <li><a href="invokeServlet?action=show_admin_page&value=ru_RU">${user.role}</a></li>
+    <li><a href="booking?action=logout"><fmt:message key="header.logout"
+                                                     bundle="${bndl}"/></a>
+    </li>
 </ul>
 
 <ul id='dropdown-language' class='dropdown-content'>
-    <li><a href="invokeServlet?action=set_locale&value=ru_RU">Русский</a></li>
+    <li><a href="booking?action=set_locale&value=ru_RU">Русский</a></li>
     <li class="divider"></li>
-    <li><a href="invokeServlet?action=set_locale&value=en_US">English</a></li>
+    <li><a href="booking?action=set_locale&value=en_US">English</a></li>
 </ul>
 
 <ul id='dropdown-language-mobile' class='dropdown-content'>
-    <li><a href="invokeServlet?action=set_locale&value=ru_RU">Русский</a></li>
+    <li><a href="booking?action=set_locale&value=ru_RU">Русский</a></li>
     <li class="divider"></li>
-    <li><a href="invokeServlet?action=set_locale&value=en_US">English</a></li>
+    <li><a href="booking?action=set_locale&value=en_US">English</a></li>
 </ul>

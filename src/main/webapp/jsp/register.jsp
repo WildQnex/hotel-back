@@ -26,7 +26,7 @@
     <div class="container">
         <div class="row 20"></div>
         <div class="row">
-            <form class="col s12" name="register" action="invokeServlet" method="POST">
+            <form class="col s12" name="register" action="booking" method="POST">
                 <input name="action" type="hidden" value="register">
                 <div class="row">
                     <div class="input-field col s6">

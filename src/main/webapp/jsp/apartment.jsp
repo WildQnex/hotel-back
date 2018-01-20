@@ -24,9 +24,9 @@
 <jsp:include page="header.jsp"/>
 
 <main>
-    ${apartment.id} | ${apartment.number} | ${apartment.apartmentClass.imagePath}
+    ${bookingError}
     <div class="container">
-        <form class="col s12" name="book" action="invokeServlet" method="POST">
+        <form class="col s12" name="book" action="booking" method="POST">
             <input type="hidden" name="action" value="book_apartment">
             <input type="hidden" name="apartmentId" value="${apartment.id}">
             <div class="row">

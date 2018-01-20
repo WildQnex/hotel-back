@@ -32,8 +32,6 @@ public class ConnectionPool {
 
     public static int poolSize = 10;
     private static final String JDBC_URL = "jdbc:mysql://localhost/hotel_booking?useUnicode=true&useSSL=true&serverTimezone=GMT";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
 
 
     private ConnectionPool(final int poolSize) throws ConnectionPoolException {

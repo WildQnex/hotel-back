@@ -38,7 +38,7 @@
                                 I am convenient because I require little markup to use effectively.</p>
                         </div>
                         <div class="card-action center">
-                            <a href="invokeServlet?action=show_apartment&id=${apartment.id}">This is a link</a>
+                            <a href="booking?action=show_apartment&id=${apartment.id}">This is a link</a>
                         </div>
                     </div>
                 </div>

@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,25 +54,21 @@ public enum CommandType {
             return (request -> {
                 try {
                     HttpSession session = request.getSession();
+                    Memento memento = (Memento)session.getAttribute("memento");
                     long apartmentId = Long.parseLong(request.getParameter("apartmentId"));
                     String pattern = "dd MMMMM, yyyy";
                     SimpleDateFormat formatter = new SimpleDateFormat(pattern, new Locale("en"));
                     Date checkIn = formatter.parse(request.getParameter("checkInDate"));
                     Date checkOut = formatter.parse(request.getParameter("checkOutDate"));
-                    System.out.println(checkIn);
-                    System.out.println(checkOut);
                     LocalDate checkInDate = checkIn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate checkOutDate = checkOut.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    System.out.println(checkInDate);
-                    System.out.println(checkOutDate);
                     boolean result = ReservationService.bookApartment((User) session.getAttribute("user"), apartmentId,
                             checkInDate, checkOutDate, Integer.parseInt(request.getParameter("personsAmount")));
-                    if (result) {
-                        return "jsp/apartments.jsp";
-                    } else {
-                        return "jsp/main.jsp";
+                    if (!result) {
+                        session.setAttribute("bookingError", "Apartment already booked");
                     }
-
+                    request.setAttribute("redirect", true);
+                    return memento.getState();
                 } catch (ServiceException | ParseException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
@@ -94,6 +91,7 @@ public enum CommandType {
                     } else {
                         session.setAttribute("loginError", "Invalid e-mail or password");
                     }
+                    request.setAttribute("redirect", true);
                     return ((Memento) session.getAttribute("memento")).getState();
                 } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
@@ -109,6 +107,7 @@ public enum CommandType {
             return (request -> {
                 HttpSession session = request.getSession();
                 session.removeAttribute("user");
+                request.setAttribute("redirect", true);
                 return ((Memento) session.getAttribute("memento")).getState();
             });
         }
@@ -121,13 +120,13 @@ public enum CommandType {
                 session.setAttribute("locale", request.getParameter("value"));
                 ApartmentDao dao = new ApartmentDaoImpl();
                 try {
-                    System.out.println(dao.findAllApartments());
                     session.setAttribute("apartments", dao.findAllApartments());
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
                     return "jsp/error.jsp";
                 }
+                request.setAttribute("redirect", true);
                 return ((Memento) session.getAttribute("memento")).getState();
             });
         }
@@ -135,7 +134,11 @@ public enum CommandType {
     FORWARD {
         @Override
         public ActionCommand receiveCommand() {
-            return (request -> (String) request.getParameter("page"));
+
+            return (request -> {
+                addToMemento(request);
+                return request.getParameter("page");
+            });
         }
     },
     REGISTER {
@@ -143,17 +146,23 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
+                    HttpSession session = request.getSession();
                     if (!request.getParameter("password").equals(request.getParameter("repeat_password"))) {
                         request.getSession().setAttribute("registerError", "Passwords do not match");
                         return "jsp/register.jsp";
                     }
+                    Memento memento = (Memento)session.getAttribute("memento");
                     if (AuthorizationService.register(request.getParameter("first_name"), request.getParameter("middle_name"),
                             request.getParameter("last_name"), request.getParameter("email"), request.getParameter("phone_number"),
                             request.getParameter("password"))) {
-                        return "jsp/main.jsp";
+                        memento.addState(request.getContextPath() + "/booking?action=forward&page=jsp/main.jsp");
+                        session.setAttribute("memento", memento);
+                        request.setAttribute("redirect", true);
+                        return memento.getState();
                     } else {
+                        request.setAttribute("redirect", true);
                         request.getSession().setAttribute("registerError", "Account already exists");
-                        return "jsp/register.jsp";
+                        return memento.getState();
                     }
                 } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
@@ -168,7 +177,7 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
-
+                    addToMemento(request);
                     long id = Long.parseLong(request.getParameter("id"));
                     request.setAttribute("apartment", ApartmentService.getApartment(id));
                     return "jsp/apartment.jsp";
@@ -193,7 +202,8 @@ public enum CommandType {
                     if (AuthorizationService.updateUserProfile(user)) {
                         request.getSession().setAttribute("user", user);
                     }
-                    return "jsp/user.jsp";
+                    request.setAttribute("redirect", true);
+                    return ((Memento) request.getSession().getAttribute("memento")).getState();
                 } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
@@ -207,8 +217,9 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
+                    addToMemento(request);
                     ReservationDao dao = new ReservationDaoImpl();
-                    System.out.println(dao.readAllReservations());
+                    request.setAttribute("reservations", dao.readAllReservations());
                     return "jsp/admin.jsp";
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
@@ -232,4 +243,10 @@ public enum CommandType {
     private static final Logger LOGGER = LogManager.getLogger(CommandType.class);
 
     public abstract ActionCommand receiveCommand();
+
+    private static void addToMemento(HttpServletRequest request){
+        Memento memento = (Memento) request.getSession().getAttribute("memento");
+        memento.addState(request.getContextPath() + "/booking?" + request.getQueryString());
+        request.getSession().setAttribute("memento", memento);
+    }
 }

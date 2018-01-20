@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/invokeServlet")
-public class InvokeServlet extends HttpServlet {
+@WebServlet("/booking")
+public class BookingController extends HttpServlet {
 
     @Override
     public void init() {
@@ -22,16 +22,15 @@ public class InvokeServlet extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         ActionCommand command = ActionCommandFactory.getActionCommand(request.getParameter("action"));
         try {
             String page = command.execute(request);
-            Memento memento = (Memento) request.getSession().getAttribute("memento");
-            memento.addState(page);
-            System.out.println(memento.getStates());
-            request.getSession().setAttribute("memento", memento);
-            request.getRequestDispatcher(page).forward(request, response);
+            if (request.getAttribute("redirect") != null) {
+                response.sendRedirect(page);
+            } else {
+                request.getRequestDispatcher(page).forward(request, response);
+            }
         } catch (CommandException e) {
             throw new ServletException(e);
         }
@@ -42,11 +41,11 @@ public class InvokeServlet extends HttpServlet {
         ActionCommand command = ActionCommandFactory.getActionCommand(request.getParameter("action"));
         try {
             String page = command.execute(request);
-            Memento memento = (Memento) request.getSession().getAttribute("memento");
-            memento.addState(page);
-            System.out.println(memento.getStates());
-            request.getSession().setAttribute("memento", memento);
-            request.getRequestDispatcher(page).forward(request, response);
+            if (request.getAttribute("redirect") != null) {
+                response.sendRedirect(page);
+            } else {
+                request.getRequestDispatcher(page).forward(request, response);
+            }
         } catch (CommandException e) {
             throw new ServletException(e);
         }

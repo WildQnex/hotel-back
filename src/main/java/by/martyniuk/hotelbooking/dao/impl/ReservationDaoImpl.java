@@ -17,7 +17,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -88,10 +87,7 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setLong(5, apartment.getId());
             ps.setString(6, "Approved");
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return false;
-            }
-            return true;
+            return !rs.next();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
