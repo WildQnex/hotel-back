@@ -8,6 +8,8 @@ import by.martyniuk.hotelbooking.dao.impl.ApartmentClassDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ReservationDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
+import by.martyniuk.hotelbooking.entity.Reservation;
+import by.martyniuk.hotelbooking.entity.Status;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
@@ -28,6 +30,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public enum CommandType {
 
@@ -222,7 +225,8 @@ public enum CommandType {
                 try {
                     addToMemento(request);
                     ReservationDao dao = new ReservationDaoImpl();
-                    request.setAttribute("reservations", dao.readAllReservations());
+                    List<Reservation> reservations =  dao.readAllReservationsByStatus(Status.WAITING_FOR_APPROVE);
+                    request.setAttribute("reservations", reservations);
                     return "jsp/admin.jsp";
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);

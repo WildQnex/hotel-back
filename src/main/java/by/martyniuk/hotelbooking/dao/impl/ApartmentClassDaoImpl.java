@@ -15,19 +15,12 @@ import java.util.List;
 
 public class ApartmentClassDaoImpl implements ApartmentClassDao {
 
-    private static final String SQL_SELECT_ALL_APARTMENTS_CLASSES = "SELECT `id_apartment_class`, `type`, `rooms_amount`," +
-            " `max_capacity`, `cost_per_night`, `cost_per_person`, `animal_cost`, `image_path` FROM `hotel_booking`.`apartment_class`";
-
-    private static final String SQL_FIND_APARTMENT_CLASS_BY_ID = "SELECT `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
-            " `animal_cost`, `image_path` FROM `hotel_booking`.`apartment_class` " +
-            " WHERE `id_apartment_class` = ?";
-
-
+    @Override
     public List<ApartmentClass> findAllApartmentClasses() throws DaoException {
         List<ApartmentClass> apartmentClassList = new ArrayList<>();
         try (Connection cn = ConnectionPool.getInstance().getConnection();
              Statement st = cn.createStatement()) {
-            ResultSet resultSet = st.executeQuery(SQL_SELECT_ALL_APARTMENTS_CLASSES);
+            ResultSet resultSet = st.executeQuery(SqlQuery.SQL_SELECT_ALL_APARTMENTS_CLASSES);
             while (resultSet.next()) {
                 apartmentClassList.add(new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
@@ -43,10 +36,10 @@ public class ApartmentClassDaoImpl implements ApartmentClassDao {
     @Override
     public ApartmentClass findApartmentClassById(long id) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection()) {
-            PreparedStatement ps = cn.prepareStatement(SQL_FIND_APARTMENT_CLASS_BY_ID);
+            PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_FIND_APARTMENT_CLASS_BY_ID);
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 return new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                         resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),

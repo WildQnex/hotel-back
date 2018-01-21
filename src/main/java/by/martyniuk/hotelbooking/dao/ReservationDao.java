@@ -2,6 +2,7 @@ package by.martyniuk.hotelbooking.dao;
 
 import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.Reservation;
+import by.martyniuk.hotelbooking.entity.Status;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 
@@ -16,4 +17,6 @@ public interface ReservationDao {
     boolean isApartmentAvailable(Apartment apartment, LocalDate checkInDate, LocalDate checkOutDate) throws DaoException;
 
     List<Reservation> readAllReservations() throws DaoException;
+
+    List<Reservation> readAllReservationsByStatus(Status status) throws DaoException;
 }
