@@ -9,7 +9,7 @@
         <nav class="white" role="navigation">
 
             <div class="nav-wrapper container">
-                <a id="logo-container" href="booking?action=forward&page=jsp/main.jsp"
+                <a id="logo-container" href="booking?action=forward&page=main"
                    class="brand-logo"><fmt:message key="header.logo" bundle="${bndl}"/></a>
                 <ul class="right hide-on-med-and-down">
 
@@ -31,7 +31,7 @@
                         <li><a class="modal-trigger" href="#modal"><fmt:message key="login.button"
                                                                                 bundle="${bndl}"/></a>
                         </li>
-                        <li><a href="booking?action=forward&page=jsp/register.jsp"><fmt:message
+                        <li><a href="booking?action=forward&page=register"><fmt:message
                                 key="register.button"
                                 bundle="${bndl}"/></a>
                         </li>
@@ -111,7 +111,7 @@
 </header>
 
 <ul id='dropdown-user' class='dropdown-content'>
-    <li><a href="booking?action=forward&page=jsp/user.jsp">Профиль</a></li>
+    <li><a href="booking?action=forward&page=user">Профиль</a></li>
     <li><a href="booking?action=show_admin_page">${user.role}</a></li>
     <li class="divider"></li>
     <li><a href="booking?action=logout"><fmt:message key="header.logout"

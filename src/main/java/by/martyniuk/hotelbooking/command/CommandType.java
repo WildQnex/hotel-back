@@ -1,5 +1,6 @@
 package by.martyniuk.hotelbooking.command;
 
+import by.martyniuk.hotelbooking.constant.PagePath;
 import by.martyniuk.hotelbooking.dao.ApartmentClassDao;
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
 import by.martyniuk.hotelbooking.dao.ReservationDao;
@@ -43,9 +44,9 @@ public enum CommandType {
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
-                return "jsp/apartments.jsp";
+                return PagePath.APARTMENTS.getPage();
             });
         }
     },
@@ -73,7 +74,7 @@ public enum CommandType {
                 } catch (ServiceException | ParseException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
             });
         }
@@ -97,7 +98,7 @@ public enum CommandType {
                 } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
             });
         }
@@ -125,7 +126,7 @@ public enum CommandType {
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
                 request.setAttribute("redirect", true);
                 return ((Memento) session.getAttribute("memento")).getState();
@@ -138,7 +139,7 @@ public enum CommandType {
 
             return (request -> {
                 addToMemento(request);
-                return request.getParameter("page");
+                return PagePath.valueOf(request.getParameter("page").toUpperCase()).getPage();
             });
         }
     },
@@ -150,7 +151,7 @@ public enum CommandType {
                     HttpSession session = request.getSession();
                     if (!request.getParameter("password").equals(request.getParameter("repeat_password"))) {
                         request.getSession().setAttribute("registerError", "Passwords do not match");
-                        return "jsp/register.jsp";
+                        return PagePath.REGISTER.getPage();
                     }
                     Memento memento = (Memento) session.getAttribute("memento");
                     if (AuthorizationService.register(request.getParameter("first_name"), request.getParameter("middle_name"),
@@ -168,7 +169,7 @@ public enum CommandType {
                 } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
             });
         }
@@ -182,11 +183,11 @@ public enum CommandType {
                     long id = Long.parseLong(request.getParameter("id"));
                     ApartmentClassDao dao = new ApartmentClassDaoImpl();
                     request.setAttribute("apartmentClass", dao.findApartmentClassById(id));
-                    return "jsp/bookApartment.jsp";
+                    return PagePath.BOOK_APARTMENT.getPage();
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
             });
         }
@@ -209,7 +210,7 @@ public enum CommandType {
                 } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
             });
         }
@@ -226,7 +227,7 @@ public enum CommandType {
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
             });
         }
@@ -243,7 +244,7 @@ public enum CommandType {
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
-                    return "jsp/error.jsp";
+                    return PagePath.ERROR.getPage();
                 }
             });
         }
@@ -254,10 +255,11 @@ public enum CommandType {
             return (request -> {
                 LOGGER.log(Level.ERROR, "Command operation not found");
                 request.getSession().setAttribute("errorMessage", "Command operation not found");
-                return "jsp/error.jsp";
+                return PagePath.ERROR.getPage();
             });
         }
     };
+
 
     private static final Logger LOGGER = LogManager.getLogger(CommandType.class);
 
