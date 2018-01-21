@@ -7,6 +7,8 @@ import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ReservationDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.UserDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
+import by.martyniuk.hotelbooking.entity.Reservation;
+import by.martyniuk.hotelbooking.entity.Status;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
@@ -62,6 +64,15 @@ public class ReservationService {
             } else {
                 return false;
             }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public static List<Reservation> readAllReservationByStatus(Status status) throws ServiceException {
+        try {
+            ReservationDao reservationDao = new ReservationDaoImpl();
+            return reservationDao.readAllReservationsByStatus(status);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

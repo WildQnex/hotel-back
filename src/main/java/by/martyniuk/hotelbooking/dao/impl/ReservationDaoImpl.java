@@ -61,7 +61,8 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setDate(3, checkIn, Calendar.getInstance());
             ps.setDate(4, checkOut, Calendar.getInstance());
             ps.setLong(5, apartment.getId());
-            ps.setString(6, "Approved");
+            ps.setString(6, Status.APPROVED.toString());
+            ps.setString(7, Status.WAITING_FOR_APPROVE.toString());
             ResultSet rs = ps.executeQuery();
             return !rs.next();
         } catch (SQLException e) {

@@ -1,6 +1,7 @@
 package by.martyniuk.hotelbooking.constant;
 
 public enum PagePath {
+    ADMIN("jsp/admin.jsp"),
     MENU("jsp/menus.jsp"),
     APARTMENTS("jsp/apartments.jsp"),
     BOOK_APARTMENT("jsp/bookApartment.jsp"),

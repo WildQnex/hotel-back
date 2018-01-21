@@ -40,7 +40,8 @@ class SqlQuery {
             "FROM `hotel_booking`.`reservation` " +
             "WHERE (NOT ((`check_in_date` > ? AND `check_in_date` >= ?) OR (check_out_date <= ? AND `check_out_date` < ?))) " +
             "AND (`apartment_id_fk` = ?) " +
-            "AND (`status_id_fk` = (SELECT `id_status` FROM `hotel_booking`.`status` WHERE UPPER(`status`) LIKE UPPER(?)))";
+            "AND ((`status_id_fk` = (SELECT `id_status` FROM `hotel_booking`.`status` WHERE UPPER(`status`) LIKE UPPER(?)))" +
+            "OR (`status_id_fk` = (SELECT `id_status` FROM `hotel_booking`.`status` WHERE UPPER(`status`) LIKE UPPER(?))))";
 
     static final String SQL_SELECT_ALL_RESERVATIONS = "SELECT `id_reservation`, `check_in_date`, `check_out_date`, `order_time`," +
             " `person_amount`, `id_user`, `first_name`, `middle_name`, `last_name`, `balance`," +

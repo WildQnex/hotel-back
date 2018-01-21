@@ -31,15 +31,33 @@
                     <div class="collapsible-header"><i class="material-icons">blur_on</i>${reservation.id} order</div>
                     <div class="collapsible-body">
                         <div class="row"> ${reservation.orderTime}, order status - ${reservation.status}</div>
-                        <div class="row divider"></div>
-                        <div class="row">
-                            <button class="col s2 m2 offset-s2 offset-m2 btn waves-effect waves-light center">
-                                Accept
-                            </button>
-                            <button class="col s2 m2 offset-s4 offset-m4 btn waves-effect waves-light center">
-                                Decline
-                            </button>
-                        </div>
+                        <div class="divider"></div>
+                        <div class="row"></div>
+                        <form class="col s12" name="login" action="booking" method="POST">
+                            <div class="row">
+                                <div class="input-field col s6 m3 offset-m2">
+                                    <select>
+                                        <option value="" disabled>Choose apartmet</option>
+                                        <option selected name="apartmentId" value="${reservation.apartment.id}">${reservation.apartment.number}</option>
+                                        <c:forEach items="${freeApartments.get(reservation)}" var="apartment">
+                                            <option value="${apartment.id}">${apartment.number}</option>
+                                        </c:forEach>
+                                    </select>
+                                    <label>Apartmet Number</label>
+                                </div>
+                                <div class="input-field col s6 m3 offset-m2">
+                                    <select>
+                                        <option value="" disabled>Choose status</option>
+                                        <option selected name="apartmentId" value="Approve">Approve</option>
+                                        <option value="Decline">Decline</option>
+                                    </select>
+                                    <label>Apartmet Status</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <button class="col s2 m2 offset-s5 offset-m5 btn waves-effect waves-light center" type="submit">Send</button>
+                            </div>
+                        </form>
                     </div>
                 </li>
             </c:forEach>
@@ -74,6 +92,12 @@
     <c:if test="${not empty loginError}">
     $('#modal').modal('open');
     </c:if>
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('select').material_select();
+    })
 </script>
 
 <script>

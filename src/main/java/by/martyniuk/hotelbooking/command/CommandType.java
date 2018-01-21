@@ -14,6 +14,7 @@ import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.memento.Memento;
+import by.martyniuk.hotelbooking.service.ApartmentService;
 import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
 import org.apache.logging.log4j.Level;
@@ -28,8 +29,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum CommandType {
@@ -186,6 +189,7 @@ public enum CommandType {
                     long id = Long.parseLong(request.getParameter("id"));
                     ApartmentClassDao dao = new ApartmentClassDaoImpl();
                     request.setAttribute("apartmentClass", dao.findApartmentClassById(id));
+
                     return PagePath.BOOK_APARTMENT.getPage();
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
@@ -201,13 +205,16 @@ public enum CommandType {
             return (request -> {
                 try {
                     User user = (User) request.getSession().getAttribute("user");
+
                     user.setFirstName(request.getParameter("firstName"));
                     user.setMiddleName(request.getParameter("middleName"));
                     user.setLastName(request.getParameter("lastName"));
                     user.setPhoneNumber(request.getParameter("phoneNumber"));
+
                     if (AuthorizationService.updateUserProfile(user)) {
                         request.getSession().setAttribute("user", user);
                     }
+
                     request.setAttribute("redirect", true);
                     return ((Memento) request.getSession().getAttribute("memento")).getState();
                 } catch (ServiceException e) {
@@ -224,11 +231,14 @@ public enum CommandType {
             return (request -> {
                 try {
                     addToMemento(request);
-                    ReservationDao dao = new ReservationDaoImpl();
-                    List<Reservation> reservations =  dao.readAllReservationsByStatus(Status.WAITING_FOR_APPROVE);
+
+                    List<Reservation> reservations = ReservationService.readAllReservationByStatus(Status.WAITING_FOR_APPROVE);
+                    Map<Reservation, List<Apartment>> freeApartments = ApartmentService.findFreeApartmentsForReservations(reservations);
+
                     request.setAttribute("reservations", reservations);
-                    return "jsp/admin.jsp";
-                } catch (DaoException e) {
+                    request.setAttribute("freeApartments", freeApartments);
+                    return PagePath.ADMIN.getPage();
+                } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
                     return PagePath.ERROR.getPage();
@@ -244,7 +254,7 @@ public enum CommandType {
                     addToMemento(request);
                     ApartmentClassDao dao = new ApartmentClassDaoImpl();
                     request.setAttribute("apartmentClasses", dao.findAllApartmentClasses());
-                    return "jsp/classes.jsp";
+                    return PagePath.CLASSES.getPage();
                 } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
