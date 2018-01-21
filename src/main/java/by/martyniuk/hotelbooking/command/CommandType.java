@@ -1,7 +1,9 @@
 package by.martyniuk.hotelbooking.command;
 
+import by.martyniuk.hotelbooking.dao.ApartmentClassDao;
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
 import by.martyniuk.hotelbooking.dao.ReservationDao;
+import by.martyniuk.hotelbooking.dao.impl.ApartmentClassDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ReservationDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
@@ -9,7 +11,6 @@ import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.memento.Memento;
-import by.martyniuk.hotelbooking.service.ApartmentService;
 import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
 import org.apache.logging.log4j.Level;
@@ -54,15 +55,15 @@ public enum CommandType {
             return (request -> {
                 try {
                     HttpSession session = request.getSession();
-                    Memento memento = (Memento)session.getAttribute("memento");
-                    long apartmentId = Long.parseLong(request.getParameter("apartmentId"));
+                    Memento memento = (Memento) session.getAttribute("memento");
+                    long apartmentClassId = Long.parseLong(request.getParameter("apartmentId"));
                     String pattern = "dd MMMMM, yyyy";
                     SimpleDateFormat formatter = new SimpleDateFormat(pattern, new Locale("en"));
                     Date checkIn = formatter.parse(request.getParameter("checkInDate"));
                     Date checkOut = formatter.parse(request.getParameter("checkOutDate"));
                     LocalDate checkInDate = checkIn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     LocalDate checkOutDate = checkOut.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    boolean result = ReservationService.bookApartment((User) session.getAttribute("user"), apartmentId,
+                    boolean result = ReservationService.bookApartment((User) session.getAttribute("user"), apartmentClassId,
                             checkInDate, checkOutDate, Integer.parseInt(request.getParameter("personsAmount")));
                     if (!result) {
                         session.setAttribute("bookingError", "Apartment already booked");
@@ -151,7 +152,7 @@ public enum CommandType {
                         request.getSession().setAttribute("registerError", "Passwords do not match");
                         return "jsp/register.jsp";
                     }
-                    Memento memento = (Memento)session.getAttribute("memento");
+                    Memento memento = (Memento) session.getAttribute("memento");
                     if (AuthorizationService.register(request.getParameter("first_name"), request.getParameter("middle_name"),
                             request.getParameter("last_name"), request.getParameter("email"), request.getParameter("phone_number"),
                             request.getParameter("password"))) {
@@ -172,16 +173,17 @@ public enum CommandType {
             });
         }
     },
-    SHOW_APARTMENT {
+    SHOW_APARTMENT_CLASS {
         @Override
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
                     addToMemento(request);
                     long id = Long.parseLong(request.getParameter("id"));
-                    request.setAttribute("apartment", ApartmentService.getApartment(id));
-                    return "jsp/apartment.jsp";
-                } catch (ServiceException e) {
+                    ApartmentClassDao dao = new ApartmentClassDaoImpl();
+                    request.setAttribute("apartmentClass", dao.findApartmentClassById(id));
+                    return "jsp/bookApartment.jsp";
+                } catch (DaoException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
                     return "jsp/error.jsp";
@@ -229,6 +231,23 @@ public enum CommandType {
             });
         }
     },
+    SHOW_APARTMENT_CLASSES {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+                    addToMemento(request);
+                    ApartmentClassDao dao = new ApartmentClassDaoImpl();
+                    request.setAttribute("apartmentClasses", dao.findAllApartmentClasses());
+                    return "jsp/classes.jsp";
+                } catch (DaoException e) {
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return "jsp/error.jsp";
+                }
+            });
+        }
+    },
     DEFAULT {
         @Override
         public ActionCommand receiveCommand() {
@@ -244,7 +263,7 @@ public enum CommandType {
 
     public abstract ActionCommand receiveCommand();
 
-    private static void addToMemento(HttpServletRequest request){
+    private static void addToMemento(HttpServletRequest request) {
         Memento memento = (Memento) request.getSession().getAttribute("memento");
         memento.addState(request.getContextPath() + "/booking?" + request.getQueryString());
         request.getSession().setAttribute("memento", memento);

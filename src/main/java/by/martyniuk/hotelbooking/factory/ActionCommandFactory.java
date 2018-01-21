@@ -11,11 +11,13 @@ public class ActionCommandFactory {
     private static final Logger LOGGER = LogManager.getLogger(ActionCommandFactory.class);
 
     public static ActionCommand getActionCommand(String action) {
-        try {
-            CommandType command = CommandType.valueOf(action.toUpperCase());
-            return command.receiveCommand();
-        } catch (IllegalArgumentException e) {
-            LOGGER.log(Level.ERROR, e);
+        if (action != null) {
+            try {
+                CommandType command = CommandType.valueOf(action.toUpperCase());
+                return command.receiveCommand();
+            } catch (IllegalArgumentException e) {
+                LOGGER.log(Level.ERROR, e);
+            }
         }
         return CommandType.DEFAULT.receiveCommand();
     }

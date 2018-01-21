@@ -28,7 +28,7 @@
     <div class="container">
         <form class="col s12" name="book" action="booking" method="POST">
             <input type="hidden" name="action" value="book_apartment">
-            <input type="hidden" name="apartmentId" value="${apartment.id}">
+            <input type="hidden" name="apartmentId" value="${apartmentClass.id}">
             <div class="row">
                 <div class="input-field col s4 m3">
                     <label for="check-in-date">Check In date</label>

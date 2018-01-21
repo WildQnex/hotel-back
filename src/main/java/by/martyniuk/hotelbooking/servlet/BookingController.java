@@ -3,7 +3,6 @@ package by.martyniuk.hotelbooking.servlet;
 import by.martyniuk.hotelbooking.command.ActionCommand;
 import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.factory.ActionCommandFactory;
-import by.martyniuk.hotelbooking.memento.Memento;
 import by.martyniuk.hotelbooking.pool.ConnectionPool;
 
 import javax.servlet.ServletException;

@@ -13,7 +13,7 @@
                    class="brand-logo"><fmt:message key="header.logo" bundle="${bndl}"/></a>
                 <ul class="right hide-on-med-and-down">
 
-                    <li><a href="booking?action=forward&page=jsp/apartments.jsp">
+                    <li><a href="booking?action=show_apartment_classes">
                         <fmt:message key="header.apartments" bundle="${bndl}"/></a>
                     </li>
 

@@ -27,6 +27,11 @@ public class ApartmentDaoImpl implements ApartmentDao {
             " `animal_cost`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
             " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `id_apartment` = ?";
 
+    private static final String SQL_FIND_APARTMENT_BY_CLASS_ID = "SELECT `id_apartment`, `number`, `floor`, `animals_allowed`," +
+            " `smoking_allowed`, `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
+            " `animal_cost`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
+            " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `apartment_class_id_fk` = ?";
+
     private static final String SQL_INSERT_APARTMENT = "INSERT INTO apartment(`class`,`number`) VALUES(?,?)";
 
     @Override
@@ -70,6 +75,28 @@ public class ApartmentDaoImpl implements ApartmentDao {
             throw new DaoException(e);
         }
         return null;
+    }
+
+    @Override
+    public List<Apartment> findApartmentListByClassId(long id) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection()) {
+            List<Apartment> apartmentList = new ArrayList<>();
+            PreparedStatement ps = cn.prepareStatement(SQL_FIND_APARTMENT_BY_CLASS_ID);
+            ps.setLong(1, id);
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                apartmentList.add(new Apartment(resultSet.getLong("id_apartment"), resultSet.getString("number"),
+                        resultSet.getInt("floor"), resultSet.getInt("animals_allowed") != 0,
+                        resultSet.getInt("smoking_allowed") != 0,
+                        new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
+                                resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
+                                resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
+                                resultSet.getBigDecimal("animal_cost"), resultSet.getString("image_path"))));
+            }
+            return apartmentList;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override
