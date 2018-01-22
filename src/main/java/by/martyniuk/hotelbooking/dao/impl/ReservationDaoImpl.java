@@ -73,7 +73,7 @@ public class ReservationDaoImpl implements ReservationDao {
     @Override
     public Reservation readReservationById(long id) throws DaoException{
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(SqlQuery.SQL_SEECT_RESERVATION_BY_ID);
+            PreparedStatement ps = connection.prepareStatement(SqlQuery.SQL_SELECT_RESERVATION_BY_ID);
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
             return getReservations(resultSet).get(0);
@@ -98,6 +98,18 @@ public class ReservationDaoImpl implements ReservationDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement ps = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_RESERVATIONS_BY_STATUS);
             ps.setString(1, status.toString());
+            ResultSet resultSet = ps.executeQuery();
+            return getReservations(resultSet);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Reservation> readAllReservationsByUserId(long userId) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(SqlQuery.SQL_SELECT_ALL_RESERVATIONS_BY_USER_ID);
+            ps.setLong(1, userId);
             ResultSet resultSet = ps.executeQuery();
             return getReservations(resultSet);
         } catch (SQLException e) {
@@ -140,7 +152,7 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setDate(2, Date.valueOf(reservation.getCheckOutDate()), Calendar.getInstance());
             ps.setTimestamp(3, Timestamp.valueOf(reservation.getOrderTime()));
             ps.setInt(4, reservation.getPersonAmount());
-            ps.setBigDecimal(5, reservation.getCostPerNight());
+            ps.setBigDecimal(5, reservation.getCostPerPerson());
             ps.setBigDecimal(6, reservation.getCostPerNight());
             ps.setBigDecimal(7, reservation.getAnimalCost());
             ps.setBigDecimal(8, reservation.getTotalCost());

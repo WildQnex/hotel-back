@@ -11,7 +11,8 @@ public enum PagePath {
     HEADER("jsp/header.jsp"),
     MAIN("jsp/main.jsp"),
     REGISTER("jsp/register.jsp"),
-    USER("jsp/user.jsp");
+    USER("jsp/user.jsp"),
+    USER_RESERVATION("jsp/userReservations.jsp");
 
     private String page;
 

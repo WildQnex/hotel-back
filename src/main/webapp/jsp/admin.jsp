@@ -30,11 +30,10 @@
                 <li>
                     <div class="collapsible-header"><i class="material-icons">blur_on</i>Order № ${reservation.id}</div>
                     <div class="collapsible-body">
-                            <%--<div class="row">Order made on ${reservation.orderTime.getDate} in ${reservation.orderTime.getTime}</div>--%>
-                        <div class="row"></div>
-                        <div class="row"></div>
-                        <div class="row"></div>
-                        <div class="row"> ${reservation.orderTime}, order status - ${reservation.status}</div>
+                        <div class="row">Reservation period:  ${reservation.checkInDate} - ${reservation.checkOutDate}</div>
+                        <div class="row">Order made on  ${reservation.orderTime.toLocalDate()}  in  ${reservation.orderTime.toLocalTime()}</div>
+                        <div class="row">Total cost:  ${reservation.totalCost}</div>
+                        <div class="row">Order status:  ${reservation.status}</div>
                         <div class="divider"></div>
                         <div class="row"></div>
                         <input name="action" type="hidden" value="approve_reservation">

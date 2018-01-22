@@ -43,10 +43,12 @@
                         <li><a class='dropdown-button' href='#' data-beloworigin="true" data-activates='dropdown-user'>
                             <c:out value="${user.firstName}"/><i class="material-icons right">arrow_drop_down</i>
                         </a></li>
+                        <c:if test="${user.role.toString().equalsIgnoreCase('Admin')}">
+                            <li><a class='dropdown-button' href='#' data-beloworigin="true" data-activates='dropdown-admin'>
+                               Admin<i class="material-icons right">arrow_drop_down</i>
+                            </a></li>
+                        </c:if>
 
-
-                        <%--<c:if test="${user.role.toString().equalsIgnoreCase('Admin')}">--%>
-                        <%--</c:if>--%>
                     </c:if>
                 </ul>
 
@@ -112,11 +114,14 @@
 
 <ul id='dropdown-user' class='dropdown-content'>
     <li><a href="booking?action=forward&page=user">Профиль</a></li>
-    <li><a href="booking?action=show_admin_page">${user.role}</a></li>
+    <li><a href="booking?action=show_personal_reservations">Заказы</a></li>
     <li class="divider"></li>
     <li><a href="booking?action=logout"><fmt:message key="header.logout"
                                                      bundle="${bndl}"/></a>
     </li>
+</ul>
+<ul id='dropdown-admin' class='dropdown-content'>
+    <li><a href="booking?action=show_admin_page">Заказы</a></li>
 </ul>
 
 <ul id='dropdown-language' class='dropdown-content'>

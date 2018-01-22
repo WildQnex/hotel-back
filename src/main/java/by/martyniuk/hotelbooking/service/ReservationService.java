@@ -46,11 +46,12 @@ public class ReservationService {
             if (apartmentOptional.isPresent()) {
                 Apartment apartment = apartmentOptional.get();
                 BigDecimal totalCost = apartment.getApartmentClass().getCostPerPerson().multiply(new BigDecimal(personsAmount));
-                totalCost = totalCost.add((new BigDecimal(ChronoUnit.DAYS.between(checkInDate, checkOutDate))).multiply(apartment.getApartmentClass().getCostPerNight()));
+                 totalCost = totalCost.add((new BigDecimal(ChronoUnit.DAYS.between(checkInDate, checkOutDate))).multiply(apartment.getApartmentClass().getCostPerNight()));
+
                 if (apartment.isAnimalsAllowed()) {
                     totalCost = totalCost.add(apartment.getApartmentClass().getAnimalCost());
                 }
-                BigDecimal newBalance = user.getBalance().subtract(totalCost);
+               BigDecimal newBalance = user.getBalance().subtract(totalCost);
                 if (reservationDao.isApartmentAvailable(apartment, checkInDate, checkOutDate)
                         && newBalance.compareTo(new BigDecimal(0)) > 0
                         && apartment.getApartmentClass().getMaxCapacity() >= personsAmount) {
@@ -64,6 +65,16 @@ public class ReservationService {
             } else {
                 return false;
             }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+
+    public static List<Reservation> readAllReservationByUserId(long userId) throws ServiceException {
+        try {
+            ReservationDao reservationDao = new ReservationDaoImpl();
+            return reservationDao.readAllReservationsByUserId(userId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

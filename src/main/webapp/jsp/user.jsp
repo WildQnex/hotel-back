@@ -24,7 +24,7 @@
 <jsp:include page="header.jsp"/>
 
 <main>
-    <div class="container">
+    <div id="profile" class="container">
         <form class="col s12" name="book" action="booking" method="POST">
             <input type="hidden" name="action" value="update_profile">
             <input type="hidden" name="userId" value="${user.id}">

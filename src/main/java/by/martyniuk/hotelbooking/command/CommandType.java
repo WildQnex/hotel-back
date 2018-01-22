@@ -3,10 +3,8 @@ package by.martyniuk.hotelbooking.command;
 import by.martyniuk.hotelbooking.constant.PagePath;
 import by.martyniuk.hotelbooking.dao.ApartmentClassDao;
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
-import by.martyniuk.hotelbooking.dao.ReservationDao;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentClassDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
-import by.martyniuk.hotelbooking.dao.impl.ReservationDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.Reservation;
 import by.martyniuk.hotelbooking.entity.Status;
@@ -29,11 +27,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public enum CommandType {
 
@@ -199,6 +195,24 @@ public enum CommandType {
             });
         }
     },
+    SHOW_PERSONAL_RESERVATIONS {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+                    addToMemento(request);
+                    List<Reservation> reservations = ReservationService.readAllReservationByUserId(((User) request.getSession().getAttribute("user")).getId());
+
+                    request.setAttribute("reservations", reservations);
+                    return PagePath.USER_RESERVATION.getPage();
+                } catch (ServiceException e) {
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return PagePath.ERROR.getPage();
+                }
+            });
+        }
+    },
     UPDATE_PROFILE {
         @Override
         public ActionCommand receiveCommand() {
@@ -237,6 +251,7 @@ public enum CommandType {
 
                     request.setAttribute("reservations", reservations);
                     request.setAttribute("freeApartments", freeApartments);
+
                     return PagePath.ADMIN.getPage();
                 } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
@@ -271,10 +286,11 @@ public enum CommandType {
                     long reservationId = Long.parseLong(request.getParameter("reservationId"));
                     long apartmentId = Long.parseLong(request.getParameter("apartmentId"));
                     Status status = Status.valueOf(request.getParameter("status").toUpperCase());
-                    if(ReservationService.approveReservation(reservationId, apartmentId, status)){
+                    if (ReservationService.approveReservation(reservationId, apartmentId, status)) {
                         LOGGER.log(Level.INFO, "Reservation approved");
                     }
-                    return PagePath.ADMIN.getPage();
+                    request.setAttribute("redirect", true);
+                    return ((Memento) request.getSession().getAttribute("memento")).getState();
                 } catch (ServiceException | IllegalArgumentException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));

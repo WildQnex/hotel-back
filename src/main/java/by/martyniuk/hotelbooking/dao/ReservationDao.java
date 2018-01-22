@@ -20,6 +20,8 @@ public interface ReservationDao {
 
     List<Reservation> readAllReservationsByStatus(Status status) throws DaoException;
 
+    List<Reservation> readAllReservationsByUserId(long userId) throws DaoException;
+
     boolean updateReservation(Reservation reservation) throws DaoException;
 
     Reservation readReservationById(long id) throws DaoException;
