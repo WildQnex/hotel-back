@@ -71,8 +71,19 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
+    public Reservation readReservationById(long id) throws DaoException{
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(SqlQuery.SQL_SEECT_RESERVATION_BY_ID);
+            ps.setLong(1, id);
+            ResultSet resultSet = ps.executeQuery();
+            return getReservations(resultSet).get(0);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
     public List<Reservation> readAllReservations() throws DaoException {
-        List<Reservation> reservations = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             Statement ps = connection.createStatement();
             ResultSet resultSet = ps.executeQuery(SqlQuery.SQL_SELECT_ALL_RESERVATIONS);
@@ -94,7 +105,7 @@ public class ReservationDaoImpl implements ReservationDao {
         }
     }
 
-    private List<Reservation> getReservations(ResultSet resultSet) throws SQLException{
+    private List<Reservation> getReservations(ResultSet resultSet) throws SQLException {
         List<Reservation> reservations = new ArrayList<>();
         while (resultSet.next()) {
             User user = new User(resultSet.getLong("id_user"), resultSet.getString("first_name"),
@@ -120,4 +131,27 @@ public class ReservationDaoImpl implements ReservationDao {
         }
         return reservations;
     }
+
+    @Override
+    public boolean updateReservation(Reservation reservation) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection();
+             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_UPDATE_RESERVATION)) {
+            ps.setDate(1, Date.valueOf(reservation.getCheckInDate()), Calendar.getInstance());
+            ps.setDate(2, Date.valueOf(reservation.getCheckOutDate()), Calendar.getInstance());
+            ps.setTimestamp(3, Timestamp.valueOf(reservation.getOrderTime()));
+            ps.setInt(4, reservation.getPersonAmount());
+            ps.setBigDecimal(5, reservation.getCostPerNight());
+            ps.setBigDecimal(6, reservation.getCostPerNight());
+            ps.setBigDecimal(7, reservation.getAnimalCost());
+            ps.setBigDecimal(8, reservation.getTotalCost());
+            ps.setLong(9, reservation.getUser().getId());
+            ps.setLong(10, reservation.getApartment().getId());
+            ps.setString(11, reservation.getStatus().toString());
+            ps.setLong(12, reservation.getId());
+            return (ps.executeUpdate() != 0);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }
+

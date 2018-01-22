@@ -28,36 +28,48 @@
         <ul class="collapsible popout" data-collapsible="accordion">
             <c:forEach items="${reservations}" var="reservation">
                 <li>
-                    <div class="collapsible-header"><i class="material-icons">blur_on</i>${reservation.id} order</div>
+                    <div class="collapsible-header"><i class="material-icons">blur_on</i>Order № ${reservation.id}</div>
                     <div class="collapsible-body">
+                            <%--<div class="row">Order made on ${reservation.orderTime.getDate} in ${reservation.orderTime.getTime}</div>--%>
+                        <div class="row"></div>
+                        <div class="row"></div>
+                        <div class="row"></div>
                         <div class="row"> ${reservation.orderTime}, order status - ${reservation.status}</div>
                         <div class="divider"></div>
                         <div class="row"></div>
-                        <form class="col s12" name="login" action="booking" method="POST">
-                            <div class="row">
-                                <div class="input-field col s6 m3 offset-m2">
-                                    <select>
-                                        <option value="" disabled>Choose apartmet</option>
-                                        <option selected name="apartmentId" value="${reservation.apartment.id}">${reservation.apartment.number}</option>
-                                        <c:forEach items="${freeApartments.get(reservation)}" var="apartment">
-                                            <option value="${apartment.id}">${apartment.number}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <label>Apartmet Number</label>
-                                </div>
-                                <div class="input-field col s6 m3 offset-m2">
-                                    <select>
-                                        <option value="" disabled>Choose status</option>
-                                        <option selected name="apartmentId" value="Approve">Approve</option>
-                                        <option value="Decline">Decline</option>
-                                    </select>
-                                    <label>Apartmet Status</label>
-                                </div>
+                        <input name="action" type="hidden" value="approve_reservation">
+                        <div class="row">
+                            <div class="input-field col s6 m4 offset-m4 offset-s3">
+                                <select id="apartmentId">
+                                    <option value="" disabled>Choose apartmet</option>
+                                    <option selected name="apartmentId"
+                                            value="${reservation.apartment.id}">${reservation.apartment.number}</option>
+                                    <c:forEach items="${freeApartments.get(reservation)}" var="apartment">
+                                        <option value="${apartment.id}">${apartment.number}</option>
+                                    </c:forEach>
+                                </select>
+                                <label>Apartmet Number</label>
                             </div>
-                            <div class="row">
-                                <button class="col s2 m2 offset-s5 offset-m5 btn waves-effect waves-light center" type="submit">Send</button>
+
+                        </div>
+                        <div class="row">
+                            <div class="col s6 m3 offset-m2">
+                                <a id="approve" onclick="setId()"
+                                   href="booking?action=approve_reservation&reservationId=${reservation.id}&status=approved">
+                                    <button class="btn waves-effect waves-light center">
+                                        Approve
+                                    </button>
+                                </a>
                             </div>
-                        </form>
+                            <div class="col s6 m3 offset-m2">
+                                <a id="decline" onclick="setId()"
+                                   href="booking?action=approve_reservation&reservationId=${reservation.id}&status=declined">
+                                    <button class="btn waves-effect waves-light center">
+                                        Decline
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </li>
             </c:forEach>
@@ -83,7 +95,7 @@
             inDuration: 300, // Transition in duration
             outDuration: 200, // Transition out duration
             startingTop: '4%', // Starting top style attribute
-            endingTop: '10%', // Ending top style attribute
+            endingTop: '10%' // Ending top style attribute
         }
     );
 </script>
@@ -98,6 +110,13 @@
     $(document).ready(function () {
         $('select').material_select();
     })
+</script>
+
+<script>
+    function setId() {
+        document.getElementById("approve").href += "&apartmentId=" + document.getElementById("apartmentId").value;
+        document.getElementById("decline").href += "&apartmentId=" + document.getElementById("apartmentId").value;
+    }
 </script>
 
 <script>

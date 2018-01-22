@@ -263,6 +263,26 @@ public enum CommandType {
             });
         }
     },
+    APPROVE_RESERVATION {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+                    long reservationId = Long.parseLong(request.getParameter("reservationId"));
+                    long apartmentId = Long.parseLong(request.getParameter("apartmentId"));
+                    Status status = Status.valueOf(request.getParameter("status").toUpperCase());
+                    if(ReservationService.approveReservation(reservationId, apartmentId, status)){
+                        LOGGER.log(Level.INFO, "Reservation approved");
+                    }
+                    return PagePath.ADMIN.getPage();
+                } catch (ServiceException | IllegalArgumentException e) {
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return PagePath.ERROR.getPage();
+                }
+            });
+        }
+    },
     DEFAULT {
         @Override
         public ActionCommand receiveCommand() {

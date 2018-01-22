@@ -77,4 +77,27 @@ public class ReservationService {
             throw new ServiceException(e);
         }
     }
+
+    public static boolean updateReservation(Reservation reservation) throws ServiceException {
+
+        return true;
+    }
+
+    public static boolean approveReservation(long reservationId, long apartmentId, Status status) throws ServiceException {
+        try {
+            ReservationDao reservationDao = new ReservationDaoImpl();
+            ApartmentDao apartmentDao = new ApartmentDaoImpl();
+            Reservation reservation = reservationDao.readReservationById(reservationId);
+            Apartment apartment = apartmentDao.findApartmentById(apartmentId);
+            if (reservation.getApartment().equals(apartment) || reservationDao.isApartmentAvailable(apartment, reservation.getCheckInDate(),
+                    reservation.getCheckOutDate())){
+                reservation.setApartment(apartment);
+                reservation.setStatus(status);
+                return reservationDao.updateReservation(reservation);
+            }
+            return false;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }
