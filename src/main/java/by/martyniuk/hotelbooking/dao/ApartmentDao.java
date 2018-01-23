@@ -12,5 +12,9 @@ public interface ApartmentDao {
 
     List<Apartment> findApartmentListByClassId(long id) throws DaoException;
 
-    boolean addApartment(Apartment user) throws DaoException;
+    boolean addApartment(Apartment apartment) throws DaoException;
+
+    boolean updateApartment(Apartment apartment) throws DaoException;
+
+    boolean deleteApartment(long apartmentId) throws DaoException;
 }

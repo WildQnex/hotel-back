@@ -122,6 +122,7 @@
 </ul>
 <ul id='dropdown-admin' class='dropdown-content'>
     <li><a href="booking?action=show_admin_page">Заказы</a></li>
+    <li><a href="booking?action=show_apartment_editor">Номера</a></li>
 </ul>
 
 <ul id='dropdown-language' class='dropdown-content'>

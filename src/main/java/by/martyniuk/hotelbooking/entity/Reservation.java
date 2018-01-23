@@ -20,7 +20,6 @@ public class Reservation implements Serializable, Cloneable {
     private int personAmount;
     private BigDecimal costPerPerson;
     private BigDecimal costPerNight;
-    private BigDecimal animalCost;
     private BigDecimal totalCost;
     private User user;
     private Apartment apartment;

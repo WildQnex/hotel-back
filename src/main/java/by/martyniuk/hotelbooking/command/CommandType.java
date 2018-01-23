@@ -6,12 +6,14 @@ import by.martyniuk.hotelbooking.dao.ApartmentDao;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentClassDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
+import by.martyniuk.hotelbooking.entity.ApartmentClass;
 import by.martyniuk.hotelbooking.entity.Reservation;
 import by.martyniuk.hotelbooking.entity.Status;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.memento.Memento;
+import by.martyniuk.hotelbooking.service.ApartmentClassService;
 import by.martyniuk.hotelbooking.service.ApartmentService;
 import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
@@ -38,17 +40,18 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
-                    HttpSession session = request.getSession();
-                    ApartmentDao dao = new ApartmentDaoImpl();
-                    List<Apartment> apartmentList = dao.findAllApartments();
-                    session.setAttribute("apartments", apartmentList);
-                    // dao.addApartment(new Apartment(0, ApartmentClass.valueOf(request.getParameter("class").toUpperCase()), request.getParameter("number")));
-                } catch (DaoException e) {
+                    String number = request.getParameter("apartmentNumber");
+                    int floor = Integer.parseInt(request.getParameter("apartmentFloor"));
+                    ApartmentClass apartmentClass = ApartmentClassService.findApartmentClassByType(request.getParameter("apartmentClass"));
+                    Apartment apartment = new Apartment(0, number, floor, apartmentClass);
+                    ApartmentService.insertApartment(apartment);
+                    request.setAttribute("redirect", true);
+                    return ((Memento) request.getSession().getAttribute("memento")).getState();
+                } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
                     return PagePath.ERROR.getPage();
                 }
-                return PagePath.APARTMENTS.getPage();
             });
         }
     },
@@ -252,7 +255,7 @@ public enum CommandType {
                     request.setAttribute("reservations", reservations);
                     request.setAttribute("freeApartments", freeApartments);
 
-                    return PagePath.ADMIN.getPage();
+                    return PagePath.APPROVE_RESERVATIONS.getPage();
                 } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
@@ -278,6 +281,23 @@ public enum CommandType {
             });
         }
     },
+    SHOW_APARTMENT_EDITOR {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+                    addToMemento(request);
+                    ApartmentDao dao = new ApartmentDaoImpl();
+                    request.setAttribute("apartments", dao.findAllApartments());
+                    return PagePath.APARTMENTS.getPage();
+                } catch (DaoException e) {
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return PagePath.ERROR.getPage();
+                }
+            });
+        }
+    },
     APPROVE_RESERVATION {
         @Override
         public ActionCommand receiveCommand() {
@@ -292,6 +312,39 @@ public enum CommandType {
                     request.setAttribute("redirect", true);
                     return ((Memento) request.getSession().getAttribute("memento")).getState();
                 } catch (ServiceException | IllegalArgumentException e) {
+                    LOGGER.log(Level.ERROR, e);
+                    request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+                    return PagePath.ERROR.getPage();
+                }
+            });
+        }
+    },
+    EDIT_APARTMENT {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+                    boolean result = false;
+                    if (request.getParameter("type").equalsIgnoreCase("delete")) {
+                        result = ApartmentService.deleteApartment(Long.parseLong(request.getParameter("apartmentId")));
+                    } else if (request.getParameter("type").equalsIgnoreCase("update")) {
+                        Apartment apartment = ApartmentService.getApartment(Long.parseLong(request.getParameter("apartmentId")));
+                        String number = request.getParameter("number");
+                        apartment.setNumber(number);
+                        ApartmentClass apartmentClass = ApartmentClassService.findApartmentClassByType(request.getParameter("class"));
+                        apartment.setApartmentClass(apartmentClass);
+                        int floor = Integer.parseInt(request.getParameter("floor"));
+                        apartment.setFloor(floor);
+                        result = ApartmentService.updateApartment(apartment);
+                    }
+                    if (result) {
+                        request.setAttribute("redirect", true);
+                        return ((Memento) request.getSession().getAttribute("memento")).getState();
+                    } else {
+                        request.setAttribute("redirect", true);
+                        return ((Memento) request.getSession().getAttribute("memento")).getState();
+                    }
+                } catch (ServiceException e) {
                     LOGGER.log(Level.ERROR, e);
                     request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
                     return PagePath.ERROR.getPage();

@@ -48,9 +48,6 @@ public class ReservationService {
                 BigDecimal totalCost = apartment.getApartmentClass().getCostPerPerson().multiply(new BigDecimal(personsAmount));
                  totalCost = totalCost.add((new BigDecimal(ChronoUnit.DAYS.between(checkInDate, checkOutDate))).multiply(apartment.getApartmentClass().getCostPerNight()));
 
-                if (apartment.isAnimalsAllowed()) {
-                    totalCost = totalCost.add(apartment.getApartmentClass().getAnimalCost());
-                }
                BigDecimal newBalance = user.getBalance().subtract(totalCost);
                 if (reservationDao.isApartmentAvailable(apartment, checkInDate, checkOutDate)
                         && newBalance.compareTo(new BigDecimal(0)) > 0

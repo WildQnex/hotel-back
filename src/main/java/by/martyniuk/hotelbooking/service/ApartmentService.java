@@ -1,6 +1,5 @@
 package by.martyniuk.hotelbooking.service;
 
-import by.martyniuk.hotelbooking.command.CommandType;
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
 import by.martyniuk.hotelbooking.dao.ReservationDao;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
@@ -12,6 +11,7 @@ import by.martyniuk.hotelbooking.exception.ServiceException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omg.CORBA.DATA_CONVERSION;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +21,33 @@ import java.util.stream.Collectors;
 public class ApartmentService {
 
     private static final Logger LOGGER = LogManager.getLogger(ApartmentService.class);
+
+    public static boolean insertApartment(Apartment apartment) throws ServiceException {
+        try{
+            ApartmentDao dao = new ApartmentDaoImpl();
+            return dao.addApartment(apartment);
+        } catch (DaoException e){
+            throw new ServiceException(e);
+        }
+    }
+
+    public static boolean updateApartment(Apartment apartment) throws ServiceException {
+        try {
+            ApartmentDao dao = new ApartmentDaoImpl();
+            return dao.updateApartment(apartment);
+        } catch (DaoException e){
+            throw new ServiceException(e);
+        }
+    }
+
+    public static boolean deleteApartment(long apartmentId) throws ServiceException {
+        try {
+            ApartmentDao dao = new ApartmentDaoImpl();
+            return dao.deleteApartment(apartmentId);
+        } catch (DaoException e){
+            throw new ServiceException(e);
+        }
+    }
 
     public static Apartment getApartment(long id) throws ServiceException {
         try {
@@ -53,7 +80,7 @@ public class ApartmentService {
                         .collect(Collectors.toList()));
             }
             return freeApartments;
-        } catch (DaoException e){
+        } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }

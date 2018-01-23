@@ -17,6 +17,5 @@ public class ApartmentClass implements Serializable, Cloneable {
     private int maxCapacity;
     private BigDecimal costPerNight;
     private BigDecimal costPerPerson;
-    private BigDecimal animalCost;
     private String imagePath;
 }

@@ -36,11 +36,10 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setInt(4, personsAmount);
             ps.setBigDecimal(5, apartment.getApartmentClass().getCostPerPerson());
             ps.setBigDecimal(6, apartment.getApartmentClass().getCostPerNight());
-            ps.setBigDecimal(7, apartment.getApartmentClass().getAnimalCost());
-            ps.setBigDecimal(8, totalCost);
-            ps.setLong(9, user.getId());
-            ps.setLong(10, apartment.getId());
-            ps.setLong(11, 1);
+            ps.setBigDecimal(7, totalCost);
+            ps.setLong(8, user.getId());
+            ps.setLong(9, apartment.getId());
+            ps.setLong(10, 1);
             return (ps.executeUpdate() != 0);
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -127,18 +126,16 @@ public class ReservationDaoImpl implements ReservationDao {
                     Role.valueOf(resultSet.getString("role").toUpperCase()),
                     resultSet.getInt("active") != 0);
             Apartment apartment = new Apartment(resultSet.getLong("id_apartment"), resultSet.getString("number"),
-                    resultSet.getInt("floor"), resultSet.getInt("animals_allowed") != 0,
-                    resultSet.getInt("smoking_allowed") != 0,
+                    resultSet.getInt("floor"),
                     new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                             resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                             resultSet.getBigDecimal("apartment_cost_per_night"), resultSet.getBigDecimal("apartment_cost_per_person"),
-                            resultSet.getBigDecimal("apartment_animal_cost"), resultSet.getString("image_path")));
+                            resultSet.getString("image_path")));
             Status status = Status.valueOf(resultSet.getString("status").toUpperCase());
             Reservation reservation = new Reservation(resultSet.getLong("id_reservation"), resultSet.getDate("check_in_date").toLocalDate(),
                     resultSet.getDate("check_out_date").toLocalDate(), resultSet.getTimestamp("order_time").toLocalDateTime(),
                     resultSet.getInt("person_amount"), resultSet.getBigDecimal("reservation_cost_per_person"),
-                    resultSet.getBigDecimal("reservation_cost_per_night"), resultSet.getBigDecimal("reservation_animal_cost"),
-                    resultSet.getBigDecimal("total_cost"), user, apartment, status);
+                    resultSet.getBigDecimal("reservation_cost_per_night"), resultSet.getBigDecimal("total_cost"), user, apartment, status);
             reservations.add(reservation);
         }
         return reservations;
@@ -154,12 +151,11 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setInt(4, reservation.getPersonAmount());
             ps.setBigDecimal(5, reservation.getCostPerPerson());
             ps.setBigDecimal(6, reservation.getCostPerNight());
-            ps.setBigDecimal(7, reservation.getAnimalCost());
-            ps.setBigDecimal(8, reservation.getTotalCost());
-            ps.setLong(9, reservation.getUser().getId());
-            ps.setLong(10, reservation.getApartment().getId());
-            ps.setString(11, reservation.getStatus().toString());
-            ps.setLong(12, reservation.getId());
+            ps.setBigDecimal(7, reservation.getTotalCost());
+            ps.setLong(8, reservation.getUser().getId());
+            ps.setLong(9, reservation.getApartment().getId());
+            ps.setString(10, reservation.getStatus().toString());
+            ps.setLong(11, reservation.getId());
             return (ps.executeUpdate() != 0);
         } catch (SQLException e) {
             throw new DaoException(e);

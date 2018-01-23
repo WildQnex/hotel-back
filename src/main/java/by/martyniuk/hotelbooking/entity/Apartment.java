@@ -13,7 +13,5 @@ public class Apartment implements Serializable, Cloneable {
     private long id;
     private String number;
     private int floor;
-    private boolean isAnimalsAllowed;
-    private boolean isSmokingAllowed;
     private ApartmentClass apartmentClass;
 }
