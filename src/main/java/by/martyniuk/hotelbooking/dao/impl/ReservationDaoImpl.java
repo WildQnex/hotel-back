@@ -124,13 +124,13 @@ public class ReservationDaoImpl implements ReservationDao {
                     new BigDecimal(resultSet.getString("balance")), resultSet.getString("email"),
                     resultSet.getString("phone_number"), resultSet.getString("password"),
                     Role.valueOf(resultSet.getString("role").toUpperCase()),
-                    resultSet.getInt("active") != 0);
+                    resultSet.getInt("user_active") != 0);
             Apartment apartment = new Apartment(resultSet.getLong("id_apartment"), resultSet.getString("number"),
                     resultSet.getInt("floor"),
                     new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                             resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                             resultSet.getBigDecimal("apartment_cost_per_night"), resultSet.getBigDecimal("apartment_cost_per_person"),
-                            resultSet.getString("image_path")));
+                            resultSet.getString("description"), resultSet.getString("image_path")), resultSet.getInt("apartment_active") != 0);
             Status status = Status.valueOf(resultSet.getString("status").toUpperCase());
             Reservation reservation = new Reservation(resultSet.getLong("id_reservation"), resultSet.getDate("check_in_date").toLocalDate(),
                     resultSet.getDate("check_out_date").toLocalDate(), resultSet.getTimestamp("order_time").toLocalDateTime(),

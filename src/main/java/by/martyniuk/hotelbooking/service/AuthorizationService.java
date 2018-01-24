@@ -37,13 +37,4 @@ public class AuthorizationService {
         }
     }
 
-    public static boolean updateUserProfile(User user) throws ServiceException {
-        try {
-            UserDao dao = new UserDaoImpl();
-            dao.updateUser(user);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-        return true;
-    }
 }

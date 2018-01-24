@@ -27,7 +27,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
                         resultSet.getInt("floor"), new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                         resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                        resultSet.getString("image_path"))));
+                        resultSet.getString("description"), resultSet.getString("image_path")), resultSet.getInt("active") != 0));
             }
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -48,7 +48,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
                         new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                                 resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                                 resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                                resultSet.getString("image_path")));
+                                resultSet.getString("description"), resultSet.getString("image_path")), resultSet.getInt("active") != 0);
             }
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -68,7 +68,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
                         resultSet.getInt("floor"), new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                         resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                        resultSet.getString("image_path"))));
+                        resultSet.getString("description"), resultSet.getString("image_path")), resultSet.getInt("active") != 0));
             }
             return apartmentList;
         } catch (SQLException e) {
@@ -80,7 +80,6 @@ public class ApartmentDaoImpl implements ApartmentDao {
     public boolean addApartment(Apartment apartment) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection();
              PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_INSERT_APARTMENT)) {
-            System.out.println(apartment.getApartmentClass());
             ps.setString(1, apartment.getNumber());
             ps.setInt(2, apartment.getFloor());
             ps.setLong(3, apartment.getApartmentClass().getId());

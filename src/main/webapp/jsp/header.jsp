@@ -8,9 +8,9 @@
     <div class="navbar-fixed">
         <nav class="white" role="navigation">
 
-            <div class="nav-wrapper container">
+            <div class="nav-wrapper container ">
                 <a id="logo-container" href="booking?action=forward&page=main"
-                   class="brand-logo"><fmt:message key="header.logo" bundle="${bndl}"/></a>
+                   class="brand-logo amber-text text-lighten-3 text-border"><fmt:message key="header.logo" bundle="${bndl}"/></a>
                 <ul class="right hide-on-med-and-down">
 
                     <li><a href="booking?action=show_apartment_classes">
@@ -82,15 +82,19 @@
 
                 <div class="row">
                     <div class="input-field col s8 m6 offset-m3 offset-s2">
-                        <input id="username" type="text" name="mail" class="validate">
-                        <label for="username"><fmt:message key="login.mail" bundle="${bndl}"/></label>
+                        <input id="login_email" type="email" name="email" class="validate" required maxlength="250"
+                               pattern="((\w)([-.](\w))?)+@((\w)([-.](\w))?)+.[a-zA-Zа-яА-Я]{2,4}"
+                               title="<fmt:message key="user.email" bundle="${bndl}"/>">
+                        <label for="login_email"><fmt:message key="user.email" bundle="${bndl}"/></label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="input-field col s8 m6 offset-m3 offset-s2">
-                        <input id="password" type="password" class="validate" name="password">
-                        <label for="password"><fmt:message key="login.password" bundle="${bndl}"/></label>
+                            <input id="login_password" type="password" name="password" class="validate" required
+                                   minlength="6" maxlength="60" title="<fmt:message key="user.password" bundle="${bndl}"/>">
+                            <label for="login_password"><fmt:message key="user.password" bundle="${bndl}"/></label>
+                        </div>
                     </div>
                 </div>
 
@@ -123,6 +127,7 @@
 <ul id='dropdown-admin' class='dropdown-content'>
     <li><a href="booking?action=show_admin_page">Заказы</a></li>
     <li><a href="booking?action=show_apartment_editor">Номера</a></li>
+    <li><a href="booking?action=show_user_manager">Users</a></li>
 </ul>
 
 <ul id='dropdown-language' class='dropdown-content'>

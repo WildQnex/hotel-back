@@ -4,20 +4,20 @@
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
-<footer class="page-footer teal">
+<footer class="page-footer amber accent-4">
     <div class="container">
         <div class="row">
-            <div class="col s12">
-                <h5 class="white-text center">Company Bio</h5>
-                <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's
-                    our full time job. Any amount would help support and continue development on this project and is
-                    greatly appreciated.</p>
+            <div class="col s12 center">
+                <h5 class="white-text"><fmt:message key="footer.company" bundle="${bndl}"/></h5>
+                <p class="grey-text text-lighten-4 footer-margin"><fmt:message key="footer.company.name" bundle="${bndl}"/></p>
+                <p class="grey-text text-lighten-4 footer-margin"><fmt:message key="footer.text" bundle="${bndl}"/></p>
+                <p class="grey-text text-lighten-4 footer-margin"><fmt:message key="footer.address" bundle="${bndl}"/></p>
             </div>
         </div>
     </div>
     <div class="footer-copyright">
         <div class="container center">
-            All rights reserved. © Vadim Martyniuk, 2017-2018
+            <fmt:message key="footer.copyright" bundle="${bndl}"/>
         </div>
     </div>
 </footer>

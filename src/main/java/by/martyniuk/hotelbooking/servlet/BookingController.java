@@ -1,9 +1,14 @@
 package by.martyniuk.hotelbooking.servlet;
 
 import by.martyniuk.hotelbooking.command.ActionCommand;
+import by.martyniuk.hotelbooking.command.CommandType;
+import by.martyniuk.hotelbooking.constant.PagePath;
 import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.factory.ActionCommandFactory;
 import by.martyniuk.hotelbooking.pool.ConnectionPool;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,9 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 @WebServlet("/booking")
 public class BookingController extends HttpServlet {
+
+    private static final Logger LOGGER = LogManager.getLogger(BookingController.class);
 
     @Override
     public void init() {
@@ -31,7 +39,9 @@ public class BookingController extends HttpServlet {
                 request.getRequestDispatcher(page).forward(request, response);
             }
         } catch (CommandException e) {
-            throw new ServletException(e);
+            LOGGER.log(Level.ERROR, e);
+            request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+            response.sendRedirect(request.getContextPath() + "/booking?action=forward&page=error");
         }
     }
 
@@ -46,7 +56,9 @@ public class BookingController extends HttpServlet {
                 request.getRequestDispatcher(page).forward(request, response);
             }
         } catch (CommandException e) {
-            throw new ServletException(e);
+            LOGGER.log(Level.ERROR, e);
+            request.setAttribute("errorMessage", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+            response.sendRedirect(request.getContextPath() + "/booking?action=forward&page=error");
         }
     }
 

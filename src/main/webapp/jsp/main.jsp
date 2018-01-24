@@ -27,15 +27,15 @@
         <div class="section no-pad-bot">
             <div class="container">
                 <br><br>
-                <h1 class="header center teal-text text-lighten-2">Hotel Europe</h1>
+                <h1 class="header center  amber-text text-lighten-3 text-border"><fmt:message key="main.hotel" bundle="${bndl}"/></h1>
                 <div class="row center">
-                    <h5 class="header col s12 light">Five-star hotel in the center of Minsk</h5>
+                    <h5 class="header col s12 light amber-text text-lighten-3 text-border"><fmt:message key="main.hotel.stars" bundle="${bndl}"/></h5>
                 </div>
                 <br><br>
 
             </div>
         </div>
-        <div class="parallax"><img src="img/backgroundmainroom.jpg" alt="Unsplashed background img 1"></div>
+        <div class="parallax"><img src="img/main-page.jpg" alt="Unsplashed background img 1"></div>
     </div>
 
 
@@ -86,16 +86,15 @@
     </div>
 
 
-    <div class="parallax-container valign-wrapper">
+    <div class="parallax-container valign-wrapper brown-text text-darken-3">
         <div class="section no-pad-bot">
             <div class="container">
                 <div class="row center">
-                    <h5 class="header col s12 light">A modern responsive front-end framework based on Material
-                        Design</h5>
+                    <h5 class="header col s12 amber-text text-lighten-3 text-border"><fmt:message key="main.restaurant" bundle="${bndl}"/></h5>
                 </div>
             </div>
         </div>
-        <div class="parallax"><img src="background2.jpg" alt="Unsplashed background img 2"></div>
+        <div class="parallax"><img src="img/main-restaurant.jpg" alt="Unsplashed background img 2"></div>
     </div>
 
 </main>

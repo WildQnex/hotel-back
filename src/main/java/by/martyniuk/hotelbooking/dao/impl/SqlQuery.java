@@ -3,38 +3,38 @@ package by.martyniuk.hotelbooking.dao.impl;
 class SqlQuery {
 
     static final String SQL_SELECT_ALL_APARTMENTS_CLASSES = "SELECT `id_apartment_class`, `type`, `rooms_amount`," +
-            " `max_capacity`, `cost_per_night`, `cost_per_person`, `image_path` FROM `hotel_booking`.`apartment_class`";
+            " `max_capacity`, `cost_per_night`, `cost_per_person`, `description`, `image_path` FROM `hotel_booking`.`apartment_class`";
 
     static final String SQL_FIND_APARTMENT_CLASS_BY_ID = "SELECT `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
-            " `image_path` FROM `hotel_booking`.`apartment_class` " +
+            " `description`, `image_path` FROM `hotel_booking`.`apartment_class` " +
             " WHERE `id_apartment_class` = ?";
 
     static final String SQL_FIND_APARTMENT_CLASS_BY_TYPE = "SELECT `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
-            " `image_path` FROM `hotel_booking`.`apartment_class` " +
+            " `description`, `image_path` FROM `hotel_booking`.`apartment_class` " +
             " WHERE UPPER(`type`) LIKE UPPER(?)";
     //-----------------
 
-    static final String SQL_SELECT_ALL_APARTMENTS = "SELECT `id_apartment`, `number`, `floor`," +
+    static final String SQL_SELECT_ALL_APARTMENTS = "SELECT `id_apartment`, `number`, `floor`, `active`," +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
-            " `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
+            " `description`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
             " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk`";
 
 
-    static final String SQL_FIND_APARTMENT_BY_ID = "SELECT `id_apartment`, `number`, `floor`, " +
+    static final String SQL_FIND_APARTMENT_BY_ID = "SELECT `id_apartment`, `number`, `floor`, `active`," +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
-            " `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
+            " `description`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
             " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `id_apartment` = ?";
 
-    static final String SQL_FIND_APARTMENT_BY_CLASS_ID = "SELECT `id_apartment`, `number`, `floor`, " +
+    static final String SQL_FIND_APARTMENT_BY_CLASS_ID = "SELECT `id_apartment`, `number`, `floor`, `active`, " +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
-            " `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
+            " `description`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
             " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `apartment_class_id_fk` = ?";
 
-    static final String SQL_INSERT_APARTMENT = "INSERT INTO `hotel_booking`.`apartment` (`number`,`floor`, `apartment_class_id_fk`) VALUES(?,?,?)";
+    static final String SQL_INSERT_APARTMENT = "INSERT INTO `hotel_booking`.`apartment` (`number`,`floor`, `apartment_class_id_fk`, `active`,) VALUES(?,?,?,1)";
 
     static final String SQL_UPDATE_APARTMENT = "UPDATE `hotel_booking`.`apartment` SET `number` = ?, `floor` = ?, `apartment_class_id_fk` = ? WHERE `id_apartment` = ?;";
 
-    static final String SQL_DELETE_APARTMENT = "DELETE FROM `hotel_booking`.`apartment` WHERE `id_apartment` = ?";
+    static final String SQL_DELETE_APARTMENT = "UPDATE `hotel_booking`.`apartment` SET `active` = 0 WHERE `id_apartment` = ?";
 
     //-----------------
 
@@ -52,9 +52,10 @@ class SqlQuery {
 
     static final String SQL_SELECT_ALL_RESERVATIONS = "SELECT `id_reservation`, `check_in_date`, `check_out_date`, `order_time`," +
             " `person_amount`, `id_user`, `first_name`, `middle_name`, `last_name`, `balance`," +
-            " `email`, `phone_number`, `password`, `role`, `active`, `id_apartment`, `number`, `floor`," +
+            " `email`, `phone_number`, `password`, `role`, `user`.`active` AS `user_active`, `apartment`.`active` AS `apartment_active`," +
+            " `id_apartment`, `number`, `floor`," +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `reservation`.`cost_per_night` AS `reservation_cost_per_night`, " +
-            " `image_path`, `id_status`, `status`, `total_cost`, `apartment_class`.`cost_per_night` AS `apartment_cost_per_night`, " +
+            " `description`, `image_path`, `id_status`, `status`, `total_cost`, `apartment_class`.`cost_per_night` AS `apartment_cost_per_night`, " +
             " `apartment_class`.`cost_per_person` AS `apartment_cost_per_person` " +
             "FROM `hotel_booking`.`reservation` " +
             "LEFT JOIN (`user` LEFT JOIN `role` ON `role`.`id_role` = `user`.`role_id_fk`) ON `user`.`id_user` = `reservation`.`user_id_fk` " +
@@ -64,10 +65,10 @@ class SqlQuery {
 
     static final String SQL_SELECT_ALL_RESERVATIONS_BY_STATUS = "SELECT `id_reservation`, `check_in_date`, `check_out_date`, `order_time`," +
             " `person_amount`, `id_user`, `first_name`, `middle_name`, `last_name`, `balance`," +
-            " `email`, `phone_number`, `password`, `role`, `active`, `id_apartment`, `number`, `floor`, " +
+            " `email`, `phone_number`, `password`, `role`,  `user`.`active` AS `user_active`, `apartment`.`active` AS `apartment_active`, `id_apartment`, `number`, `floor`, " +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `reservation`.`cost_per_night` AS `reservation_cost_per_night`, " +
-            " `reservation`.`cost_per_person` AS `reservation_cost_per_person`, `reservation`.`cost_animal` AS `reservation_animal_cost`, " +
-            " `image_path`, `id_status`, `status`, `total_cost`, `apartment_class`.`cost_per_night` AS `apartment_cost_per_night`, " +
+            " `reservation`.`cost_per_person` AS `reservation_cost_per_person`, " +
+            " `description`, `image_path`, `id_status`, `status`, `total_cost`, `apartment_class`.`cost_per_night` AS `apartment_cost_per_night`, " +
             " `apartment_class`.`cost_per_person` AS `apartment_cost_per_person` " +
             "FROM `hotel_booking`.`reservation` " +
             "LEFT JOIN (`user` LEFT JOIN `role` ON `role`.`id_role` = `user`.`role_id_fk`) ON `user`.`id_user` = `reservation`.`user_id_fk` " +
@@ -78,10 +79,10 @@ class SqlQuery {
 
     static final String SQL_SELECT_ALL_RESERVATIONS_BY_USER_ID = "SELECT `id_reservation`, `check_in_date`, `check_out_date`, `order_time`," +
             " `person_amount`, `id_user`, `first_name`, `middle_name`, `last_name`, `balance`," +
-            " `email`, `phone_number`, `password`, `role`, `active`, `id_apartment`, `number`, `floor`," +
+            " `email`, `phone_number`, `password`, `role`,  `user`.`active` AS `user_active`, `apartment`.`active` AS `apartment_active`, `id_apartment`, `number`, `floor`," +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `reservation`.`cost_per_night` AS `reservation_cost_per_night`, " +
             " `reservation`.`cost_per_person` AS `reservation_cost_per_person`, " +
-            " `image_path`, `id_status`, `status`, `total_cost`, `apartment_class`.`cost_per_night` AS `apartment_cost_per_night`, " +
+            " `description`, `image_path`, `id_status`, `status`, `total_cost`, `apartment_class`.`cost_per_night` AS `apartment_cost_per_night`, " +
             " `apartment_class`.`cost_per_person` AS `apartment_cost_per_person` " +
             "FROM `hotel_booking`.`reservation` " +
             "LEFT JOIN (`user` LEFT JOIN `role` ON `role`.`id_role` = `user`.`role_id_fk`) ON `user`.`id_user` = `reservation`.`user_id_fk` " +
@@ -92,10 +93,10 @@ class SqlQuery {
 
     static final String SQL_SELECT_RESERVATION_BY_ID = "SELECT `id_reservation`, `check_in_date`, `check_out_date`, `order_time`," +
             " `person_amount`, `id_user`, `first_name`, `middle_name`, `last_name`, `balance`," +
-            " `email`, `phone_number`, `password`, `role`, `active`, `id_apartment`, `number`, `floor`," +
+            " `email`, `phone_number`, `password`, `role`,  `user`.`active` AS `user_active`, `apartment`.`active` AS `apartment_active`, `id_apartment`, `number`, `floor`," +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `reservation`.`cost_per_night` AS `reservation_cost_per_night`, " +
             " `reservation`.`cost_per_person` AS `reservation_cost_per_person`, " +
-            " `image_path`, `id_status`, `status`, `total_cost`, `apartment_class`.`cost_per_night` AS `apartment_cost_per_night`, " +
+            " `description`, `image_path`, `id_status`, `status`, `total_cost`, `apartment_class`.`cost_per_night` AS `apartment_cost_per_night`, " +
             " `apartment_class`.`cost_per_person` AS `apartment_cost_per_person` " +
             "FROM `hotel_booking`.`reservation` " +
             "LEFT JOIN (`user` LEFT JOIN `role` ON `role`.`id_role` = `user`.`role_id_fk`) ON `user`.`id_user` = `reservation`.`user_id_fk` " +

@@ -14,4 +14,5 @@ public class Apartment implements Serializable, Cloneable {
     private String number;
     private int floor;
     private ApartmentClass apartmentClass;
+    private boolean active;
 }

@@ -30,15 +30,14 @@
                 <div class="col s6 m4">
                     <div class="card">
                         <div class="card-image">
-                            <img src="${apartmentClass.imagePath}">
+                            <img class="class-img-height" src="${apartmentClass.imagePath}">
                             <span class="card-title">${apartmentClass.type}</span>
                         </div>
-                        <div class="card-content">
-                            <p>I am a very simple card. I am good at containing small bits of information.
-                                I am convenient because I require little markup to use effectively.</p>
+                        <div class="card-content class-content-height">
+                            ${apartmentClass.description}
                         </div>
                         <div class="card-action center">
-                            <a href="booking?action=show_apartment_class&id=${apartmentClass.id}">This is a link</a>
+                            <a href="booking?action=show_apartment_class&id=${apartmentClass.id}"><fmt:message key="classes.show" bundle="${bndl}"/></a>
                         </div>
                     </div>
                 </div>

@@ -25,7 +25,7 @@ public class ApartmentClassDaoImpl implements ApartmentClassDao {
                 apartmentClassList.add(new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                         resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                        resultSet.getString("image_path")));
+                        resultSet.getString("description"), resultSet.getString("image_path")));
             }
             return apartmentClassList;
         } catch (SQLException e) {
@@ -43,7 +43,7 @@ public class ApartmentClassDaoImpl implements ApartmentClassDao {
                 return new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                         resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                        resultSet.getString("image_path"));
+                        resultSet.getString("description"), resultSet.getString("image_path"));
             }
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -61,7 +61,7 @@ public class ApartmentClassDaoImpl implements ApartmentClassDao {
                 return new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                         resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                        resultSet.getString("image_path"));
+                        resultSet.getString("description"), resultSet.getString("image_path"));
             }
         } catch (SQLException e) {
             throw new DaoException(e);
