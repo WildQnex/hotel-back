@@ -1,9 +1,7 @@
 package by.martyniuk.hotelbooking.command;
 
 import by.martyniuk.hotelbooking.constant.PagePath;
-import by.martyniuk.hotelbooking.dao.ApartmentClassDao;
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
-import by.martyniuk.hotelbooking.dao.impl.ApartmentClassDaoImpl;
 import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.ApartmentClass;
@@ -13,17 +11,17 @@ import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
-import by.martyniuk.hotelbooking.memento.Memento;
 import by.martyniuk.hotelbooking.service.ApartmentClassService;
 import by.martyniuk.hotelbooking.service.ApartmentService;
 import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
 import by.martyniuk.hotelbooking.service.UserService;
+import by.martyniuk.hotelbooking.util.UserValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,13 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public enum CommandType {
 
     ADD_APARTMENT {
         @Override
-        public ActionCommand receiveCommand(){
+        public ActionCommand receiveCommand() {
             return (request -> {
                 try {
                     String number = request.getParameter("apartmentNumber");
@@ -49,7 +48,7 @@ public enum CommandType {
                     Apartment apartment = new Apartment(0, number, floor, apartmentClass, true);
                     ApartmentService.insertApartment(apartment);
                     request.setAttribute("redirect", true);
-                    return ((Memento) request.getSession().getAttribute("memento")).getState();
+                    return request.getHeader("referer");
                 } catch (ServiceException e) {
                     throw new CommandException(e);
                 }
@@ -62,7 +61,6 @@ public enum CommandType {
             return (request -> {
                 try {
                     HttpSession session = request.getSession();
-                    Memento memento = (Memento) session.getAttribute("memento");
                     long apartmentClassId = Long.parseLong(request.getParameter("apartmentId"));
                     String pattern = "dd MMMMM, yyyy";
                     SimpleDateFormat formatter = new SimpleDateFormat(pattern, new Locale("en"));
@@ -76,7 +74,7 @@ public enum CommandType {
                         session.setAttribute("bookingError", "Apartment already booked");
                     }
                     request.setAttribute("redirect", true);
-                    return memento.getState();
+                    return request.getHeader("referer");
                 } catch (ServiceException | ParseException e) {
                     throw new CommandException(e);
                 }
@@ -91,17 +89,17 @@ public enum CommandType {
                     HttpSession session = request.getSession();
                     String mail = request.getParameter("email");
                     String password = request.getParameter("password");
-                    User user = AuthorizationService.login(mail, password);
-                    if (user != null) {
-                        session.setAttribute("user", user);
+                    Optional<User> user = AuthorizationService.login(mail, password);
+                    if (user.isPresent()) {
+                        session.setAttribute("user", user.get());
                     } else {
-                        session.setAttribute("loginError", "Invalid e-mail or password");
+                        session.setAttribute("login_error", "Invalid e-mail or password");
                     }
                     request.setAttribute("redirect", true);
-                    return ((Memento) session.getAttribute("memento")).getState();
+                    return request.getHeader("referer");
                 } catch (ServiceException e) {
                     throw new CommandException(e);
-            }
+                }
             });
         }
     },
@@ -112,7 +110,7 @@ public enum CommandType {
                 HttpSession session = request.getSession();
                 session.removeAttribute("user");
                 request.setAttribute("redirect", true);
-                return ((Memento) session.getAttribute("memento")).getState();
+                return request.getHeader("referer");
             });
         }
     },
@@ -123,7 +121,7 @@ public enum CommandType {
                 HttpSession session = request.getSession();
                 session.setAttribute("locale", request.getParameter("value"));
                 request.setAttribute("redirect", true);
-                return ((Memento) session.getAttribute("memento")).getState();
+                return request.getHeader("referer");
             });
         }
     },
@@ -132,7 +130,6 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
 
             return (request -> {
-                addToMemento(request);
                 return PagePath.valueOf(request.getParameter("page").toUpperCase()).getPage();
             });
         }
@@ -144,21 +141,39 @@ public enum CommandType {
                 try {
                     HttpSession session = request.getSession();
                     if (!request.getParameter("password").equals(request.getParameter("repeat_password"))) {
-                        request.getSession().setAttribute("registerError", "Passwords do not match");
+                        request.getSession().setAttribute("register_error", "Passwords do not match");
                         return PagePath.REGISTER.getPage();
                     }
-                    Memento memento = (Memento) session.getAttribute("memento");
+                    if (!UserValidator.validatePassword("password")) {
+                        request.getSession().setAttribute("register_error", "Incorrect password");
+                        return PagePath.REGISTER.getPage();
+                    }
+                    if (!UserValidator.validateName(request.getParameter("first_name"))) {
+                        request.getSession().setAttribute("register_error", "Incorrect name");
+                        return PagePath.REGISTER.getPage();
+                    }
+                    if (!UserValidator.validateName(request.getParameter("last_name"))) {
+                        request.getSession().setAttribute("register_error", "Incorrect last name");
+                        return PagePath.REGISTER.getPage();
+                    }
+                    if (!UserValidator.validateEmail(request.getParameter("email"))) {
+                        request.getSession().setAttribute("register_error", "Incorrect E-mail");
+                        return PagePath.REGISTER.getPage();
+                    }
+                    if (!UserValidator.validatePhoneNumber(request.getParameter("phone_number"))) {
+                        request.getSession().setAttribute("register_error", "Incorrect phone number");
+                        return PagePath.REGISTER.getPage();
+                    }
                     if (AuthorizationService.register(request.getParameter("first_name"), request.getParameter("middle_name"),
                             request.getParameter("last_name"), request.getParameter("email"), request.getParameter("phone_number"),
                             request.getParameter("password"))) {
-                        memento.addState(request.getContextPath() + "/booking?action=forward&page=jsp/main.jsp");
-                        session.setAttribute("memento", memento);
+
                         request.setAttribute("redirect", true);
-                        return memento.getState();
+                        return request.getContextPath() + "/booking?action=forward&page=main";
                     } else {
                         request.setAttribute("redirect", true);
-                        request.getSession().setAttribute("registerError", "Account already exists");
-                        return memento.getState();
+                        request.getSession().setAttribute("register_error", "Account already exists");
+                        return request.getHeader("referer");
                     }
                 } catch (ServiceException e) {
                     throw new CommandException(e);
@@ -171,7 +186,6 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
-                    addToMemento(request);
                     long id = Long.parseLong(request.getParameter("id"));
                     request.setAttribute("apartmentClass", ApartmentClassService.findApartmentClassById(id));
 
@@ -187,7 +201,6 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
-                    addToMemento(request);
                     List<Reservation> reservations = ReservationService.readAllReservationByUserId(((User) request.getSession().getAttribute("user")).getId());
 
                     request.setAttribute("reservations", reservations);
@@ -203,19 +216,86 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
+
+                    String firstName = request.getParameter("first_name");
+                    String middleName = request.getParameter("middle_name");
+                    String lastName = request.getParameter("last_name");
+                    String phoneNumber = request.getParameter("phone_number");
+
+                    if (!UserValidator.validateName(firstName)) {
+                        request.getSession().setAttribute("update_profile_error", "Incorrect name");
+
+                        request.setAttribute("redirect", true);
+                        return request.getHeader("referer");
+                    }
+
+                    if (!UserValidator.validateName(middleName)) {
+                        request.getSession().setAttribute("update_profile_error", "Incorrect last name");
+                        request.setAttribute("redirect", true);
+                        return request.getHeader("referer");
+                    }
+
+                    if (!UserValidator.validatePhoneNumber(lastName)) {
+                        request.getSession().setAttribute("update_profile_error", "Incorrect phone number");
+                        request.setAttribute("redirect", true);
+                        return request.getHeader("referer");
+                    }
                     User user = (User) request.getSession().getAttribute("user");
 
-                    user.setFirstName(request.getParameter("firstName"));
-                    user.setMiddleName(request.getParameter("middleName"));
-                    user.setLastName(request.getParameter("lastName"));
-                    user.setPhoneNumber(request.getParameter("phoneNumber"));
+                    user.setFirstName(firstName);
+                    user.setMiddleName(middleName);
+                    user.setLastName(lastName);
+                    user.setPhoneNumber(phoneNumber);
 
                     if (UserService.updateUserProfile(user)) {
                         request.getSession().setAttribute("user", user);
                     }
 
                     request.setAttribute("redirect", true);
-                    return ((Memento) request.getSession().getAttribute("memento")).getState();
+                    return request.getHeader("referer");
+                } catch (ServiceException e) {
+                    throw new CommandException(e);
+                }
+            });
+        }
+    },
+    UPDATE_PASSWORD {
+        @Override
+        public ActionCommand receiveCommand() {
+            return (request -> {
+                try {
+                    String currentPassword = request.getParameter("current_password");
+                    String newPassword = request.getParameter("new_password");
+                    String repeatPassword = request.getParameter("repeat_new_password");
+
+                    User user = (User) request.getSession().getAttribute("user");
+
+                    if (!UserValidator.validatePasswordsEquals(newPassword, repeatPassword)) {
+                        request.getSession().setAttribute("update_profile_error", "Passwords do not match");
+                        request.setAttribute("redirect", true);
+                        return request.getHeader("referer");
+                    }
+
+                    if (!UserValidator.validatePassword(newPassword)) {
+                        request.getSession().setAttribute("update_profile_error", "Incorrect new password");
+                        request.setAttribute("redirect", true);
+                        return request.getHeader("referer");
+                    }
+
+                    if (!BCrypt.checkpw(currentPassword, user.getPassword())) {
+                        request.getSession().setAttribute("update_profile_error", "Incorrect password");
+                        request.setAttribute("redirect", true);
+                        return request.getHeader("referer");
+                    }
+
+                    user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+
+                    if (UserService.updateUserProfile(user)) {
+                        request.getSession().setAttribute("user", user);
+                    }
+
+                    request.setAttribute("redirect", true);
+                    return request.getHeader("referer");
                 } catch (ServiceException e) {
                     throw new CommandException(e);
                 }
@@ -227,7 +307,6 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
-                    addToMemento(request);
 
                     List<Reservation> reservations = ReservationService.readAllReservationByStatus(Status.WAITING_FOR_APPROVE);
                     Map<Reservation, List<Apartment>> freeApartments = ApartmentService.findFreeApartmentsForReservations(reservations);
@@ -247,7 +326,6 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
-                    addToMemento(request);
                     request.setAttribute("apartmentClasses", ApartmentClassService.findAllApartmentClasses());
                     return PagePath.CLASSES.getPage();
                 } catch (ServiceException e) {
@@ -261,7 +339,6 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
-                    addToMemento(request);
                     ApartmentDao dao = new ApartmentDaoImpl();
                     request.setAttribute("apartments", dao.findAllApartments());
                     return PagePath.APARTMENTS.getPage();
@@ -283,7 +360,7 @@ public enum CommandType {
                         LOGGER.log(Level.INFO, "Reservation approved");
                     }
                     request.setAttribute("redirect", true);
-                    return ((Memento) request.getSession().getAttribute("memento")).getState();
+                    return request.getHeader("referer");
                 } catch (ServiceException | IllegalArgumentException e) {
                     throw new CommandException(e);
                 }
@@ -310,10 +387,10 @@ public enum CommandType {
                     }
                     if (result) {
                         request.setAttribute("redirect", true);
-                        return ((Memento) request.getSession().getAttribute("memento")).getState();
+                        return request.getHeader("referer");
                     } else {
                         request.setAttribute("redirect", true);
-                        return ((Memento) request.getSession().getAttribute("memento")).getState();
+                        return request.getHeader("referer");
                     }
                 } catch (ServiceException e) {
                     throw new CommandException(e);
@@ -334,7 +411,6 @@ public enum CommandType {
         public ActionCommand receiveCommand() {
             return (request -> {
                 try {
-                    addToMemento(request);
                     request.setAttribute("users", UserService.findAllUsers());
                     return PagePath.USER_MANAGER.getPage();
                 } catch (ServiceException e) {
@@ -352,12 +428,6 @@ public enum CommandType {
             .collect(Collectors.toList());
 
     public abstract ActionCommand receiveCommand();
-
-    private static void addToMemento(HttpServletRequest request) {
-        Memento memento = (Memento) request.getSession().getAttribute("memento");
-        memento.addState(request.getContextPath() + "/booking?" + request.getQueryString());
-        request.getSession().setAttribute("memento", memento);
-    }
 
     public static boolean ifPresent(String command) {
         return (command != null) && (commands.contains(command.toUpperCase()));

@@ -100,11 +100,11 @@
                 </div>
 
 
-                <c:if test="${not empty loginError}">
+                <c:if test="${not empty login_error}">
                     <div id="login-error" class="row">
-                        <div class="col s8 m6 offset-m3 offset-s2 center red-text">${loginError}</div>
+                        <div class="col s8 m6 offset-m3 offset-s2 center red-text">${login_error}</div>
                     </div>
-                    <c:remove var="loginError" scope="session" />
+                    <c:remove var="login_error" scope="session" />
                 </c:if>
 
                 <div class="row">

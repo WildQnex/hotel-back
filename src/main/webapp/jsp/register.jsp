@@ -25,6 +25,7 @@
 <main>
     <div class="container">
         <div class="row 20"></div>
+
         <div class="row">
             <form class="col s12" name="register" action="booking" method="POST">
                 <input name="action" type="hidden" value="register">
@@ -78,6 +79,13 @@
                 <div class="row red-text">
                     * - <fmt:message key="register.note" bundle="${bndl}"/>
                 </div>
+
+                <c:if test="${not empty register_error}">
+                    <div class="row">
+                        <div class="col s8 m6 offset-m3 offset-s2 center red-text">${register_error}</div>
+                    </div>
+                    <c:remove var="register_error" scope="session" />
+                </c:if>
 
                 <div class="row">
                     <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">

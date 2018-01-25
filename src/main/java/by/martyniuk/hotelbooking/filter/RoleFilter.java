@@ -3,7 +3,6 @@ package by.martyniuk.hotelbooking.filter;
 import by.martyniuk.hotelbooking.command.CommandType;
 import by.martyniuk.hotelbooking.entity.Role;
 import by.martyniuk.hotelbooking.entity.User;
-import by.martyniuk.hotelbooking.memento.Memento;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -26,7 +25,7 @@ public class RoleFilter implements Filter {
             CommandType.SHOW_ADMIN_PAGE, CommandType.SHOW_APARTMENT_EDITOR, CommandType.SHOW_USER_MANAGER);
 
     private Set<CommandType> user = EnumSet.of(CommandType.BOOK_APARTMENT, CommandType.LOGOUT, CommandType.SHOW_PERSONAL_RESERVATIONS,
-            CommandType.UPDATE_PROFILE);
+            CommandType.UPDATE_PROFILE, CommandType.UPDATE_PASSWORD);
 
     private Set<CommandType> guest = EnumSet.of(CommandType.LOGIN, CommandType.REGISTER);
 
@@ -40,8 +39,6 @@ public class RoleFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession();
-
-        Memento memento = (Memento) session.getAttribute("memento");
 
         CommandType commandType;
         if(CommandType.ifPresent(httpServletRequest.getParameter("action"))){

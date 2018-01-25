@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
 
@@ -39,23 +40,24 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public User findUserByMail(String mail) throws DaoException {
+    public Optional<User> findUserByMail(String mail) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection();
              PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_FIND_USER_BY_MAIL)) {
             ps.setString(1, mail);
             ResultSet resultSet = ps.executeQuery();
+            Optional<User> user = Optional.empty();
             if (resultSet.next()) {
-                return new User(resultSet.getLong("id_user"), resultSet.getString("first_name"),
+                user = Optional.of(new User(resultSet.getLong("id_user"), resultSet.getString("first_name"),
                         resultSet.getString("middle_name"), resultSet.getString("last_name"),
                         new BigDecimal(resultSet.getString("balance")), resultSet.getString("email"),
                         resultSet.getString("phone_number"), resultSet.getString("password"),
                         Role.valueOf(resultSet.getString("role").toUpperCase()),
-                        resultSet.getInt("active") != 0);
+                        resultSet.getInt("active") != 0));
             }
+            return user;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return null;
     }
 
     @Override
