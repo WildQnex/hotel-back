@@ -21,7 +21,7 @@
 
 <body>
 
-<jsp:include page="header.jsp"/>
+<jsp:include page="../header.jsp"/>
 
 <main>
     <div id="profile" class="container">
@@ -74,7 +74,7 @@
 </main>
 
 
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../footer.jsp"/>
 
 </body>
 
@@ -97,9 +97,11 @@
 </script>
 
 <script>
-    <c:if test="${not empty loginError}">
-    $('#modal').modal('open');
-    </c:if>
+    $( window ).on( "load", function() {
+        if ( $('#login-error').length == 1){
+            $('#modal').modal('open');
+        }
+    });
 </script>
 
 <script>

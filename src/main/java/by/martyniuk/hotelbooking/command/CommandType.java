@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum CommandType {
 
@@ -346,6 +347,10 @@ public enum CommandType {
 
     private static final Logger LOGGER = LogManager.getLogger(CommandType.class);
 
+    private static List<String> commands = Arrays.stream(CommandType.values())
+            .map(Enum::toString)
+            .collect(Collectors.toList());
+
     public abstract ActionCommand receiveCommand();
 
     private static void addToMemento(HttpServletRequest request) {
@@ -353,4 +358,9 @@ public enum CommandType {
         memento.addState(request.getContextPath() + "/booking?" + request.getQueryString());
         request.getSession().setAttribute("memento", memento);
     }
+
+    public static boolean ifPresent(String command) {
+        return (command != null) && (commands.contains(command.toUpperCase()));
+    }
+
 }

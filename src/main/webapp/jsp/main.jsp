@@ -119,9 +119,11 @@
 </script>
 
 <script>
-    <c:if test="${not empty loginError}">
-    $('#modal').modal('open');
-    </c:if>
+    $( window ).on( "load", function() {
+        if ( $('#login-error').length == 1){
+            $('#modal').modal('open');
+        }
+    });
 </script>
 
 

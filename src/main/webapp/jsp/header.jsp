@@ -10,7 +10,8 @@
 
             <div class="nav-wrapper container ">
                 <a id="logo-container" href="booking?action=forward&page=main"
-                   class="brand-logo amber-text text-lighten-3 text-border"><fmt:message key="header.logo" bundle="${bndl}"/></a>
+                   class="brand-logo amber-text text-lighten-3 text-border"><fmt:message key="header.logo"
+                                                                                         bundle="${bndl}"/></a>
                 <ul class="right hide-on-med-and-down">
 
                     <li><a href="booking?action=show_apartment_classes">
@@ -44,8 +45,9 @@
                             <c:out value="${user.firstName}"/><i class="material-icons right">arrow_drop_down</i>
                         </a></li>
                         <c:if test="${user.role.toString().equalsIgnoreCase('Admin')}">
-                            <li><a class='dropdown-button' href='#' data-beloworigin="true" data-activates='dropdown-admin'>
-                               Admin<i class="material-icons right">arrow_drop_down</i>
+                            <li><a class='dropdown-button' href='#' data-beloworigin="true"
+                                   data-activates='dropdown-admin'>
+                                Admin<i class="material-icons right">arrow_drop_down</i>
                             </a></li>
                         </c:if>
 
@@ -91,17 +93,18 @@
 
                 <div class="row">
                     <div class="input-field col s8 m6 offset-m3 offset-s2">
-                            <input id="login_password" type="password" name="password" class="validate" required
-                                   minlength="6" maxlength="60" title="<fmt:message key="user.password" bundle="${bndl}"/>">
-                            <label for="login_password"><fmt:message key="user.password" bundle="${bndl}"/></label>
-                        </div>
+                        <input id="login_password" type="password" name="password" class="validate" required
+                               minlength="6" maxlength="60" title="<fmt:message key="user.password" bundle="${bndl}"/>">
+                        <label for="login_password"><fmt:message key="user.password" bundle="${bndl}"/></label>
                     </div>
                 </div>
 
+
                 <c:if test="${not empty loginError}">
-                    <div class="row">
+                    <div id="login-error" class="row">
                         <div class="col s8 m6 offset-m3 offset-s2 center red-text">${loginError}</div>
                     </div>
+                    <c:remove var="loginError" scope="session" />
                 </c:if>
 
                 <div class="row">
