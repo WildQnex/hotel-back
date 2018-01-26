@@ -12,7 +12,6 @@
     <title>Hotel Europe</title>
 
     <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/app-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -24,7 +23,14 @@
 <jsp:include page="header.jsp"/>
 
 <main class="red-text">
-    ${errorMessage}
+    <c:if test="${not empty error_message}">
+        <div class="row"></div>
+        <div class="row">
+            <div class="col s8 m6 offset-m3 offset-s2 center red-text">${error_message}</div>
+        </div>
+        <c:remove var="error_message" scope="session"/>
+    </c:if>
+
 </main>
 
 <jsp:include page="footer.jsp"/>
@@ -33,7 +39,7 @@
 
 
 <!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
 

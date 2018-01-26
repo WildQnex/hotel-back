@@ -12,7 +12,6 @@
     <title>Hotel Europe</title>
 
     <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/app-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -76,7 +75,7 @@
                 </div>
             </div>
             <div class="row">
-                <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
+                <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center" type="submit">
                     <fmt:message key="profile.change" bundle="${bndl}"/>
                 </button>
             </div>
@@ -102,7 +101,7 @@
                 </div>
             </div>
             <div class="row">
-                <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
+                <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center" type="submit">
                     <fmt:message key="profile.password.change" bundle="${bndl}"/>
                 </button>
             </div>
@@ -117,7 +116,7 @@
 
 
 <!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
 
@@ -131,6 +130,22 @@
             endingTop: '10%', // Ending top style attribute
         }
     );
+</script>
+
+<script type="text/javascript" language="JavaScript">
+    window.onload = function () {
+        document.getElementById("repeat_new_password").onchange = validatePassword;
+        document.getElementById("new_password").onchange = validatePassword;
+    }
+    function validatePassword() {
+        var pass2 = document.getElementById("repeat_new_password").value;
+        var pass1 = document.getElementById("new_password").value;
+        if (pass1 === pass2)
+            document.getElementById("repeat_new_password").setCustomValidity('');
+        else
+            document.getElementById("repeat_new_password").setCustomValidity("<fmt:message key="password.confirmation" bundle="${bndl}"/>");
+
+    }
 </script>
 
 <script>

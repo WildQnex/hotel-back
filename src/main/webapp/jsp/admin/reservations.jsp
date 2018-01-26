@@ -12,7 +12,6 @@
     <title>Hotel Europe</title>
 
     <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/app-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -25,36 +24,45 @@
 
 <main>
     <div class="container">
+        <c:if test="${not empty approve_reservation_error}">
+            <div class="row"></div>
+            <div class="row">
+                <div class="col s8 m6 offset-m3 offset-s2 center red-text">${approve_reservation_error}</div>
+            </div>
+            <c:remove var="approve_reservation_error" scope="session"/>
+        </c:if>
         <ul class="collapsible popout" data-collapsible="accordion">
             <c:forEach items="${reservations}" var="reservation">
                 <li>
                     <div class="collapsible-header"><i class="material-icons">blur_on</i>Order № ${reservation.id}</div>
                     <div class="collapsible-body">
-                        <div class="row">Reservation period:  ${reservation.checkInDate} - ${reservation.checkOutDate}</div>
-                        <div class="row">Order made on  ${reservation.orderTime.toLocalDate()}  in  ${reservation.orderTime.toLocalTime()}</div>
-                        <div class="row">Total cost:  ${reservation.totalCost}</div>
-                        <div class="row">Order status:  ${reservation.status}</div>
+                        <div class="row">Reservation period: ${reservation.checkInDate}
+                            - ${reservation.checkOutDate}</div>
+                        <div class="row">Order made on ${reservation.orderTime.toLocalDate()}
+                            in ${reservation.orderTime.toLocalTime()}</div>
+                        <div class="row">Total cost: ${reservation.totalCost}</div>
+                        <div class="row">Order status: ${reservation.status}</div>
                         <div class="divider"></div>
                         <div class="row"></div>
                         <input name="action" type="hidden" value="approve_reservation">
                         <div class="row">
                             <div class="input-field col s6 m4 offset-m4 offset-s3">
-                                <select id="apartmentId">
+                                <select id="apartment_id">
                                     <option value="" disabled>Choose apartmet</option>
-                                    <option selected name="apartmentId"
+                                    <option selected name="apartment_id"
                                             value="${reservation.apartment.id}">${reservation.apartment.number}</option>
                                     <c:forEach items="${freeApartments.get(reservation)}" var="apartment">
                                         <option value="${apartment.id}">${apartment.number}</option>
                                     </c:forEach>
                                 </select>
-                                <label>Apartmet Number</label>
+                                <label>Apartment Number</label>
                             </div>
 
                         </div>
                         <div class="row">
                             <div class="col s6 m3 offset-m2">
                                 <a id="approve" onclick="setId()"
-                                   href="booking?action=approve_reservation&reservationId=${reservation.id}&status=approved">
+                                   href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=approved">
                                     <button class="btn waves-effect waves-light center">
                                         Approve
                                     </button>
@@ -62,7 +70,7 @@
                             </div>
                             <div class="col s6 m3 offset-m2">
                                 <a id="decline" onclick="setId()"
-                                   href="booking?action=approve_reservation&reservationId=${reservation.id}&status=declined">
+                                   href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=declined">
                                     <button class="btn waves-effect waves-light center">
                                         Decline
                                     </button>
@@ -83,7 +91,7 @@
 
 
 <!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
 
@@ -100,8 +108,8 @@
 </script>
 
 <script>
-    $( window ).on( "load", function() {
-        if ( $('#login-error').length == 1){
+    $(window).on("load", function () {
+        if ($('#login-error').length == 1) {
             $('#modal').modal('open');
         }
     });
@@ -115,8 +123,8 @@
 
 <script>
     function setId() {
-        document.getElementById("approve").href += "&apartmentId=" + document.getElementById("apartmentId").value;
-        document.getElementById("decline").href += "&apartmentId=" + document.getElementById("apartmentId").value;
+        document.getElementById("approve").href += "&apartment_id=" + document.getElementById("apartmentId").value;
+        document.getElementById("decline").href += "&apartment_id=" + document.getElementById("apartmentId").value;
     }
 </script>
 

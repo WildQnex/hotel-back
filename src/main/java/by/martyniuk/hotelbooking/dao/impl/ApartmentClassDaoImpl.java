@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ApartmentClassDaoImpl implements ApartmentClassDao {
 
@@ -34,38 +35,40 @@ public class ApartmentClassDaoImpl implements ApartmentClassDao {
     }
 
     @Override
-    public ApartmentClass findApartmentClassById(long id) throws DaoException {
+    public Optional<ApartmentClass> findApartmentClassById(long id) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_FIND_APARTMENT_CLASS_BY_ID);
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
+            Optional<ApartmentClass> apartmentClassOptional = Optional.empty();
             if (resultSet.next()) {
-                return new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
+                apartmentClassOptional = Optional.of(new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                         resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                        resultSet.getString("description"), resultSet.getString("image_path"));
+                        resultSet.getString("description"), resultSet.getString("image_path")));
             }
+            return apartmentClassOptional;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return null;
     }
 
     @Override
-    public ApartmentClass findApartmentClassByType(String type) throws DaoException {
+    public Optional<ApartmentClass> findApartmentClassByType(String type) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_FIND_APARTMENT_CLASS_BY_TYPE);
             ps.setString(1, type);
             ResultSet resultSet = ps.executeQuery();
+            Optional<ApartmentClass> apartmentClassOptional = Optional.empty();
             if (resultSet.next()) {
-                return new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
+                apartmentClassOptional = Optional.of(new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                         resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                         resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                        resultSet.getString("description"), resultSet.getString("image_path"));
+                        resultSet.getString("description"), resultSet.getString("image_path")));
             }
+            return apartmentClassOptional;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return null;
     }
 }

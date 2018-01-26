@@ -12,7 +12,6 @@
     <title>Hotel Europe</title>
 
     <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/app-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -24,31 +23,62 @@
 <jsp:include page="../header.jsp"/>
 
 <main>
-    ${bookingError}
+
+
     <div class="container">
-        <form class="col s12" name="book" action="booking" method="POST">
-            <input type="hidden" name="action" value="book_apartment">
-            <input type="hidden" name="apartmentId" value="${apartmentClass.id}">
-            <div class="row">
-                <div class="input-field col s4 m3">
-                    <label for="check-in-date">Check In date</label>
-                    <input name="checkInDate" id="check-in-date" type="text" class="datepicker">
-                </div>
-                <div class="input-field col s4 m3">
-                    <label for="check-out-date">Check Out date</label>
-                    <input name="checkOutDate" id="check-out-date" type="text" class="datepicker">
-                </div>
-                <div class="input-field col s4 m3">
-                    <label for="personsAmount">Persons amount</label>
-                    <input name="personsAmount" id="personsAmount" type="text">
-                </div>
+        <div class="row"></div>
+        <div class="row">
+            <div class="container col s4">
+                <h5 class="row center">${apartmentClass.type}</h5>
+                <div class="row"></div>
+                <div class="row">${apartmentClass.description}</div>
+                <div class="row"><strong><fmt:message key="apartment.cost.per.person" bundle="${bndl}"/>:</strong> ${apartmentClass.costPerPerson} $</div>
+                <div class="row"><strong><fmt:message key="apartment.cost.per.night" bundle="${bndl}"/>:</strong> ${apartmentClass.costPerNight} $</div>
+                <div class="row"><strong><fmt:message key="apartment.rooms.amount" bundle="${bndl}"/>:</strong> ${apartmentClass.roomsAmount}</div>
+                <div class="row"><strong><fmt:message key="apartment.max.capacity" bundle="${bndl}"/>:</strong> ${apartmentClass.maxCapacity} <fmt:message key="reservation.person" bundle="${bndl}"/></div>
             </div>
+            <img class="materialboxed col s8" src="${apartmentClass.imagePath}">
+        </div>
+        <div class="divider"></div>
+        <c:if test="${not empty booking_error}">
+            <div class="row"></div>
             <div class="row">
-                <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
-                    Book
-                </button>
+                <div class="col s8 m6 offset-m3 offset-s2 center red-text">${booking_error}</div>
             </div>
-        </form>
+            <c:remove var="booking_error" scope="session"/>
+        </c:if>
+        <c:choose>
+            <c:when test="${not empty user}">
+                <div class="row"></div>
+                <form class="col s12" name="book" action="booking" method="POST">
+                    <input type="hidden" name="action" value="book_apartment">
+                    <input type="hidden" name="apartment_id" value="${apartmentClass.id}">
+                    <div class="row">
+                        <div class="input-field col s4 m4">
+                            <label for="check_in_date"><fmt:message key="reservation.check.in.date" bundle="${bndl}"/>:</strong></label>
+                            <input name="check_in_date" id="check_in_date" type="text" class="datepicker">
+                        </div>
+                        <div class="input-field col s4 m4">
+                            <label for="check_out_date"><fmt:message key="reservation.check.out.date" bundle="${bndl}"/>:</strong></label>
+                            <input name="check_out_date" id="check_out_date" type="text" class="datepicker">
+                        </div>
+                        <div class="input-field col s4 m4">
+                            <label for="person_amount"><fmt:message key="reservation.person.amount" bundle="${bndl}"/>:</strong></label>
+                            <input name="person_amount" id="person_amount" type="text">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center" type="submit">
+                            <fmt:message key="reservation.book" bundle="${bndl}"/>
+                        </button>
+                    </div>
+                </form>
+            </c:when>
+            <c:otherwise>
+                <div class="row"></div>
+                <div class="row center"><fmt:message key="reservation.authorization" bundle="${bndl}"/></div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </main>
 
@@ -59,9 +89,11 @@
 
 
 <!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
+
+
 
 <script>
     $('.modal').modal({
@@ -76,8 +108,8 @@
 </script>
 
 <script>
-    $( window ).on( "load", function() {
-        if ( $('#login-error').length == 1){
+    $(window).on("load", function () {
+        if ($('#login-error').length == 1) {
             $('#modal').modal('open');
         }
     });

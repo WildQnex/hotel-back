@@ -5,7 +5,7 @@ import org.testng.annotations.BeforeMethod;
 
 import static org.testng.Assert.*;
 
-public class UserServiceTest {
+public class ReservationServiceImplTest {
 
     @BeforeMethod
     public void setUp() throws Exception {

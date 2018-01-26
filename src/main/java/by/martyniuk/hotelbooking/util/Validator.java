@@ -1,14 +1,37 @@
 package by.martyniuk.hotelbooking.util;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UserValidator {
+public class Validator {
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Zа-яА-Я]{3,45}");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("((\\w)([-.](\\w))?)+@((\\w)([-.](\\w))?)+.[a-zA-Zа-яА-Я]{2,4}");
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("((\\+)?\\d+?-?\\d+-?\\d+)|((\\+\\d+)?(\\(\\d{3}\\))\\d{7})|" +
             "((\\+\\d+)?(\\(\\d{3}\\))(\\(\\d{3}\\))?-?\\d)|((\\+-?(\\d){3,18}))");
+    private static final Pattern PERSON_AMOUNT_PATTERN = Pattern.compile("\\d");
+    private static final Pattern ID_PATTERN = Pattern.compile("\\d{1,20}");
 
+    public static boolean validateId(String id){
+        if(id == null){
+            return false;
+        }
+        Matcher matcher = ID_PATTERN.matcher(id);
+        return matcher.matches();
+    }
+
+    public static boolean validateDateRange(LocalDate checkInDate, LocalDate checkOutDate){
+        return checkInDate.isBefore(checkOutDate) && checkInDate.isAfter(LocalDateTime.now().toLocalDate());
+    }
+
+    public static boolean validatePersonAmount(String personAmount) {
+        if(personAmount == null){
+            return false;
+        }
+        Matcher matcher = PERSON_AMOUNT_PATTERN.matcher(personAmount);
+        return matcher.matches();
+    }
 
     public static boolean validateName(String name) {
         if(name == null){

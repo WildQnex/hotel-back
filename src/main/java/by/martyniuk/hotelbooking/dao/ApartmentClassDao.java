@@ -4,12 +4,13 @@ import by.martyniuk.hotelbooking.entity.ApartmentClass;
 import by.martyniuk.hotelbooking.exception.DaoException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApartmentClassDao {
 
     List<ApartmentClass> findAllApartmentClasses() throws DaoException;
 
-    ApartmentClass findApartmentClassById(long id) throws DaoException;
+    Optional<ApartmentClass> findApartmentClassById(long id) throws DaoException;
 
-    ApartmentClass findApartmentClassByType(String type) throws DaoException;
+    Optional<ApartmentClass> findApartmentClassByType(String type) throws DaoException;
 }

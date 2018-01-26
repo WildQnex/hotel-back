@@ -12,7 +12,6 @@
     <title>Hotel Europe</title>
 
     <!-- CSS  -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/app-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -25,6 +24,13 @@
 
 <main>
     <div class="container">
+        <c:if test="${not empty apartment_classes_error}">
+            <div class="row"></div>
+            <div class="row">
+                <div class="col s8 m6 offset-m3 offset-s2 center red-text">${apartment_classes_error}</div>
+            </div>
+            <c:remove var="apartment_classes_error" scope="session"/>
+        </c:if>
         <div class="row">
             <c:forEach items="${apartmentClasses}" var="apartmentClass">
                 <div class="col s6 m4">
@@ -52,7 +58,7 @@
 
 
 <!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
 
