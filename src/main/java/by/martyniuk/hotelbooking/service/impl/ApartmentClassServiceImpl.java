@@ -12,16 +12,6 @@ import java.util.Optional;
 
 public class ApartmentClassServiceImpl implements ApartmentClassService {
 
-    @Override
-    public Optional<ApartmentClass> findApartmentClassByType(String type) throws ServiceException {
-        try {
-            ApartmentClassDao dao = new ApartmentClassDaoImpl();
-
-            return dao.findApartmentClassByType(type);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
 
     @Override
     public Optional<ApartmentClass> findApartmentClassById(long id) throws ServiceException {

@@ -20,7 +20,6 @@
 
 <body>
 
-<jsp:include page="header.jsp"/>
 
 <main class="red-text">
     <c:if test="${not empty error_message}">
@@ -30,10 +29,12 @@
         </div>
         <c:remove var="error_message" scope="session"/>
     </c:if>
+    <a id="logo-container" href="booking?action=forward&page=main" class="brand-logo amber-text text-lighten-3 text-border">
+        <fmt:message key="header.logo" bundle="${bndl}"/>
+    </a>
 
 </main>
 
-<jsp:include page="footer.jsp"/>
 
 </body>
 
@@ -56,8 +57,8 @@
 </script>
 
 <script>
-    $( window ).on( "load", function() {
-        if ( $('#login-error').length == 1){
+    $(window).on("load", function () {
+        if ($('#login-error').length == 1) {
             $('#modal').modal('open');
         }
     });

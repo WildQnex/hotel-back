@@ -9,28 +9,28 @@ class SqlQuery {
             " `description`, `image_path` FROM `hotel_booking`.`apartment_class` " +
             " WHERE `id_apartment_class` = ?";
 
-    static final String SQL_FIND_APARTMENT_CLASS_BY_TYPE = "SELECT `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
-            " `description`, `image_path` FROM `hotel_booking`.`apartment_class` " +
-            " WHERE UPPER(`type`) LIKE UPPER(?)";
     //-----------------
 
     static final String SQL_SELECT_ALL_APARTMENTS = "SELECT `id_apartment`, `number`, `floor`, `active`," +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
             " `description`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
-            " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk`";
+            " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk`" +
+            " WHERE `active` = 1";
 
 
     static final String SQL_FIND_APARTMENT_BY_ID = "SELECT `id_apartment`, `number`, `floor`, `active`," +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
             " `description`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
-            " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `id_apartment` = ?";
+            " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `id_apartment` = ?" +
+            " AND `active` = 1";
 
     static final String SQL_FIND_APARTMENT_BY_CLASS_ID = "SELECT `id_apartment`, `number`, `floor`, `active`, " +
             " `id_apartment_class`, `type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`," +
             " `description`, `image_path` FROM `hotel_booking`.`apartment` LEFT JOIN `apartment_class` " +
-            " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `apartment_class_id_fk` = ?";
+            " ON `apartment_class`.`id_apartment_class` = `apartment`.`apartment_class_id_fk` WHERE `apartment_class_id_fk` = ?" +
+            " AND `active` = 1";
 
-    static final String SQL_INSERT_APARTMENT = "INSERT INTO `hotel_booking`.`apartment` (`number`,`floor`, `apartment_class_id_fk`, `active`,) VALUES(?,?,?,1)";
+    static final String SQL_INSERT_APARTMENT = "INSERT INTO `hotel_booking`.`apartment` (`number`,`floor`, `apartment_class_id_fk`, `active`) VALUES (?,?,?,1)";
 
     static final String SQL_UPDATE_APARTMENT = "UPDATE `hotel_booking`.`apartment` SET `number` = ?, `floor` = ?, `apartment_class_id_fk` = ? WHERE `id_apartment` = ?;";
 
@@ -105,9 +105,8 @@ class SqlQuery {
             "LEFT JOIN `status` ON `status`.`id_status` = `reservation`.`status_id_fk`" +
             "WHERE `id_reservation` = ?";
 
-    static final String SQL_UPDATE_RESERVATION = "UPDATE `hotel_booking`.`reservation` SET `check_in_date` = ?, `check_out_date` = ?," +
-            " `order_time` = ?, `person_amount` = ?, `cost_per_person` = ?, `cost_per_night` = ?, `total_cost` = ?," +
-            " `user_id_fk` = ?, `apartment_id_fk` = ?, `status_id_fk` = (SELECT `id_status` FROM `status` WHERE UPPER(`status`) LIKE UPPER(?)) " +
+    static final String SQL_UPDATE_RESERVATION_STATUS = "UPDATE `hotel_booking`.`reservation` SET `apartment_id_fk` = ?, " +
+            " `status_id_fk` = (SELECT `id_status` FROM `status` WHERE UPPER(`status`) LIKE UPPER(?)) " +
             " WHERE `id_reservation` = ?";
 
     //---------------
@@ -115,16 +114,21 @@ class SqlQuery {
 
     static final String SQL_SELECT_ALL_USERS = "SELECT `id_user`, `first_name`, `middle_name`, `last_name`, `balance`, `email`, " +
             "`phone_number`, `password`, `role`, `active` FROM `hotel_booking`.`user` LEFT JOIN `role` " +
-            "ON `role`.`id_role` = `user`.`role_id_fk`";
+            "ON `role`.`id_role` = `user`.`role_id_fk`  WHERE `active` = 1";
 
     static final String SQL_FIND_USER_BY_MAIL = "SELECT `id_user`, `first_name`, `middle_name`, `last_name`, `balance`, `email`, " +
             "`phone_number`, `password`, `role`, `active` FROM `hotel_booking`.`user` LEFT JOIN `role` " +
-            "ON `role`.`id_role` = `user`.`role_id_fk` WHERE `user`.`email`	= ?";
+            "ON `role`.`id_role` = `user`.`role_id_fk` WHERE `user`.`email`	= ?  AND `active` = 1";
 
     static final String SQL_INSERT_USER = "INSERT INTO `hotel_booking`.`user` (`first_name`, `middle_name`, `last_name`, " +
             "`balance`, `email`, `phone_number`, `password`, `role_id_fk`, `active`)  VALUES (?,?,?,?,?,?,?,(SELECT `id_role` FROM `role` WHERE UPPER(`role`) LIKE UPPER(?)),?)";
 
     static final String SQL_UPDATE_USER = "UPDATE `hotel_booking`.`user` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, " +
-            "`balance` = ?, `email` = ?, `phone_number` = ?, `password` = ?, `active` = ?, " +
+            "`email` = ?, `phone_number` = ?, `password` = ?, `active` = ?, " +
             "`role_id_fk` = (SELECT `id_role` FROM `role` WHERE UPPER(`role`) LIKE UPPER(?)) WHERE `id_user` = ?";
+
+    static final String SQL_DEPOSIT_MONEY = "UPDATE `hotel_booking`.`user` SET `balance` = (`balance` + ?) WHERE `id_user` = ?";
+
+    static final String SQL_WITHDRAW_USER_MONEY = "UPDATE `hotel_booking`.`user` SET `balance` = (`balance` - ?) " +
+            "WHERE `id_user` = ? AND `balance` >= ?";
 }

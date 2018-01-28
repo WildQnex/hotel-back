@@ -31,7 +31,7 @@ public class ConnectionPool {
     private BlockingDeque<ProxyConnection> busyConnectionQueue;
 
     public static int poolSize = 10;
-    public static String JDBC_URL = "jdbc:mysql://localhost:3306/hotel_booking?useUnicode=true&serverTimezone=GMT";
+    public static String JDBC_URL = "jdbc:mysql://localhost:3306/hotel_booking?useUnicode=true&useSSL=false&serverTimezone=GMT";
 
 
     private ConnectionPool(final int poolSize) throws ConnectionPoolException {

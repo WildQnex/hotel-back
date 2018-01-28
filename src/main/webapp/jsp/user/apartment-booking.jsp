@@ -55,16 +55,16 @@
                     <input type="hidden" name="apartment_id" value="${apartmentClass.id}">
                     <div class="row">
                         <div class="input-field col s4 m4">
-                            <label for="check_in_date"><fmt:message key="reservation.check.in.date" bundle="${bndl}"/>:</strong></label>
-                            <input name="check_in_date" id="check_in_date" type="text" class="datepicker">
+                            <label for="check_in_date"><fmt:message key="reservation.check.in.date" bundle="${bndl}"/>:</label>
+                            <input name="check_in_date" id="check_in_date" type="text" class="datepicker" required>
                         </div>
                         <div class="input-field col s4 m4">
-                            <label for="check_out_date"><fmt:message key="reservation.check.out.date" bundle="${bndl}"/>:</strong></label>
-                            <input name="check_out_date" id="check_out_date" type="text" class="datepicker">
+                            <label for="check_out_date"><fmt:message key="reservation.check.out.date" bundle="${bndl}"/>:</label>
+                            <input name="check_out_date" id="check_out_date" type="text" class="datepicker" required>
                         </div>
                         <div class="input-field col s4 m4">
-                            <label for="person_amount"><fmt:message key="reservation.person.amount" bundle="${bndl}"/>:</strong></label>
-                            <input name="person_amount" id="person_amount" type="text">
+                            <label for="person_amount"><fmt:message key="reservation.person.amount" bundle="${bndl}"/>:</label>
+                            <input name="person_amount" id="person_amount" type="text" pattern="[1-9]" class="validate" required maxlength="1">
                         </div>
                     </div>
                     <div class="row">
@@ -124,6 +124,42 @@
         close: 'Ok',
         closeOnSelect: false // Close upon selecting a date,
     });
+
+    function checkInDate() {
+        if ($('#check_in_date').val() == '') {
+            $('#check_in_date').addClass('invalid')
+            return false;
+        } else {
+            $('#check_in_date').removeClass('invalid')
+            return true;
+        }
+    }
+
+    function checkOutDate() {
+        if ($('#check_out_date').val() == '') {
+            $('#check_out_date').addClass('invalid')
+            return false;
+        } else {
+            $('#check_out_date').removeClass('invalid')
+            return true;
+        }
+    }
+
+    $('form').submit(function() {
+        return checkInDate() && checkOutDate();
+    });
+
+    $('#check_in_date').change(function() {
+        checkInDate();
+
+    });
+
+    $('#check_out_date').change(function() {
+        checkOutDate();
+    });
+
+
+
 </script>
 
 </html>

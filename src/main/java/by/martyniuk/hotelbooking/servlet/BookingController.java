@@ -25,7 +25,6 @@ public class BookingController extends HttpServlet {
 
     @Override
     public void init() {
-
     }
 
     @Override
@@ -40,7 +39,7 @@ public class BookingController extends HttpServlet {
             }
         } catch (CommandException e) {
             LOGGER.log(Level.ERROR, e);
-            request.getSession().setAttribute("error_message", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+            request.getSession().setAttribute("error_message", e.getMessage());
             response.sendRedirect(request.getContextPath() + "/booking?action=forward&page=error");
         }
     }
@@ -57,7 +56,7 @@ public class BookingController extends HttpServlet {
             }
         } catch (CommandException e) {
             LOGGER.log(Level.ERROR, e);
-            request.getSession().setAttribute("error_message", e.getMessage() + '\n' + Arrays.toString(e.getStackTrace()));
+            request.getSession().setAttribute("error_message", e.getMessage());
             response.sendRedirect(request.getContextPath() + "/booking?action=forward&page=error");
         }
     }

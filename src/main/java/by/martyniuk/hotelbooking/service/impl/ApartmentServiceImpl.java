@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ApartmentServiceImpl implements ApartmentService {
@@ -53,7 +54,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public Apartment getApartment(long id) throws ServiceException {
+    public Optional<Apartment> getApartment(long id) throws ServiceException {
         try {
             ApartmentDao dao = new ApartmentDaoImpl();
             return dao.findApartmentById(id);
@@ -86,6 +87,16 @@ public class ApartmentServiceImpl implements ApartmentService {
             }
             return freeApartments;
         } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Apartment> findAllApartments() throws ServiceException {
+        try {
+            ApartmentDao apartmentDao = new ApartmentDaoImpl();
+            return apartmentDao.findAllApartments();
+        } catch (DaoException e){
             throw new ServiceException(e);
         }
     }

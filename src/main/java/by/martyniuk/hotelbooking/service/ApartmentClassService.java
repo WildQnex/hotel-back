@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface ApartmentClassService {
 
-    Optional<ApartmentClass> findApartmentClassByType(String type) throws ServiceException;
-
     Optional<ApartmentClass> findApartmentClassById(long id) throws ServiceException;
 
     List<ApartmentClass> findAllApartmentClasses() throws ServiceException;

@@ -80,20 +80,30 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean updateUser(User user) throws DaoException {
+    public boolean updateUserData(User user) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection();
              PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_UPDATE_USER)) {
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getMiddleName());
             ps.setString(3, user.getLastName());
-            ps.setBigDecimal(4, user.getBalance());
-            ps.setString(5, user.getEmail());
-            ps.setString(6, user.getPhoneNumber());
-            ps.setString(7, user.getPassword());
-            ps.setInt(8, (user.isActive()) ? 1 : 0);
-            ps.setString(9, user.getRole().toString());
-            ps.setLong(10, user.getId());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getPhoneNumber());
+            ps.setString(6, user.getPassword());
+            ps.setInt(7, (user.isActive()) ? 1 : 0);
+            ps.setString(8, user.getRole().toString());
+            ps.setLong(9, user.getId());
             return (ps.executeUpdate() != 0);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    public boolean depositeMoney(long userId, BigDecimal money) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection();
+             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_DEPOSIT_MONEY)) {
+            ps.setBigDecimal(1, money);
+            ps.setLong(2, userId);
+            return ps.executeUpdate() != 0;
         } catch (SQLException e) {
             throw new DaoException(e);
         }

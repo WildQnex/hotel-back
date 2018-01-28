@@ -6,6 +6,7 @@ import by.martyniuk.hotelbooking.exception.ServiceException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ApartmentService {
     boolean insertApartment(Apartment apartment) throws ServiceException;
@@ -14,7 +15,9 @@ public interface ApartmentService {
 
     boolean deleteApartment(long apartmentId) throws ServiceException;
 
-    Apartment getApartment(long id) throws ServiceException;
+    Optional<Apartment> getApartment(long id) throws ServiceException;
 
     Map<Reservation, List<Apartment>> findFreeApartmentsForReservations(List<Reservation> reservations) throws ServiceException;
+
+    List<Apartment> findAllApartments() throws ServiceException;
 }

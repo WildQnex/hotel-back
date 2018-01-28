@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ApartmentDaoImpl implements ApartmentDao {
 
@@ -37,23 +38,24 @@ public class ApartmentDaoImpl implements ApartmentDao {
 
 
     @Override
-    public Apartment findApartmentById(long id) throws DaoException {
+    public Optional<Apartment> findApartmentById(long id) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_FIND_APARTMENT_BY_ID);
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
+            Optional<Apartment> apartmentOptional = Optional.empty();
             if (resultSet.next()) {
-                return new Apartment(resultSet.getLong("id_apartment"), resultSet.getString("number"),
+                apartmentOptional = Optional.of(new Apartment(resultSet.getLong("id_apartment"), resultSet.getString("number"),
                         resultSet.getInt("floor"),
                         new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
                                 resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
                                 resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                                resultSet.getString("description"), resultSet.getString("image_path")), resultSet.getInt("active") != 0);
+                                resultSet.getString("description"), resultSet.getString("image_path")), resultSet.getInt("active") != 0));
             }
+            return apartmentOptional;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return null;
     }
 
     @Override

@@ -15,7 +15,5 @@ public interface ReservationService {
 
     List<Reservation> readAllReservationByStatus(Status status) throws ServiceException;
 
-    boolean updateReservation(Reservation reservation) throws ServiceException;
-
-    boolean approveReservation(long reservationId, long apartmentId, Status status) throws ServiceException;
+    boolean updateReservationStatus(long reservationId, long apartmentId, Status status) throws ServiceException;
 }

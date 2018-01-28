@@ -11,6 +11,4 @@ public interface ApartmentClassDao {
     List<ApartmentClass> findAllApartmentClasses() throws DaoException;
 
     Optional<ApartmentClass> findApartmentClassById(long id) throws DaoException;
-
-    Optional<ApartmentClass> findApartmentClassByType(String type) throws DaoException;
 }

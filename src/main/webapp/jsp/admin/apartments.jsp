@@ -20,7 +20,7 @@
 
 <body>
 
-<jsp:include page="header.jsp"/>
+<jsp:include page="../header.jsp"/>
 
 <main>
     <div class="container">
@@ -28,36 +28,44 @@
             <c:forEach items="${apartments}" var="apartment">
             <li>
                 <div class="collapsible-header">
-                    <i class="material-icons">blur_on</i>Apartment № ${apartment.number} Class
+                    <i class="material-icons">blur_on</i>№ ${apartment.number} Class
                     : ${apartment.apartmentClass.type}
                 </div>
 
-                    <div class="collapsible-body">
-                        <form class="col s12" name="book" action="booking" method="POST">
-                            <input name="action" value="edit_apartment" type="hidden"/>
-                            <input name="type" value="update" type="hidden"/>
-                            <input name="apartmentId" value="${apartment.id}" type="hidden">
-                            <div class="row">
-                                <div class="input-field col s6">
-                                    <input id="number" name="number" type="text" class="validate" value="${apartment.number}">
-                                    <label for="number">Apartment Number</label>
-                                </div>
-                                <div class="input-field col s6">
-                                    <input id="floor" name="floor" type="text" class="validate" value="${apartment.floor}">
-                                    <label for="floor">Floor</label>
-                                </div>
+                <div class="collapsible-body">
+                    <form class="col s12" name="book" action="booking" method="POST">
+                        <input name="action" value="edit_apartment" type="hidden"/>
+                        <input name="type" value="update" type="hidden"/>
+                        <input name="apartmentId" value="${apartment.id}" type="hidden">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="number" name="number" type="text" class="validate"
+                                       value="${apartment.number}">
+                                <label for="number">Apartment Number</label>
                             </div>
-                            <div class="row">
-                                <div class="input-field col s6">
-                                    <input id="class" name="class" type="text" class="validate" value="${apartment.apartmentClass.type}">
-                                    <label for="class">Class</label>
-                                </div>
+                            <div class="input-field col s6">
+                                <input id="floor" name="floor" type="text" class="validate" value="${apartment.floor}">
+                                <label for="floor">Floor</label>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6 m4 offset-m4 offset-s3">
+                                <select id="class" name="class">
+                                    <option value="" disabled>Choose apartment class</option>
+                                    <option selected name="class"
+                                            value="${apartment.apartmentClass.id}">${apartment.apartmentClass.type}</option>
+                                    <c:forEach items="${apartmentClasses}" var="apartmentClass">
+                                        <option value="${apartmentClass.id}">${apartmentClass.type}</option>
+                                    </c:forEach>
+                                </select>
+                                <label>Apartment Class</label>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col s6 m3 offset-m2">
-                                    <button class="btn waves-effect waves-light" type="submit">
-                                        Edit
-                                    </button>
+                                <button class="btn waves-effect waves-light" type="submit">
+                                    Edit
+                                </button>
                             </div>
                             <div class="col s6 m3 offset-m2">
                                 <a href="booking?action=edit_apartment&apartmentId=${apartment.id}&type=delete">
@@ -67,8 +75,8 @@
                                 </a>
                             </div>
                         </div>
-                        </form>
-                    </div>
+                    </form>
+                </div>
 
             </li>
             </c:forEach>
@@ -84,7 +92,7 @@
     </ul>
 </main>
 
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../footer.jsp"/>
 
 </body>
 
@@ -116,15 +124,20 @@
 
             <div class="row">
                 <div class="input-field col s8 m6 offset-m3 offset-s2">
-                    <input id="apartmentClass" type="text" class="validate" name="apartmentClass">
-                    <label for="apartmentClass">Class</label>
+                    <select name="apartmentClass">
+                        <option value="" disabled>Choose apartment class</option>
+                        <c:forEach items="${apartmentClasses}" var="apartmentClass">
+                            <option selected value="${apartmentClass.id}">${apartmentClass.type}</option>
+                        </c:forEach>
+                    </select>
+                    <label>Apartment Class</label>
                 </div>
             </div>
 
             <%--<c:if test="${not empty loginError}">--%>
-                <%--<div class="row">--%>
-                    <%--<div class="col s8 m6 offset-m3 offset-s2 center red-text">${loginError}</div>--%>
-                <%--</div>--%>
+            <%--<div class="row">--%>
+            <%--<div class="col s8 m6 offset-m3 offset-s2 center red-text">${loginError}</div>--%>
+            <%--</div>--%>
             <%--</c:if>--%>
 
             <div class="row">
@@ -159,11 +172,15 @@
             endingTop: '10%', // Ending top style attribute
         }
     );
+
+    $(document).ready(function () {
+        $('select').material_select();
+    });
 </script>
 
 <script>
-    $( window ).on( "load", function() {
-        if ( $('#login-error').length == 1){
+    $(window).on("load", function () {
+        if ($('#login-error').length == 1) {
             $('#modal').modal('open');
         }
     });

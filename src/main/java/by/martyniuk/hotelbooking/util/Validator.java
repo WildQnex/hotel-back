@@ -1,9 +1,14 @@
 package by.martyniuk.hotelbooking.util;
 
+import by.martyniuk.hotelbooking.entity.Status;
+import by.martyniuk.hotelbooking.entity.User;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Validator {
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Zа-яА-Я]{3,45}");
@@ -13,20 +18,32 @@ public class Validator {
     private static final Pattern PERSON_AMOUNT_PATTERN = Pattern.compile("\\d");
     private static final Pattern ID_PATTERN = Pattern.compile("\\d{1,20}");
 
-    public static boolean validateId(String id){
-        if(id == null){
+    public static boolean validateUser(User user){
+        return validateName(user.getFirstName()) && validateName(user.getLastName()) && validateName(user.getMiddleName()) &&
+                validateEmail(user.getEmail()) && validatePhoneNumber(user.getPhoneNumber());
+    }
+
+    public static boolean validateStatus(String status) {
+        return Arrays.stream(Status.values())
+                .map(Enum::toString)
+                .collect(Collectors.toList())
+                .contains(status.toUpperCase());
+    }
+
+    public static boolean validateId(String id) {
+        if (id == null) {
             return false;
         }
         Matcher matcher = ID_PATTERN.matcher(id);
         return matcher.matches();
     }
 
-    public static boolean validateDateRange(LocalDate checkInDate, LocalDate checkOutDate){
+    public static boolean validateDateRange(LocalDate checkInDate, LocalDate checkOutDate) {
         return checkInDate.isBefore(checkOutDate) && checkInDate.isAfter(LocalDateTime.now().toLocalDate());
     }
 
     public static boolean validatePersonAmount(String personAmount) {
-        if(personAmount == null){
+        if (personAmount == null) {
             return false;
         }
         Matcher matcher = PERSON_AMOUNT_PATTERN.matcher(personAmount);
@@ -34,7 +51,7 @@ public class Validator {
     }
 
     public static boolean validateName(String name) {
-        if(name == null){
+        if (name == null) {
             return false;
         }
         Matcher matcher = NAME_PATTERN.matcher(name);
@@ -42,7 +59,7 @@ public class Validator {
     }
 
     public static boolean validateEmail(String email) {
-        if(email == null){
+        if (email == null) {
             return false;
         }
         Matcher matcher = EMAIL_PATTERN.matcher(email);
@@ -50,22 +67,22 @@ public class Validator {
     }
 
     public static boolean validatePhoneNumber(String phoneNumber) {
-        if(phoneNumber == null){
+        if (phoneNumber == null) {
             return false;
         }
         Matcher matcher = PHONE_NUMBER_PATTERN.matcher(phoneNumber);
         return matcher.matches() && phoneNumber.length() <= 18;
     }
 
-    public static boolean validatePassword(String password) {
-        if(password == null){
+    public static boolean validatePasswords(String password, String repeatPassword) {
+        if (password == null || repeatPassword == null) {
             return false;
         }
-        return password.length() <= 60 && password.length() >= 6;
+        return password.equals(repeatPassword) && password.length() <= 60 && password.length() >= 6;
     }
 
-    public static boolean validatePasswordsEquals(String password, String confirmation){
-        if(password == null || confirmation == null){
+    public static boolean validatePasswordsEquals(String password, String confirmation) {
+        if (password == null || confirmation == null) {
             return false;
         }
         return password.equals(confirmation);

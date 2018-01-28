@@ -8,6 +8,7 @@
     <name>hotel-booking Webapp</name>
     <url>http://maven.apache.org</url>
 
+
     <properties>
         <jdbc.username>root</jdbc.username>
         <jdbc.password>root</jdbc.password>
@@ -24,6 +25,7 @@
         <mysql-connector-java.version>6.0.6</mysql-connector-java.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <ibatis2-sqlmap.version>2.1.7.597</ibatis2-sqlmap.version>
+        <spring.test>5.0.2.RELEASE</spring.test>
     </properties>
 
     <dependencies>
@@ -44,6 +46,13 @@
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.test}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.security</groupId>

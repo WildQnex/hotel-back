@@ -53,22 +53,4 @@ public class ApartmentClassDaoImpl implements ApartmentClassDao {
         }
     }
 
-    @Override
-    public Optional<ApartmentClass> findApartmentClassByType(String type) throws DaoException {
-        try (Connection cn = ConnectionPool.getInstance().getConnection()) {
-            PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_FIND_APARTMENT_CLASS_BY_TYPE);
-            ps.setString(1, type);
-            ResultSet resultSet = ps.executeQuery();
-            Optional<ApartmentClass> apartmentClassOptional = Optional.empty();
-            if (resultSet.next()) {
-                apartmentClassOptional = Optional.of(new ApartmentClass(resultSet.getLong("id_apartment_class"), resultSet.getString("type"),
-                        resultSet.getInt("rooms_amount"), resultSet.getInt("max_capacity"),
-                        resultSet.getBigDecimal("cost_per_night"), resultSet.getBigDecimal("cost_per_person"),
-                        resultSet.getString("description"), resultSet.getString("image_path")));
-            }
-            return apartmentClassOptional;
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
 }

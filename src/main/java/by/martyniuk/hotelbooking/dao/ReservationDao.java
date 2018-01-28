@@ -9,6 +9,7 @@ import by.martyniuk.hotelbooking.exception.DaoException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationDao {
 
@@ -22,7 +23,7 @@ public interface ReservationDao {
 
     List<Reservation> readAllReservationsByUserId(long userId) throws DaoException;
 
-    boolean updateReservation(Reservation reservation) throws DaoException;
+    boolean updateReservationStatus(Reservation reservation, Status status) throws DaoException;
 
-    Reservation readReservationById(long id) throws DaoException;
+    Optional<Reservation> readReservationById(long id) throws DaoException;
 }

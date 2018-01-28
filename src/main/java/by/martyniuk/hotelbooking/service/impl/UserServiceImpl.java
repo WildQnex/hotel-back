@@ -8,6 +8,7 @@ import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
@@ -15,7 +16,7 @@ public class UserServiceImpl implements UserService {
     public boolean updateUserProfile(User user) throws ServiceException {
         try {
             UserDao dao = new UserDaoImpl();
-            dao.updateUser(user);
+            dao.updateUserData(user);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -31,4 +32,20 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public Optional<User> findUserByMail(String mail) throws ServiceException {
+        try {
+            UserDao dao = new UserDaoImpl();
+            return dao.findUserByMail(mail);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean changeUserPassword(long userId, String currentPassword, String newPassword) throws ServiceException{
+        return true;
+    }
+
 }

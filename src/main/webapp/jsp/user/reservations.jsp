@@ -29,18 +29,18 @@
                 <c:forEach items="${reservations}" var="reservation">
                     <li>
                         <div class="collapsible-header">
-                            <i class="material-icons">blur_on</i>Order ${reservation.checkInDate}
-                            - ${reservation.checkOutDate} Status : ${reservation.status}
+                            <i class="material-icons">blur_on</i><fmt:message key="reservation.order" bundle="${bndl}"/> ${reservation.checkInDate}
+                            - ${reservation.checkOutDate} <fmt:message key="reservation.status" bundle="${bndl}"/> : ${reservation.status}
                         </div>
                         <div class="collapsible-body">
-                            <div class="row"><strong>Order made on</strong> ${reservation.orderTime.toLocalDate()}
-                                <strong>  at </strong> ${reservation.orderTime.toLocalTime()}</div>
-                            <div class="row"><strong>Apartment number:</strong> ${reservation.apartment.number}</div>
-                            <div class="row"><strong>Person amount:</strong> ${reservation.personAmount}</div>
-                            <div class="row"><strong>Cost per person:</strong> ${reservation.costPerPerson} $</div>
-                            <div class="row"><strong>Cost per night:</strong> ${reservation.costPerNight} $</div>
-                            <div class="row"><strong>Total cost:</strong> ${reservation.totalCost} $</div>
-                            <div class="row"><strong>Order status:</strong> ${reservation.status}</div>
+                            <div class="row"><strong><fmt:message key="reservation.order.made.on" bundle="${bndl}"/></strong> ${reservation.orderTime.toLocalDate()}
+                                <strong>  <fmt:message key="reservation.order.made.at" bundle="${bndl}"/> </strong> ${reservation.orderTime.toLocalTime()}</div>
+                            <div class="row"><strong><fmt:message key="apartment.number" bundle="${bndl}"/>:</strong> ${reservation.apartment.number}</div>
+                            <div class="row"><strong><fmt:message key="apartment.class.person.amount" bundle="${bndl}"/>:</strong> ${reservation.personAmount}</div>
+                            <div class="row"><strong><fmt:message key="apartment.cost.per.person" bundle="${bndl}"/>:</strong> ${reservation.costPerPerson} $</div>
+                            <div class="row"><strong><fmt:message key="apartment.cost.per.night" bundle="${bndl}"/>:</strong> ${reservation.costPerNight} $</div>
+                            <div class="row"><strong><fmt:message key="apartment.total.cost" bundle="${bndl}"/>:</strong> ${reservation.totalCost} $</div>
+                            <div class="row"><strong><fmt:message key="reservation.order.status" bundle="${bndl}"/>:</strong> ${reservation.status}</div>
                         </div>
                     </li>
                 </c:forEach>

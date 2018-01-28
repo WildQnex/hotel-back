@@ -47,8 +47,8 @@
                         <input name="action" type="hidden" value="approve_reservation">
                         <div class="row">
                             <div class="input-field col s6 m4 offset-m4 offset-s3">
-                                <select id="apartment_id">
-                                    <option value="" disabled>Choose apartmet</option>
+                                <select id="apartment_id" >
+                                    <option value="" disabled>Choose apartment</option>
                                     <option selected name="apartment_id"
                                             value="${reservation.apartment.id}">${reservation.apartment.number}</option>
                                     <c:forEach items="${freeApartments.get(reservation)}" var="apartment">
@@ -57,21 +57,20 @@
                                 </select>
                                 <label>Apartment Number</label>
                             </div>
-
                         </div>
                         <div class="row">
                             <div class="col s6 m3 offset-m2">
-                                <a id="approve" onclick="setId()"
-                                   href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=approved">
-                                    <button class="btn waves-effect waves-light center">
+                                <a id="approve"
+                                   href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=approved&apartment_id=">
+                                    <button id="approve_button" onclick="$(this).setApprovedId();" class="btn waves-effect waves-light center">
                                         Approve
                                     </button>
                                 </a>
                             </div>
                             <div class="col s6 m3 offset-m2">
-                                <a id="decline" onclick="setId()"
-                                   href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=declined">
-                                    <button class="btn waves-effect waves-light center">
+                                <a id="decline"
+                                   href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=declined&apartment_id=${reservation.apartment.id}">
+                                    <button id="decline_button" class="btn waves-effect waves-light center">
                                         Decline
                                     </button>
                                 </a>
@@ -118,14 +117,13 @@
 <script>
     $(document).ready(function () {
         $('select').material_select();
-    })
-</script>
+    });
 
-<script>
-    function setId() {
-        document.getElementById("approve").href += "&apartment_id=" + document.getElementById("apartmentId").value;
-        document.getElementById("decline").href += "&apartment_id=" + document.getElementById("apartmentId").value;
-    }
+    $.fn.setApprovedId = function() {
+        var collapsibleDiv = this.parent().parent().parent().parent();
+        var newHref = this.parent().attr('href') + collapsibleDiv.find('select').val();
+        this.parent().attr('href', newHref);
+    };
 </script>
 
 <script>

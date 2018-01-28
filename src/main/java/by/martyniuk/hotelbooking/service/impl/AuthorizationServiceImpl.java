@@ -31,14 +31,16 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public boolean register(String firstName, String middleName, String lastName, String email, String phoneNumber, String password) throws ServiceException {
+    public boolean register(User user) throws ServiceException {
         try {
-            Optional<User> user = userDao.findUserByMail(email);
-            if (user.isPresent()) {
+            Optional<User> optionalUser = userDao.findUserByMail(user.getEmail());
+            if (optionalUser.isPresent()) {
                 return false;
             }
-            return userDao.addUser(new User(0, firstName, middleName, lastName, new BigDecimal("0"), email,
-                    phoneNumber, BCrypt.hashpw(password, BCrypt.gensalt()), Role.USER, true));
+
+            return userDao.addUser(new User(0, user.getFirstName(), user.getMiddleName(), user.getLastName(),
+                    new BigDecimal("0"), user.getEmail(), user.getPhoneNumber(),
+                    BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()), Role.USER, true));
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

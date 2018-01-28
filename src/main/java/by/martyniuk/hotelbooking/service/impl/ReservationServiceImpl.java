@@ -30,12 +30,10 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public boolean bookApartment(User user, long apartmentClassId, LocalDate checkInDate, LocalDate checkOutDate, int personsAmount) throws ServiceException {
-
-        boolean result = false;
         try {
             ReservationDao reservationDao = new ReservationDaoImpl();
             ApartmentDao apartmentDao = new ApartmentDaoImpl();
-            UserDao userDao = new UserDaoImpl();
+
             List<Apartment> apartmentList = apartmentDao.findApartmentListByClassId(apartmentClassId);
             Optional<Apartment> apartmentOptional = apartmentList.stream().filter(p -> {
                 try {
@@ -47,23 +45,16 @@ public class ReservationServiceImpl implements ReservationService {
             }).findFirst();
             if (apartmentOptional.isPresent()) {
                 Apartment apartment = apartmentOptional.get();
-                BigDecimal totalCost = apartment.getApartmentClass().getCostPerPerson().multiply(new BigDecimal(personsAmount));
-                totalCost = totalCost.add((new BigDecimal(ChronoUnit.DAYS.between(checkInDate, checkOutDate))).multiply(apartment.getApartmentClass().getCostPerNight()));
+                long daysAmount = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+                BigDecimal totalCost = apartment.getApartmentClass().getCostPerPerson()
+                        .multiply(new BigDecimal(personsAmount))
+                        .multiply(new BigDecimal(daysAmount));
+                totalCost = totalCost.add((new BigDecimal(daysAmount))
+                                                .multiply(apartment.getApartmentClass().getCostPerNight()));
 
-                BigDecimal newBalance = user.getBalance().subtract(totalCost);
-                if (reservationDao.isApartmentAvailable(apartment, checkInDate, checkOutDate)
-                        && newBalance.compareTo(new BigDecimal(0)) > 0
-                        && apartment.getApartmentClass().getMaxCapacity() >= personsAmount) {
-                    result = reservationDao.addReservation(apartment, user, checkInDate, checkOutDate, totalCost, personsAmount);
-                }
-                if (result) {
-                    user.setBalance(newBalance);
-                    userDao.updateUser(user);
-                }
-                return result;
-            } else {
-                return false;
+                return reservationDao.addReservation(apartmentOptional.get(), user, checkInDate, checkOutDate, totalCost, personsAmount);
             }
+            return false;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -90,23 +81,33 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public boolean updateReservation(Reservation reservation) throws ServiceException {
-
-        return true;
-    }
-
-    @Override
-    public boolean approveReservation(long reservationId, long apartmentId, Status status) throws ServiceException {
+    public boolean updateReservationStatus(long reservationId, long apartmentId, Status status) throws ServiceException {
         try {
+
+
             ReservationDao reservationDao = new ReservationDaoImpl();
             ApartmentDao apartmentDao = new ApartmentDaoImpl();
-            Reservation reservation = reservationDao.readReservationById(reservationId);
-            Apartment apartment = apartmentDao.findApartmentById(apartmentId);
-            if (reservation.getApartment().equals(apartment) || reservationDao.isApartmentAvailable(apartment, reservation.getCheckInDate(),
-                    reservation.getCheckOutDate())) {
+            Optional<Reservation> reservationOptional = reservationDao.readReservationById(reservationId);
+
+            if(!reservationOptional.isPresent()){
+                return false;
+            }
+            Reservation reservation = reservationOptional.get();
+            if(!reservation.getStatus().equals(Status.WAITING_FOR_APPROVE)){
+                return false;
+            }
+            Optional<Apartment> apartmentOptional = apartmentDao.findApartmentById(apartmentId);
+
+            if(!apartmentOptional.isPresent()){
+                return false;
+            }
+            Apartment apartment = apartmentOptional.get();
+            if (reservation.getApartment().equals(apartment) || (reservationDao.isApartmentAvailable(apartment, reservation.getCheckInDate(),
+                    reservation.getCheckOutDate()) && apartment.getApartmentClass().equals(reservation.getApartment().getApartmentClass()))) {
+
                 reservation.setApartment(apartment);
-                reservation.setStatus(status);
-                return reservationDao.updateReservation(reservation);
+
+                return reservationDao.updateReservationStatus(reservation, status);
             }
             return false;
         } catch (DaoException e) {
