@@ -5,7 +5,7 @@
     <artifactId>hotel-booking</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>hotel-booking Maven Webapp</name>
+    <name>hotel-booking Webapp</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -23,6 +23,7 @@
         <lombok.version>1.16.18</lombok.version>
         <mysql-connector-java.version>6.0.6</mysql-connector-java.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+        <ibatis2-sqlmap.version>2.1.7.597</ibatis2-sqlmap.version>
     </properties>
 
     <dependencies>
@@ -89,6 +90,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.ibatis</groupId>
+            <artifactId>ibatis2-sqlmap</artifactId>
+            <version>${ibatis2-sqlmap.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql-connector-java.version}</version>
@@ -96,10 +103,17 @@
     </dependencies>
 
     <build>
+        <filters>
+            <filter>src/main/resources/db.properties</filter>
+        </filters>
         <finalName>hotel-booking</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/test/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>

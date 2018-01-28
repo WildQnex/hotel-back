@@ -31,20 +31,21 @@ public class ConnectionPool {
     private BlockingDeque<ProxyConnection> busyConnectionQueue;
 
     public static int poolSize = 10;
-    private static final String JDBC_URL = "jdbc:mysql://localhost/hotel_booking?useUnicode=true&useSSL=true&serverTimezone=GMT";
+    public static String JDBC_URL = "jdbc:mysql://localhost:3306/hotel_booking?useUnicode=true&serverTimezone=GMT";
 
 
     private ConnectionPool(final int poolSize) throws ConnectionPoolException {
         try {
-            makeConnection(poolSize);
+            initConnectionPool(poolSize);
         } catch (SQLException e) {
             throw new ConnectionPoolException("Failed to get connection.", e);
         }
     }
 
-    public void returnConnection(ProxyConnection connection) {
-        busyConnectionQueue.remove(connection);
-        emptyConnectionQueue.addLast(connection);
+    public void returnConnection(Connection connection) {
+        if(busyConnectionQueue.remove(connection)){
+            emptyConnectionQueue.addLast((ProxyConnection)connection);
+        }
     }
 
     private static class ConnectionPoolHolder {
@@ -85,7 +86,15 @@ public class ConnectionPool {
         LOGGER.log(Level.INFO, "Connections in the amount of " + count + " pieces successfully closed.");
     }
 
-    private void makeConnection(final int POOL_SIZE) throws SQLException {
+    public int getAmountFreeConnections(){
+        return emptyConnectionQueue.size();
+    }
+
+    public int getAmountBusyConnections(){
+        return busyConnectionQueue.size();
+    }
+
+    private void initConnectionPool(final int POOL_SIZE) throws SQLException {
         emptyConnectionQueue = new LinkedBlockingDeque<>(POOL_SIZE);
         busyConnectionQueue = new LinkedBlockingDeque<>(POOL_SIZE);
         Properties properties = new Properties();
