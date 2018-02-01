@@ -108,4 +108,16 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public boolean updateUserPassword(long userId, String newPassword) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection();
+             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_UPDATE_USER_PASSWORD)) {
+            ps.setString(1, newPassword);
+            ps.setLong(2, userId);
+            return ps.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }

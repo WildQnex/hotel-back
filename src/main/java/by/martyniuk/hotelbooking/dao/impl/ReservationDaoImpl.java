@@ -93,7 +93,7 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public boolean isApartmentAvailable(Apartment apartment, LocalDate checkInDate, LocalDate checkOutDate) throws DaoException {
+    public boolean isApartmentAvailable(long apartmentId, LocalDate checkInDate, LocalDate checkOutDate) throws DaoException {
 
         try (Connection cn = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_CHECK_AVAILABILITY);
@@ -103,7 +103,7 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setDate(2, checkOut, Calendar.getInstance());
             ps.setDate(3, checkIn, Calendar.getInstance());
             ps.setDate(4, checkOut, Calendar.getInstance());
-            ps.setLong(5, apartment.getId());
+            ps.setLong(5, apartmentId);
             ps.setString(6, Status.APPROVED.toString());
             ps.setString(7, Status.WAITING_FOR_APPROVE.toString());
             ResultSet rs = ps.executeQuery();
@@ -121,7 +121,7 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
             Optional<Reservation> reservationOptional = Optional.empty();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 reservationOptional = Optional.of(getReservation(resultSet));
             }
             return reservationOptional;
@@ -136,7 +136,7 @@ public class ReservationDaoImpl implements ReservationDao {
             Statement ps = connection.createStatement();
             ResultSet resultSet = ps.executeQuery(SqlQuery.SQL_SELECT_ALL_RESERVATIONS);
             ArrayList<Reservation> reservations = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 reservations.add(getReservation(resultSet));
             }
             return reservations;
@@ -152,7 +152,7 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setString(1, status.toString());
             ResultSet resultSet = ps.executeQuery();
             ArrayList<Reservation> reservations = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 reservations.add(getReservation(resultSet));
             }
             return reservations;
@@ -168,7 +168,7 @@ public class ReservationDaoImpl implements ReservationDao {
             ps.setLong(1, userId);
             ResultSet resultSet = ps.executeQuery();
             ArrayList<Reservation> reservations = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 reservations.add(getReservation(resultSet));
             }
             return reservations;
@@ -198,14 +198,14 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public boolean updateReservationStatus(Reservation reservation, Status status) throws DaoException {
+    public boolean updateReservationApartmentAndStatus(Reservation reservation, Status status) throws DaoException {
         Connection cn = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement psUpdate = cn.prepareStatement(SqlQuery.SQL_UPDATE_RESERVATION_STATUS);
              PreparedStatement psUpdateBalance = cn.prepareStatement(SqlQuery.SQL_DEPOSIT_MONEY)) {
             cn.setAutoCommit(false);
             boolean result = true;
 
-            if(status.equals(Status.DECLINED) || status.equals(Status.CANCELED)){
+            if (status.equals(Status.DECLINED) || status.equals(Status.CANCELED)) {
                 psUpdateBalance.setBigDecimal(1, reservation.getTotalCost());
                 psUpdateBalance.setLong(2, reservation.getUser().getId());
                 result = psUpdateBalance.executeUpdate() != 0;
@@ -214,7 +214,7 @@ public class ReservationDaoImpl implements ReservationDao {
             psUpdate.setLong(1, reservation.getApartment().getId());
             psUpdate.setString(2, status.toString());
             psUpdate.setLong(3, reservation.getId());
-            if(psUpdate.executeUpdate() != 0 && result){
+            if (psUpdate.executeUpdate() != 0 && result) {
                 cn.commit();
                 return true;
             } else {

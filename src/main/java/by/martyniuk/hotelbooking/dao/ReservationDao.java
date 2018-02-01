@@ -15,7 +15,7 @@ public interface ReservationDao {
 
     boolean addReservation(Apartment apartment, User user, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalCost, int personAmount) throws DaoException;
 
-    boolean isApartmentAvailable(Apartment apartment, LocalDate checkInDate, LocalDate checkOutDate) throws DaoException;
+    boolean isApartmentAvailable(long apartment, LocalDate checkInDate, LocalDate checkOutDate) throws DaoException;
 
     List<Reservation> readAllReservations() throws DaoException;
 
@@ -23,7 +23,7 @@ public interface ReservationDao {
 
     List<Reservation> readAllReservationsByUserId(long userId) throws DaoException;
 
-    boolean updateReservationStatus(Reservation reservation, Status status) throws DaoException;
+    boolean updateReservationApartmentAndStatus(Reservation reservation, Status status) throws DaoException;
 
     Optional<Reservation> readReservationById(long id) throws DaoException;
 }

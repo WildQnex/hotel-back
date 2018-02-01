@@ -9,9 +9,11 @@
         <div class="row">
             <div class="col s12 center">
                 <h5 class="white-text"><fmt:message key="footer.company" bundle="${bndl}"/></h5>
-                <p class="grey-text text-lighten-4 footer-margin"><fmt:message key="footer.company.name" bundle="${bndl}"/></p>
+                <p class="grey-text text-lighten-4 footer-margin"><fmt:message key="footer.company.name"
+                                                                               bundle="${bndl}"/></p>
                 <p class="grey-text text-lighten-4 footer-margin"><fmt:message key="footer.text" bundle="${bndl}"/></p>
-                <p class="grey-text text-lighten-4 footer-margin"><fmt:message key="footer.address" bundle="${bndl}"/></p>
+                <p class="grey-text text-lighten-4 footer-margin"><fmt:message key="footer.address"
+                                                                               bundle="${bndl}"/></p>
             </div>
         </div>
     </div>

@@ -12,13 +12,13 @@ import java.util.Optional;
 
 public class ApartmentClassServiceImpl implements ApartmentClassService {
 
+    public static ApartmentClassDao apartmentClassDao = new ApartmentClassDaoImpl();
+
 
     @Override
     public Optional<ApartmentClass> findApartmentClassById(long id) throws ServiceException {
         try {
-            ApartmentClassDao dao = new ApartmentClassDaoImpl();
-
-            return dao.findApartmentClassById(id);
+            return apartmentClassDao.findApartmentClassById(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -27,10 +27,10 @@ public class ApartmentClassServiceImpl implements ApartmentClassService {
     @Override
     public List<ApartmentClass> findAllApartmentClasses() throws ServiceException {
         try {
-            ApartmentClassDao dao = new ApartmentClassDaoImpl();
-            return dao.findAllApartmentClasses();
+            return apartmentClassDao.findAllApartmentClasses();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
+
 }

@@ -26,9 +26,11 @@
         <div class="section no-pad-bot">
             <div class="container">
                 <br><br>
-                <h1 class="header center  amber-text text-lighten-3 text-border"><fmt:message key="main.hotel" bundle="${bndl}"/></h1>
+                <h1 class="header center  amber-text text-lighten-3 text-border"><fmt:message key="main.hotel"
+                                                                                              bundle="${bndl}"/></h1>
                 <div class="row center">
-                    <h5 class="header col s12 light amber-text text-lighten-3 text-border"><fmt:message key="main.hotel.stars" bundle="${bndl}"/></h5>
+                    <h5 class="header col s12 light amber-text text-lighten-3 text-border"><fmt:message
+                            key="main.hotel.stars" bundle="${bndl}"/></h5>
                 </div>
                 <br><br>
 
@@ -89,7 +91,8 @@
         <div class="section no-pad-bot">
             <div class="container">
                 <div class="row center">
-                    <h5 class="header col s12 amber-text text-lighten-3 text-border"><fmt:message key="main.restaurant" bundle="${bndl}"/></h5>
+                    <h5 class="header col s12 amber-text text-lighten-3 text-border"><fmt:message key="main.restaurant"
+                                                                                                  bundle="${bndl}"/></h5>
                 </div>
             </div>
         </div>
@@ -118,8 +121,8 @@
 </script>
 
 <script>
-    $( window ).on( "load", function() {
-        if ( $('#login-error').length == 1){
+    $(window).on("load", function () {
+        if ($('#login-error').length == 1) {
             $('#modal').modal('open');
         }
     });

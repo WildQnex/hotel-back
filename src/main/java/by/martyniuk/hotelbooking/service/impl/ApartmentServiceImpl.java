@@ -23,11 +23,13 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     private static final Logger LOGGER = LogManager.getLogger(ApartmentServiceImpl.class);
 
+    public static ApartmentDao apartmentDao = new ApartmentDaoImpl();
+    public static ReservationDao reservationDao = new ReservationDaoImpl();
+
     @Override
     public boolean insertApartment(Apartment apartment) throws ServiceException {
         try {
-            ApartmentDao dao = new ApartmentDaoImpl();
-            return dao.addApartment(apartment);
+            return apartmentDao.addApartment(apartment);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -36,8 +38,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public boolean updateApartment(Apartment apartment) throws ServiceException {
         try {
-            ApartmentDao dao = new ApartmentDaoImpl();
-            return dao.updateApartment(apartment);
+            return apartmentDao.updateApartment(apartment);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -46,8 +47,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public boolean deleteApartment(long apartmentId) throws ServiceException {
         try {
-            ApartmentDao dao = new ApartmentDaoImpl();
-            return dao.deleteApartment(apartmentId);
+            return apartmentDao.deleteApartment(apartmentId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -56,8 +56,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public Optional<Apartment> getApartment(long id) throws ServiceException {
         try {
-            ApartmentDao dao = new ApartmentDaoImpl();
-            return dao.findApartmentById(id);
+            return apartmentDao.findApartmentById(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -65,19 +64,17 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Map<Reservation, List<Apartment>> findFreeApartmentsForReservations(List<Reservation> reservations) throws ServiceException {
-
         Map<Reservation, List<Apartment>> freeApartments = new HashMap<>();
-        ApartmentDao apartmentDao = new ApartmentDaoImpl();
-        ReservationDao reservationDao = new ReservationDaoImpl();
+        System.out.println(reservations);
         try {
-
-
             for (Reservation reservation : reservations) {
                 List<Apartment> apartments = apartmentDao.findApartmentListByClassId(reservation.getApartment().getApartmentClass().getId());
+                System.out.println(apartments);
                 freeApartments.put(reservation, apartments.stream()
                         .filter(apartment -> {
                             try {
-                                return reservationDao.isApartmentAvailable(apartment, reservation.getCheckInDate(), reservation.getCheckOutDate());
+                                System.out.println(apartment);
+                                return reservationDao.isApartmentAvailable(apartment.getId(), reservation.getCheckInDate(), reservation.getCheckOutDate());
                             } catch (DaoException e) {
                                 LOGGER.log(Level.ERROR, e);
                             }
@@ -94,9 +91,8 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public List<Apartment> findAllApartments() throws ServiceException {
         try {
-            ApartmentDao apartmentDao = new ApartmentDaoImpl();
             return apartmentDao.findAllApartments();
-        } catch (DaoException e){
+        } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }

@@ -33,7 +33,7 @@ public class ConnectionPoolTest {
                 properties.getProperty("jdbc.username"), properties.getProperty("jdbc.password"));
         scriptRunner = new ScriptRunner(connection, false, true);
         scriptRunner.runScript(reader);
-        ConnectionPool.JDBC_URL = "jdbc:mysql://localhost:3306/hotel_booking_test?useUnicode=true&serverTimezone=GMT";
+        ConnectionPool.getInstance().initConnectionPool(2, "jdbc:mysql://localhost:3306/hotel_booking_test?useUnicode=true&serverTimezone=GMT");
 
     }
 

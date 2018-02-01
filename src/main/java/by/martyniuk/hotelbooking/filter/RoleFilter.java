@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
-@WebFilter(urlPatterns = {"/booking"})
+@WebFilter(filterName = "RoleFilter", urlPatterns = {"/booking"})
 public class RoleFilter implements Filter {
 
     private Set<CommandType> admin = EnumSet.of(CommandType.ADD_APARTMENT, CommandType.APPROVE_RESERVATION, CommandType.EDIT_APARTMENT,
@@ -41,33 +41,33 @@ public class RoleFilter implements Filter {
         HttpSession session = httpServletRequest.getSession();
 
         CommandType commandType;
-        if(CommandType.ifPresent(httpServletRequest.getParameter("action"))){
+        if (CommandType.ifPresent(httpServletRequest.getParameter("action"))) {
             commandType = CommandType.valueOf(httpServletRequest.getParameter("action").toUpperCase());
         } else {
             commandType = CommandType.DEFAULT;
         }
 
-        User user = (User)session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         boolean isContinue = true;
 
-        if(user != null){
+        if (user != null) {
             Role role = user.getRole();
-            if(role.equals(Role.ADMIN)){
-                if(guest.contains(commandType)){
+            if (role.equals(Role.ADMIN)) {
+                if (guest.contains(commandType)) {
                     isContinue = false;
                 }
             } else {
-                if(admin.contains(commandType) || guest.contains(commandType)){
+                if (admin.contains(commandType) || guest.contains(commandType)) {
                     isContinue = false;
                 }
             }
         } else {
-            if(admin.contains(commandType) || this.user.contains(commandType)){
+            if (admin.contains(commandType) || this.user.contains(commandType)) {
                 isContinue = false;
             }
         }
-        if(isContinue){
+        if (isContinue) {
             chain.doFilter(request, response);
         } else {
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/index.jsp");

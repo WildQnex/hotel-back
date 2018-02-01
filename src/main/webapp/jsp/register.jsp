@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
+<%@ taglib prefix="ct" uri="error" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,6 +22,7 @@
 
 <jsp:include page="header.jsp"/>
 
+
 <main>
     <div class="container">
         <div class="row 20"></div>
@@ -36,14 +38,16 @@
                     </div>
                     <div class="input-field col s6">
                         <input id="last_name" type="text" name="last_name" class="validate" required
-                               pattern="[a-zA-Zа-яА-Я]{2,45}" title="<fmt:message key="user.name.last" bundle="${bndl}"/>">
+                               pattern="[a-zA-Zа-яА-Я]{2,45}"
+                               title="<fmt:message key="user.name.last" bundle="${bndl}"/>">
                         <label for="last_name"><fmt:message key="user.name.last" bundle="${bndl}"/></label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s6">
                         <input id="middle_name" type="text" name="middle_name" class="validate"
-                               pattern="[a-zA-Zа-яА-Я]{0,45}" title="<fmt:message key="user.name.middle" bundle="${bndl}"/>">
+                               pattern="[a-zA-Zа-яА-Я]{0,45}"
+                               title="<fmt:message key="user.name.middle" bundle="${bndl}"/>">
                         <label for="middle_name"><fmt:message key="user.name.middle" bundle="${bndl}"/> *</label>
                     </div>
                 </div>
@@ -55,7 +59,8 @@
                         <label for="email"><fmt:message key="user.email" bundle="${bndl}"/></label>
                     </div>
                     <div class="input-field col s6">
-                        <input id="phone_number" type="text" name="phone_number" class="validate" maxlength="18" required
+                        <input id="phone_number" type="text" name="phone_number" class="validate" maxlength="18"
+                               required
                                pattern="((\+)?\d+?-?\d+-?\d+)|((\+\d+)?(\(\d{3}\))\d{7})|
                                ((\+\d+)?(\(\d{3}\))(\(\d{3}\))?-?\d)|((\+-?(\d){3,18}))"
                                title="<fmt:message key="user.phone" bundle="${bndl}"/>">
@@ -69,7 +74,8 @@
                         <label for="password"><fmt:message key="user.password" bundle="${bndl}"/></label>
                     </div>
                     <div class="input-field col s6">
-                        <input id="repeat_password" type="password" name="repeat_password" class="validate" required minlength="6"
+                        <input id="repeat_password" type="password" name="repeat_password" class="validate" required
+                               minlength="6"
                                maxlength="60" title="<fmt:message key="user.password.repeat" bundle="${bndl}"/>">
                         <label for="repeat_password"><fmt:message key="user.password.repeat" bundle="${bndl}"/></label>
                     </div>
@@ -79,12 +85,7 @@
                     * - <fmt:message key="register.note" bundle="${bndl}"/>
                 </div>
 
-                <c:if test="${not empty register_error}">
-                    <div class="row">
-                        <div class="col s8 m6 offset-m3 offset-s2 center red-text">${register_error}</div>
-                    </div>
-                    <c:remove var="register_error" scope="session" />
-                </c:if>
+                <ct:showError scope="${sessionScope}" key="register_error"/>
 
                 <div class="row">
                     <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
@@ -121,6 +122,7 @@
         document.getElementById("repeat_password").onchange = validatePassword;
         document.getElementById("password").onchange = validatePassword;
     }
+
     function validatePassword() {
         var pass2 = document.getElementById("repeat_password").value;
         var pass1 = document.getElementById("password").value;
@@ -133,8 +135,8 @@
 </script>
 
 <script>
-    $( window ).on( "load", function() {
-        if ( $('#login-error').length == 1){
+    $(window).on("load", function () {
+        if ($('#login-error').length == 1) {
             $('#modal').modal('open');
         }
     });

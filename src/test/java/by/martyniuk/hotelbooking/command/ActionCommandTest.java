@@ -13,7 +13,6 @@ import by.martyniuk.hotelbooking.service.AuthorizationService;
 import by.martyniuk.hotelbooking.service.ReservationService;
 import by.martyniuk.hotelbooking.service.UserService;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -59,9 +58,6 @@ public class ActionCommandTest {
                 "mail@gmail.com", "+375251712452", "password", Role.ADMIN, true);
     }
 
-    @AfterMethod
-    public void tearDown() {
-    }
 
     @Test
     public void loginTest() throws ServiceException, CommandException {
@@ -179,7 +175,7 @@ public class ActionCommandTest {
         CommandType.userService = userService;
         when(userService.updateUserProfile(anyObject())).thenReturn(true);
         CommandType.UPDATE_PROFILE.receiveCommand().execute(request);
-        assertEquals(((User)request.getSession().getAttribute("user")).getFirstName(), name);
+        assertEquals(((User) request.getSession().getAttribute("user")).getFirstName(), name);
     }
 
     @Test
@@ -203,10 +199,10 @@ public class ActionCommandTest {
         request.setParameter("new_password", newPassword);
         request.setParameter("repeat_new_password", newPassword);
         CommandType.userService = userService;
-        when(userService.changeUserPassword(user.getId(), user.getPassword(), newPassword)).thenReturn(true);
+        when(userService.changeUserPassword(user.getEmail(), user.getPassword(), newPassword)).thenReturn(true);
         user.setPassword(newPassword);
         when(userService.findUserByMail(user.getEmail())).thenReturn(Optional.of(user));
         CommandType.UPDATE_PROFILE.receiveCommand().execute(request);
-        assertEquals(((User)request.getSession().getAttribute("user")).getPassword(), newPassword);
+        assertEquals(((User) request.getSession().getAttribute("user")).getPassword(), newPassword);
     }
 }

@@ -30,8 +30,8 @@ public class ConnectionPool {
     private BlockingDeque<ProxyConnection> emptyConnectionQueue;
     private BlockingDeque<ProxyConnection> busyConnectionQueue;
 
-    public static int poolSize = 10;
-    public static String JDBC_URL = "jdbc:mysql://localhost:3306/hotel_booking?useUnicode=true&useSSL=false&serverTimezone=GMT";
+    private static int poolSize = 10;
+    private static String JDBC_URL = "jdbc:mysql://localhost:3306/hotel_booking?useUnicode=true&useSSL=false&serverTimezone=GMT";
 
 
     private ConnectionPool(final int poolSize) throws ConnectionPoolException {
@@ -43,8 +43,8 @@ public class ConnectionPool {
     }
 
     public void returnConnection(Connection connection) {
-        if(busyConnectionQueue.remove(connection)){
-            emptyConnectionQueue.addLast((ProxyConnection)connection);
+        if (busyConnectionQueue.remove(connection)) {
+            emptyConnectionQueue.addLast((ProxyConnection) connection);
         }
     }
 
@@ -65,6 +65,11 @@ public class ConnectionPool {
         return ConnectionPoolHolder.HOLDER_INSTANCE;
     }
 
+    public void initConnectionPool(int poolSize, String url) throws SQLException {
+        closeConnections();
+        JDBC_URL = url;
+        initConnectionPool(poolSize);
+    }
 
     public Connection getConnection() {
         ProxyConnection connection = emptyConnectionQueue.poll();
@@ -73,25 +78,29 @@ public class ConnectionPool {
     }
 
     public void destroy() {
-        int count = 0;
-        for (ProxyConnection connection : emptyConnectionQueue) {
-            connection.reallyClose();
-            count++;
-        }
+        closeConnections();
         try {
             DriverManager.deregisterDriver(DRIVER);
         } catch (SQLException e) {
             LOGGER.log(Level.INFO, "Can't close connection", e);
         }
-        LOGGER.log(Level.INFO, "Connections in the amount of " + count + " pieces successfully closed.");
     }
 
-    public int getAmountFreeConnections(){
+    public int getAmountFreeConnections() {
         return emptyConnectionQueue.size();
     }
 
-    public int getAmountBusyConnections(){
+    public int getAmountBusyConnections() {
         return busyConnectionQueue.size();
+    }
+
+    private void closeConnections() {
+        int count = 0;
+        for (ProxyConnection connection : emptyConnectionQueue) {
+            connection.reallyClose();
+            count++;
+        }
+        LOGGER.log(Level.INFO, "Connections in the amount of " + count + " where successfully closed.");
     }
 
     private void initConnectionPool(final int POOL_SIZE) throws SQLException {

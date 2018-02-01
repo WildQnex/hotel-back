@@ -6,17 +6,19 @@ import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
+    public static UserDao userDao = new UserDaoImpl();
+
     @Override
     public boolean updateUserProfile(User user) throws ServiceException {
         try {
-            UserDao dao = new UserDaoImpl();
-            dao.updateUserData(user);
+            userDao.updateUserData(user);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -26,8 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUsers() throws ServiceException {
         try {
-            UserDao dao = new UserDaoImpl();
-            return dao.findAllUsers();
+            return userDao.findAllUsers();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -36,16 +37,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findUserByMail(String mail) throws ServiceException {
         try {
-            UserDao dao = new UserDaoImpl();
-            return dao.findUserByMail(mail);
+            return userDao.findUserByMail(mail);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public boolean changeUserPassword(long userId, String currentPassword, String newPassword) throws ServiceException{
-        return true;
+    public boolean changeUserPassword(String mail, String currentPassword, String newPassword) throws ServiceException {
+        try {
+            Optional<User> optionalUser = userDao.findUserByMail(mail);
+            if (!(optionalUser.isPresent() && BCrypt.checkpw(currentPassword, optionalUser.get().getPassword()))) {
+                return false;
+            }
+            User user = optionalUser.get();
+            user.setPassword(newPassword);
+            return userDao.updateUserPassword(user.getId(), newPassword);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
 }

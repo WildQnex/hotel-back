@@ -1,7 +1,5 @@
 package by.martyniuk.hotelbooking.constant;
 
-import by.martyniuk.hotelbooking.command.CommandType;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,11 +21,11 @@ public enum PagePath {
 
     private String page;
 
-    PagePath(String page){
+    PagePath(String page) {
         this.page = page;
     }
 
-    public String getPage(){
+    public String getPage() {
         return page;
     }
 

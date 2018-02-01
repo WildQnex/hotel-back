@@ -16,4 +16,6 @@ public interface UserDao {
 
     boolean updateUserData(User user) throws DaoException;
 
+    boolean updateUserPassword(long userId, String newPassword) throws DaoException;
+
 }

@@ -1,17 +1,25 @@
 package by.martyniuk.hotelbooking.factory;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import by.martyniuk.hotelbooking.command.CommandType;
+import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class ActionCommandFactoryTest {
 
-    @BeforeMethod
-    public void setUp() throws Exception {
+
+    @Test
+    public void getActionCommandLowerCaseTest() {
+        assertEquals(ActionCommandFactory.getActionCommand("login"), CommandType.LOGIN.receiveCommand());
     }
 
-    @AfterMethod
-    public void tearDown() throws Exception {
+    @Test
+    public void getActionCommandIgnoreCaseTest() {
+        assertEquals(ActionCommandFactory.getActionCommand("LoGouT"), CommandType.LOGOUT.receiveCommand());
+    }
+
+    @Test
+    public void getActionCommandWrongCommandTest() {
+        assertEquals(ActionCommandFactory.getActionCommand("log in"), CommandType.DEFAULT.receiveCommand());
     }
 }

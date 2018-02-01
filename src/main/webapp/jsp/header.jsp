@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="ct" uri="error" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -100,12 +101,8 @@
                 </div>
 
 
-                <c:if test="${not empty login_error}">
-                    <div id="login-error" class="row">
-                        <div class="col s8 m6 offset-m3 offset-s2 center red-text">${login_error}</div>
-                    </div>
-                    <c:remove var="login_error" scope="session" />
-                </c:if>
+                <ct:showError scope="${sessionScope}" key="login_error"/>
+
 
                 <div class="row">
                     <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">

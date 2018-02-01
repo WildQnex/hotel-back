@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class AuthorizationServiceImpl implements AuthorizationService {
 
-    private static UserDao userDao = new UserDaoImpl();
+    public static UserDao userDao = new UserDaoImpl();
 
     @Override
     public Optional<User> login(String mail, String password) throws ServiceException {

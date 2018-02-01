@@ -11,7 +11,7 @@ public interface UserService {
 
     Optional<User> findUserByMail(String mail) throws ServiceException;
 
-    boolean changeUserPassword(long userId, String currentPassword, String newPassword) throws ServiceException;
+    boolean changeUserPassword(String mail, String currentPassword, String newPassword) throws ServiceException;
 
     List<User> findAllUsers() throws ServiceException;
 }

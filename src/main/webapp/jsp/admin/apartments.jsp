@@ -134,12 +134,6 @@
                 </div>
             </div>
 
-            <%--<c:if test="${not empty loginError}">--%>
-            <%--<div class="row">--%>
-            <%--<div class="col s8 m6 offset-m3 offset-s2 center red-text">${loginError}</div>--%>
-            <%--</div>--%>
-            <%--</c:if>--%>
-
             <div class="row">
                 <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
                     Create

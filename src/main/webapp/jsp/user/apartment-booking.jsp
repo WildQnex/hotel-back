@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="ct" uri="error" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -32,21 +33,24 @@
                 <h5 class="row center">${apartmentClass.type}</h5>
                 <div class="row"></div>
                 <div class="row">${apartmentClass.description}</div>
-                <div class="row"><strong><fmt:message key="apartment.cost.per.person" bundle="${bndl}"/>:</strong> ${apartmentClass.costPerPerson} $</div>
-                <div class="row"><strong><fmt:message key="apartment.cost.per.night" bundle="${bndl}"/>:</strong> ${apartmentClass.costPerNight} $</div>
-                <div class="row"><strong><fmt:message key="apartment.rooms.amount" bundle="${bndl}"/>:</strong> ${apartmentClass.roomsAmount}</div>
-                <div class="row"><strong><fmt:message key="apartment.max.capacity" bundle="${bndl}"/>:</strong> ${apartmentClass.maxCapacity} <fmt:message key="reservation.person" bundle="${bndl}"/></div>
+                <div class="row"><strong><fmt:message key="apartment.cost.per.person"
+                                                      bundle="${bndl}"/>:</strong> ${apartmentClass.costPerPerson} $
+                </div>
+                <div class="row"><strong><fmt:message key="apartment.cost.per.night"
+                                                      bundle="${bndl}"/>:</strong> ${apartmentClass.costPerNight} $
+                </div>
+                <div class="row"><strong><fmt:message key="apartment.rooms.amount"
+                                                      bundle="${bndl}"/>:</strong> ${apartmentClass.roomsAmount}</div>
+                <div class="row"><strong><fmt:message key="apartment.max.capacity"
+                                                      bundle="${bndl}"/>:</strong> ${apartmentClass.maxCapacity}
+                    <fmt:message key="reservation.person" bundle="${bndl}"/></div>
             </div>
             <img class="materialboxed col s8" src="${apartmentClass.imagePath}">
         </div>
         <div class="divider"></div>
-        <c:if test="${not empty booking_error}">
-            <div class="row"></div>
-            <div class="row">
-                <div class="col s8 m6 offset-m3 offset-s2 center red-text">${booking_error}</div>
-            </div>
-            <c:remove var="booking_error" scope="session"/>
-        </c:if>
+
+        <ct:showError scope="${sessionScope}" key="booking_error"/>
+
         <c:choose>
             <c:when test="${not empty user}">
                 <div class="row"></div>
@@ -55,7 +59,8 @@
                     <input type="hidden" name="apartment_id" value="${apartmentClass.id}">
                     <div class="row">
                         <div class="input-field col s4 m4">
-                            <label for="check_in_date"><fmt:message key="reservation.check.in.date" bundle="${bndl}"/>:</label>
+                            <label for="check_in_date"><fmt:message key="reservation.check.in.date"
+                                                                    bundle="${bndl}"/>:</label>
                             <input name="check_in_date" id="check_in_date" type="text" class="datepicker" required>
                         </div>
                         <div class="input-field col s4 m4">
@@ -63,12 +68,15 @@
                             <input name="check_out_date" id="check_out_date" type="text" class="datepicker" required>
                         </div>
                         <div class="input-field col s4 m4">
-                            <label for="person_amount"><fmt:message key="reservation.person.amount" bundle="${bndl}"/>:</label>
-                            <input name="person_amount" id="person_amount" type="text" pattern="[1-9]" class="validate" required maxlength="1">
+                            <label for="person_amount"><fmt:message key="reservation.person.amount"
+                                                                    bundle="${bndl}"/>:</label>
+                            <input name="person_amount" id="person_amount" type="text" pattern="[1-9]" class="validate"
+                                   required maxlength="1">
                         </div>
                     </div>
                     <div class="row">
-                        <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center" type="submit">
+                        <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center"
+                                type="submit">
                             <fmt:message key="reservation.book" bundle="${bndl}"/>
                         </button>
                     </div>
@@ -92,7 +100,6 @@
 <script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
-
 
 
 <script>
@@ -145,19 +152,18 @@
         }
     }
 
-    $('form').submit(function() {
+    $('form').submit(function () {
         return checkInDate() && checkOutDate();
     });
 
-    $('#check_in_date').change(function() {
+    $('#check_in_date').change(function () {
         checkInDate();
 
     });
 
-    $('#check_out_date').change(function() {
+    $('#check_out_date').change(function () {
         checkOutDate();
     });
-
 
 
 </script>

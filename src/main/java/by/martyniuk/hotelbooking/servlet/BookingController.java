@@ -1,8 +1,6 @@
 package by.martyniuk.hotelbooking.servlet;
 
 import by.martyniuk.hotelbooking.command.ActionCommand;
-import by.martyniuk.hotelbooking.command.CommandType;
-import by.martyniuk.hotelbooking.constant.PagePath;
 import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.factory.ActionCommandFactory;
 import by.martyniuk.hotelbooking.pool.ConnectionPool;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 @WebServlet("/booking")
 public class BookingController extends HttpServlet {

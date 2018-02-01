@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="ct" uri="error" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -24,13 +25,8 @@
 
 <main>
     <div class="container">
-        <c:if test="${not empty approve_reservation_error}">
-            <div class="row"></div>
-            <div class="row">
-                <div class="col s8 m6 offset-m3 offset-s2 center red-text">${approve_reservation_error}</div>
-            </div>
-            <c:remove var="approve_reservation_error" scope="session"/>
-        </c:if>
+        <ct:showError scope="${sessionScope}" key="approve_reservation_error"/>
+
         <ul class="collapsible popout" data-collapsible="accordion">
             <c:forEach items="${reservations}" var="reservation">
                 <li>
@@ -47,7 +43,7 @@
                         <input name="action" type="hidden" value="approve_reservation">
                         <div class="row">
                             <div class="input-field col s6 m4 offset-m4 offset-s3">
-                                <select id="apartment_id" >
+                                <select id="apartment_id">
                                     <option value="" disabled>Choose apartment</option>
                                     <option selected name="apartment_id"
                                             value="${reservation.apartment.id}">${reservation.apartment.number}</option>
@@ -62,7 +58,8 @@
                             <div class="col s6 m3 offset-m2">
                                 <a id="approve"
                                    href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=approved&apartment_id=">
-                                    <button id="approve_button" onclick="$(this).setApprovedId();" class="btn waves-effect waves-light center">
+                                    <button id="approve_button" onclick="$(this).setApprovedId();"
+                                            class="btn waves-effect waves-light center">
                                         Approve
                                     </button>
                                 </a>
@@ -119,7 +116,7 @@
         $('select').material_select();
     });
 
-    $.fn.setApprovedId = function() {
+    $.fn.setApprovedId = function () {
         var collapsibleDiv = this.parent().parent().parent().parent();
         var newHref = this.parent().attr('href') + collapsibleDiv.find('select').val();
         this.parent().attr('href', newHref);

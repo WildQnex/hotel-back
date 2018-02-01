@@ -25,16 +25,16 @@
 <main>
     <div class="container">
         <%--<form class="col s12" name="login" action="booking" method="POST">--%>
-            <%--<div class="row"></div>--%>
-            <%--<div class="row">--%>
-                <%--<div class="input-field col s3 m3">--%>
-                    <%--<input id="password" type="text" class="validate" name="E-mail">--%>
-                    <%--<label for="password">E-mail</label>--%>
-                <%--</div>--%>
-                <%--<button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light" type="submit">--%>
-                    <%--Найти--%>
-                <%--</button>--%>
-            <%--</div>--%>
+        <%--<div class="row"></div>--%>
+        <%--<div class="row">--%>
+        <%--<div class="input-field col s3 m3">--%>
+        <%--<input id="password" type="text" class="validate" name="E-mail">--%>
+        <%--<label for="password">E-mail</label>--%>
+        <%--</div>--%>
+        <%--<button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light" type="submit">--%>
+        <%--Найти--%>
+        <%--</button>--%>
+        <%--</div>--%>
         <%--</form>--%>
     </div>
     <div id="reservations" class="container">
@@ -87,8 +87,8 @@
 </script>
 
 <script>
-    $( window ).on( "load", function() {
-        if ( $('#login-error').length == 1){
+    $(window).on("load", function () {
+        if ($('#login-error').length == 1) {
             $('#modal').modal('open');
         }
     });

@@ -2,6 +2,7 @@ package by.martyniuk.hotelbooking.util;
 
 import by.martyniuk.hotelbooking.entity.Status;
 import by.martyniuk.hotelbooking.entity.User;
+import by.martyniuk.hotelbooking.resource.ResourceManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class Validator {
     private static final Pattern PERSON_AMOUNT_PATTERN = Pattern.compile("\\d");
     private static final Pattern ID_PATTERN = Pattern.compile("\\d{1,20}");
 
-    public static boolean validateUser(User user){
+    public static boolean validateUser(User user) {
         return validateName(user.getFirstName()) && validateName(user.getLastName()) && validateName(user.getMiddleName()) &&
                 validateEmail(user.getEmail()) && validatePhoneNumber(user.getPhoneNumber());
     }
@@ -79,12 +80,5 @@ public class Validator {
             return false;
         }
         return password.equals(repeatPassword) && password.length() <= 60 && password.length() >= 6;
-    }
-
-    public static boolean validatePasswordsEquals(String password, String confirmation) {
-        if (password == null || confirmation == null) {
-            return false;
-        }
-        return password.equals(confirmation);
     }
 }
