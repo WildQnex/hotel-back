@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="ct" uri="error" %>
+<%@ taglib prefix="ct" uri="http://martyniuk.by" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -26,28 +26,28 @@
 <main>
     <div id="profile" class="container">
         <div class="row"></div>
-        <ct:showError scope="${sessionScope}" key="update_profile_error"/>
+        <ct:showMessage color="red" key="updateProfileError"/>
 
         <form class="col s12" name="book" action="booking" method="POST">
             <input type="hidden" name="action" value="update_profile">
             <div class="row">
                 <div class="input-field col s4 m4">
-                    <input id="first_name" type="text" name="first_name" class="validate" required
+                    <input id="firstName" type="text" name="firstName" class="validate" required
                            pattern="[a-zA-Zа-яА-Я]{2,45}" value="${user.firstName}"
                            title="<fmt:message key="user.name" bundle="${bndl}"/>">
-                    <label for="first_name"><fmt:message key="user.name" bundle="${bndl}"/></label>
+                    <label for="firstName"><fmt:message key="user.name" bundle="${bndl}"/></label>
                 </div>
                 <div class="input-field col s4 m4">
-                    <input id="last_name" type="text" name="last_name" class="validate" required
+                    <input id="lastName" type="text" name="lastName" class="validate" required
                            pattern="[a-zA-Zа-яА-Я]{2,45}" value="${user.lastName}"
                            title="<fmt:message key="user.name.last" bundle="${bndl}"/>">
-                    <label for="last_name"><fmt:message key="user.name.last" bundle="${bndl}"/></label>
+                    <label for="lastName"><fmt:message key="user.name.last" bundle="${bndl}"/></label>
                 </div>
                 <div class="input-field col s4 m4">
-                    <input id="middle_name" type="text" name="middle_name" class="validate"
+                    <input id="middleName" type="text" name="middleName" class="validate"
                            pattern="[a-zA-Zа-яА-Я]{0,45}" value="${user.middleName}"
                            title="<fmt:message key="user.name.middle" bundle="${bndl}"/>">
-                    <label for="middle_name"><fmt:message key="user.name.middle" bundle="${bndl}"/> *</label>
+                    <label for="middleName"><fmt:message key="user.name.middle" bundle="${bndl}"/> *</label>
                 </div>
             </div>
             <div class="row">
@@ -67,11 +67,11 @@
             </div>
             <div class="row">
                 <div class="input-field col s4 m4">
-                    <input id="phone_number" type="text" name="phone_number" class="validate" maxlength="18" required
+                    <input id="phoneNumber" type="text" name="phoneNumber" class="validate" maxlength="18" required
                            pattern="((\+)?\d+?-?\d+-?\d+)|((\+\d+)?(\(\d{3}\))\d{7})|
                                ((\+\d+)?(\(\d{3}\))(\(\d{3}\))?-?\d)|((\+-?(\d){3,18}))"
                            value="${user.phoneNumber}" title="<fmt:message key="user.phone" bundle="${bndl}"/>">
-                    <label for="phone_number"><fmt:message key="user.phone" bundle="${bndl}"/></label>
+                    <label for="phoneNumber"><fmt:message key="user.phone" bundle="${bndl}"/></label>
                 </div>
             </div>
             <div class="row">
@@ -86,21 +86,21 @@
             <div class="row"></div>
             <div class="row">
                 <div class="input-field col s4">
-                    <input id="current_password" type="password" name="current_password" class="validate" required
+                    <input id="currentPassword" type="password" name="currentPassword" class="validate" required
                            minlength="6"
                            maxlength="60" title="<fmt:message key="user.password.current" bundle="${bndl}"/>">
-                    <label for="current_password"><fmt:message key="user.password.current" bundle="${bndl}"/></label>
+                    <label for="currentPassword"><fmt:message key="user.password.current" bundle="${bndl}"/></label>
                 </div>
                 <div class="input-field col s4">
-                    <input id="new_password" type="password" name="new_password" class="validate" required minlength="6"
+                    <input id="newPassword" type="password" name="newPassword" class="validate" required minlength="6"
                            maxlength="60" title="<fmt:message key="user.password" bundle="${bndl}"/>">
-                    <label for="new_password"><fmt:message key="user.password" bundle="${bndl}"/></label>
+                    <label for="newPassword"><fmt:message key="user.password" bundle="${bndl}"/></label>
                 </div>
                 <div class="input-field col s4">
-                    <input id="repeat_new_password" type="password" name="repeat_new_password" class="validate" required
+                    <input id="repeatNewPassword" type="password" name="repeatNewPassword" class="validate" required
                            minlength="6"
                            maxlength="60" title="<fmt:message key="user.password.repeat" bundle="${bndl}"/>">
-                    <label for="repeat_new_password"><fmt:message key="user.password.repeat" bundle="${bndl}"/></label>
+                    <label for="repeatNewPassword"><fmt:message key="user.password.repeat" bundle="${bndl}"/></label>
                 </div>
             </div>
             <div class="row">
@@ -138,17 +138,17 @@
 
 <script type="text/javascript" language="JavaScript">
     window.onload = function () {
-        document.getElementById("repeat_new_password").onchange = validatePassword;
-        document.getElementById("new_password").onchange = validatePassword;
+        document.getElementById("repeatNewPassword").onchange = validatePassword;
+        document.getElementById("newPassword").onchange = validatePassword;
     }
 
     function validatePassword() {
-        var pass2 = document.getElementById("repeat_new_password").value;
-        var pass1 = document.getElementById("new_password").value;
+        var pass2 = document.getElementById("repeatNewPassword").value;
+        var pass1 = document.getElementById("newPassword").value;
         if (pass1 === pass2)
-            document.getElementById("repeat_new_password").setCustomValidity('');
+            document.getElementById("repeatNewPassword").setCustomValidity('');
         else
-            document.getElementById("repeat_new_password").setCustomValidity("<fmt:message key="password.confirmation" bundle="${bndl}"/>");
+            document.getElementById("repeatNewPassword").setCustomValidity("<fmt:message key="password.confirmation" bundle="${bndl}"/>");
 
     }
 </script>

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="ct" uri="error" %>
+<%@ taglib prefix="ct" uri="http://martyniuk.by" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -85,23 +85,23 @@
 
                 <div class="row">
                     <div class="input-field col s8 m6 offset-m3 offset-s2">
-                        <input id="login_email" type="email" name="email" class="validate" required maxlength="250"
+                        <input id="loginEmail" type="email" name="email" class="validate" required maxlength="250"
                                pattern="((\w)([-.](\w))?)+@((\w)([-.](\w))?)+.[a-zA-Zа-яА-Я]{2,4}"
                                title="<fmt:message key="user.email" bundle="${bndl}"/>">
-                        <label for="login_email"><fmt:message key="user.email" bundle="${bndl}"/></label>
+                        <label for="loginEmail"><fmt:message key="user.email" bundle="${bndl}"/></label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="input-field col s8 m6 offset-m3 offset-s2">
-                        <input id="login_password" type="password" name="password" class="validate" required
+                        <input id="loginPassword" type="password" name="password" class="validate" required
                                minlength="6" maxlength="60" title="<fmt:message key="user.password" bundle="${bndl}"/>">
-                        <label for="login_password"><fmt:message key="user.password" bundle="${bndl}"/></label>
+                        <label for="loginPassword"><fmt:message key="user.password" bundle="${bndl}"/></label>
                     </div>
                 </div>
 
 
-                <ct:showError scope="${sessionScope}" key="login_error"/>
+                <ct:showMessage color="red" key="loginError"/>
 
 
                 <div class="row">

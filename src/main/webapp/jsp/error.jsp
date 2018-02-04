@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="ct" uri="error" %>
+<%@ taglib prefix="ct" uri="http://martyniuk.by" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -24,13 +24,13 @@
 
 <main class="red-text">
 
-    <ct:showError scope="${sessionScope}" key="error_message"/>
-
-    <a id="logo-container" href="booking?action=forward&page=main"
-       class="brand-logo amber-text text-lighten-3 text-border">
-        <fmt:message key="header.logo" bundle="${bndl}"/>
-    </a>
-
+    <ct:showMessage color="red" key="errorMessage"/>
+    <div class="center">
+        <a id="logo-container" href="booking?action=forward&page=main"
+           class="brand-logo center amber-text text-lighten-3 text-border">
+            На главную
+        </a>
+    </div>
 </main>
 
 

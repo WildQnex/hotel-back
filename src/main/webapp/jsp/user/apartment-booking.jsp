@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="ct" uri="error" %>
+<%@ taglib prefix="ct" uri="http://martyniuk.by" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -49,28 +49,29 @@
         </div>
         <div class="divider"></div>
 
-        <ct:showError scope="${sessionScope}" key="booking_error"/>
+        <ct:showMessage color="red" key="bookingError"/>
+        <ct:showMessage color="green" key="bookingMessage"/>
 
         <c:choose>
             <c:when test="${not empty user}">
                 <div class="row"></div>
                 <form class="col s12" name="book" action="booking" method="POST">
-                    <input type="hidden" name="action" value="book_apartment">
-                    <input type="hidden" name="apartment_id" value="${apartmentClass.id}">
+                    <input type="hidden" name="action" value="bookApartment">
+                    <input type="hidden" name="apartmentId" value="${apartmentClass.id}">
                     <div class="row">
                         <div class="input-field col s4 m4">
-                            <label for="check_in_date"><fmt:message key="reservation.check.in.date"
+                            <label for="checkInDate"><fmt:message key="reservation.check.in.date"
                                                                     bundle="${bndl}"/>:</label>
-                            <input name="check_in_date" id="check_in_date" type="text" class="datepicker" required>
+                            <input name="checkInDate" id="checkInDate" type="text" class="datepicker" required>
                         </div>
                         <div class="input-field col s4 m4">
-                            <label for="check_out_date"><fmt:message key="reservation.check.out.date" bundle="${bndl}"/>:</label>
-                            <input name="check_out_date" id="check_out_date" type="text" class="datepicker" required>
+                            <label for="checkOutDate"><fmt:message key="reservation.check.out.date" bundle="${bndl}"/>:</label>
+                            <input name="checkOutDate" id="checkOutDate" type="text" class="datepicker" required>
                         </div>
                         <div class="input-field col s4 m4">
-                            <label for="person_amount"><fmt:message key="reservation.person.amount"
+                            <label for="personAmount"><fmt:message key="reservation.person.amount"
                                                                     bundle="${bndl}"/>:</label>
-                            <input name="person_amount" id="person_amount" type="text" pattern="[1-9]" class="validate"
+                            <input name="personAmount" id="personAmount" type="text" pattern="[1-9]" class="validate"
                                    required maxlength="1">
                         </div>
                     </div>
@@ -133,21 +134,21 @@
     });
 
     function checkInDate() {
-        if ($('#check_in_date').val() == '') {
-            $('#check_in_date').addClass('invalid')
+        if ($('#checkInDate').val() == '') {
+            $('#checkInDate').addClass('invalid')
             return false;
         } else {
-            $('#check_in_date').removeClass('invalid')
+            $('#checkInDate').removeClass('invalid')
             return true;
         }
     }
 
     function checkOutDate() {
-        if ($('#check_out_date').val() == '') {
-            $('#check_out_date').addClass('invalid')
+        if ($('#checkOutDate').val() == '') {
+            $('#checkOutDate').addClass('invalid')
             return false;
         } else {
-            $('#check_out_date').removeClass('invalid')
+            $('#checkOutDate').removeClass('invalid')
             return true;
         }
     }
@@ -156,12 +157,12 @@
         return checkInDate() && checkOutDate();
     });
 
-    $('#check_in_date').change(function () {
+    $('#checkInDate').change(function () {
         checkInDate();
 
     });
 
-    $('#check_out_date').change(function () {
+    $('#checkOutDate').change(function () {
         checkOutDate();
     });
 

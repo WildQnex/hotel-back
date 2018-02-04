@@ -43,12 +43,11 @@ public class ReservationDaoImplTest {
         Properties properties = new Properties();
         properties.load(ConnectionPool.class.getResourceAsStream("/db.properties"));
         DriverManager.registerDriver(new Driver());
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/?useUnicode=true&useSSL=false&serverTimezone=GMT",
+        connection = DriverManager.getConnection(properties.getProperty("jdbc.url"),
                 properties.getProperty("jdbc.username"), properties.getProperty("jdbc.password"));
         scriptRunner = new ScriptRunner(connection, false, true);
         scriptRunner.runScript(new InputStreamReader(ConnectionPoolTest.class.getResourceAsStream("/Insert.sql")));
-        ConnectionPool.getInstance().initConnectionPool(5, "jdbc:mysql://localhost:3306/hotel_booking_test?useUnicode=true&useSLL=false&serverTimezone=GMT");
-
+        ConnectionPool.isTest = true;
     }
 
     @BeforeMethod
@@ -59,6 +58,7 @@ public class ReservationDaoImplTest {
 
     @AfterClass
     public void tearDown() throws Exception {
+        ConnectionPool.isTest = false;
         Reader reader = new InputStreamReader(ConnectionPoolTest.class.getResourceAsStream("/Drop.sql"));
         scriptRunner.runScript(reader);
         connection.close();

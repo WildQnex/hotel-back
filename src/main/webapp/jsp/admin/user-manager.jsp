@@ -28,7 +28,7 @@
         <%--<div class="row"></div>--%>
         <%--<div class="row">--%>
         <%--<div class="input-field col s3 m3">--%>
-        <%--<input id="password" type="text" class="validate" name="E-mail">--%>
+        <%--<input id="password" type="text" class="validate" name="email">--%>
         <%--<label for="password">E-mail</label>--%>
         <%--</div>--%>
         <%--<button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light" type="submit">--%>

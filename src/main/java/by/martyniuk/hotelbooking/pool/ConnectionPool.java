@@ -10,40 +10,42 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class ConnectionPool {
 
-    private static final Logger LOGGER = LogManager.getLogger(ConnectionPool.class);
-    private static final Driver DRIVER;
+    public static boolean isTest = false;
 
+    private static final Logger LOGGER = LogManager.getLogger(ConnectionPool.class);
+    private static final Properties PROPERTIES = new Properties();
+    private static final Driver DRIVER;
     static {
         try {
             DRIVER = new Driver();
-        } catch (SQLException e) {
+            PROPERTIES.load(ConnectionPool.class.getResourceAsStream("/db.properties"));
+        } catch (SQLException | IOException e) {
             throw new ExceptionInInitializerError(e);
         }
     }
 
     private BlockingDeque<ProxyConnection> emptyConnectionQueue;
-    private BlockingDeque<ProxyConnection> busyConnectionQueue;
-
-    private static int poolSize = 10;
-    private static String JDBC_URL = "jdbc:mysql://localhost:3306/hotel_booking?useUnicode=true&useSSL=false&serverTimezone=GMT";
+    private List<ProxyConnection> busyConnectionList;
 
 
-    private ConnectionPool(final int poolSize) throws ConnectionPoolException {
+    private ConnectionPool() throws ConnectionPoolException {
         try {
-            initConnectionPool(poolSize);
+            initConnectionPool();
         } catch (SQLException e) {
             throw new ConnectionPoolException("Failed to get connection.", e);
         }
     }
 
     public void returnConnection(Connection connection) {
-        if (busyConnectionQueue.remove(connection)) {
+        if (busyConnectionList.remove(connection)) {
             emptyConnectionQueue.addLast((ProxyConnection) connection);
         }
     }
@@ -54,7 +56,7 @@ public class ConnectionPool {
         static {
             try {
                 DriverManager.registerDriver(DRIVER);
-                HOLDER_INSTANCE = new ConnectionPool(poolSize);
+                HOLDER_INSTANCE = new ConnectionPool();
             } catch (SQLException | ConnectionPoolException e) {
                 throw new ExceptionInInitializerError(e);
             }
@@ -65,15 +67,9 @@ public class ConnectionPool {
         return ConnectionPoolHolder.HOLDER_INSTANCE;
     }
 
-    public void initConnectionPool(int poolSize, String url) throws SQLException {
-        closeConnections();
-        JDBC_URL = url;
-        initConnectionPool(poolSize);
-    }
-
     public Connection getConnection() {
         ProxyConnection connection = emptyConnectionQueue.poll();
-        busyConnectionQueue.addLast(connection);
+        busyConnectionList.add(connection);
         return connection;
     }
 
@@ -91,7 +87,7 @@ public class ConnectionPool {
     }
 
     public int getAmountBusyConnections() {
-        return busyConnectionQueue.size();
+        return busyConnectionList.size();
     }
 
     private void closeConnections() {
@@ -100,22 +96,27 @@ public class ConnectionPool {
             connection.reallyClose();
             count++;
         }
+        for (ProxyConnection connection : busyConnectionList) {
+            connection.reallyClose();
+            count++;
+        }
         LOGGER.log(Level.INFO, "Connections in the amount of " + count + " where successfully closed.");
     }
 
-    private void initConnectionPool(final int POOL_SIZE) throws SQLException {
-        emptyConnectionQueue = new LinkedBlockingDeque<>(POOL_SIZE);
-        busyConnectionQueue = new LinkedBlockingDeque<>(POOL_SIZE);
-        Properties properties = new Properties();
-        try {
-            properties.load(ConnectionPool.class.getResourceAsStream("/db.properties"));
-        } catch (IOException e) {
-            LOGGER.log(Level.INFO, "Can't open property file");
-            throw new RuntimeException(e);
-        }
-        for (int i = 0; i < POOL_SIZE; i++) {
-            Connection connection = DriverManager.getConnection(JDBC_URL, properties.getProperty("jdbc.username"),
-                    properties.getProperty("jdbc.password"));
+    private void initConnectionPool() throws SQLException {
+        int poolSize = Integer.parseInt(PROPERTIES.getProperty("pool.size"));
+        emptyConnectionQueue = new LinkedBlockingDeque<>(poolSize);
+        busyConnectionList = new ArrayList<>(poolSize);
+
+        for (int i = 0; i < poolSize; i++) {
+            Connection connection;
+            if(isTest) {
+                connection = DriverManager.getConnection(PROPERTIES.getProperty("jdbc.database.test.url"), PROPERTIES.getProperty("jdbc.username"),
+                        PROPERTIES.getProperty("jdbc.password"));
+            } else {
+                connection = DriverManager.getConnection(PROPERTIES.getProperty("jdbc.database.url"), PROPERTIES.getProperty("jdbc.username"),
+                        PROPERTIES.getProperty("jdbc.password"));
+            }
             emptyConnectionQueue.offer(new ProxyConnection(connection));
         }
     }

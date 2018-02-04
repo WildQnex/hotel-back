@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="ct" uri="error" %>
+<%@ taglib prefix="ct" uri="http://martyniuk.by" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -26,7 +26,7 @@
 <main>
     <div class="container">
 
-        <ct:showError scope="${sessionScope}" key="apartment_classes_error"/>
+        <ct:showMessage color="red" key="apartmentClassesError"/>
 
         <div class="row">
             <c:forEach items="${apartmentClasses}" var="apartmentClass">

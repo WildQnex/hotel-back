@@ -34,7 +34,7 @@
 
                 <div class="collapsible-body">
                     <form class="col s12" name="book" action="booking" method="POST">
-                        <input name="action" value="edit_apartment" type="hidden"/>
+                        <input name="action" value="editApartment" type="hidden"/>
                         <input name="type" value="update" type="hidden"/>
                         <input name="apartmentId" value="${apartment.id}" type="hidden">
                         <div class="row">
@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <input name="action" type="hidden" value="add_apartment">
+            <input name="action" type="hidden" value="addApartment">
 
             <div class="row">
                 <div class="input-field col s8 m6 offset-m3 offset-s2">

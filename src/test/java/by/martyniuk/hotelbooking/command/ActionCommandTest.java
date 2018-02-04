@@ -77,7 +77,7 @@ public class ActionCommandTest {
         CommandType.authorizationService = authorizationService;
         when(authorizationService.login("user@gmail.com", "password")).thenReturn(Optional.empty());
         CommandType.LOGIN.receiveCommand().execute(request);
-        assertNotNull(request.getSession().getAttribute("login_error"));
+        assertNotNull(request.getSession().getAttribute("loginError"));
     }
 
     @Test
@@ -112,30 +112,30 @@ public class ActionCommandTest {
 
     @Test
     public void registerTest() throws CommandException, ServiceException {
-        request.setParameter("first_name", user.getFirstName());
-        request.setParameter("last_name", user.getLastName());
-        request.setParameter("middle_name", user.getMiddleName());
+        request.setParameter("firstName", user.getFirstName());
+        request.setParameter("lastName", user.getLastName());
+        request.setParameter("middleName", user.getMiddleName());
         request.setParameter("email", user.getEmail());
-        request.setParameter("phone_number", user.getPhoneNumber());
+        request.setParameter("phoneNumber", user.getPhoneNumber());
         request.setParameter("password", user.getPassword());
-        request.setParameter("repeat_password", user.getPassword());
+        request.setParameter("repeatPassword", user.getPassword());
         CommandType.authorizationService = authorizationService;
         when(authorizationService.register(anyObject())).thenReturn(true);
         CommandType.REGISTER.receiveCommand().execute(request);
-        assertNull(request.getSession().getAttribute("register_error"));
+        assertNull(request.getSession().getAttribute("registerError"));
     }
 
     @Test
     public void registerValidationTest() throws CommandException, ServiceException {
-        request.setParameter("first_name", user.getFirstName());
-        request.setParameter("last_name", user.getLastName());
-        request.setParameter("middle_name", user.getMiddleName());
+        request.setParameter("firstName", user.getFirstName());
+        request.setParameter("lastName", user.getLastName());
+        request.setParameter("middleName", user.getMiddleName());
         request.setParameter("password", user.getPassword());
-        request.setParameter("repeat_password", user.getPassword());
+        request.setParameter("repeatPassword", user.getPassword());
         CommandType.authorizationService = authorizationService;
         when(authorizationService.register(anyObject())).thenReturn(true);
         CommandType.REGISTER.receiveCommand().execute(request);
-        assertNotNull(request.getSession().getAttribute("register_error"));
+        assertNotNull(request.getSession().getAttribute("registerError"));
     }
 
     @Test
@@ -152,7 +152,7 @@ public class ActionCommandTest {
         CommandType.apartmentClassService = apartmentClassService;
         when(apartmentClassService.findApartmentClassById(anyInt())).thenReturn(Optional.of(apartmentClass));
         CommandType.SHOW_APARTMENT_CLASS.receiveCommand().execute(request);
-        assertNotNull(request.getSession().getAttribute("apartment_classes_error"));
+        assertNotNull(request.getSession().getAttribute("apartmentClassesError"));
     }
 
     @Test
@@ -168,10 +168,10 @@ public class ActionCommandTest {
     public void updateProfileTest() throws CommandException, ServiceException {
         String name = "name";
         request.getSession().setAttribute("user", user);
-        request.setParameter("first_name", name);
-        request.setParameter("last_name", user.getLastName());
-        request.setParameter("middle_name", user.getMiddleName());
-        request.setParameter("phone_number", user.getPhoneNumber());
+        request.setParameter("firstName", name);
+        request.setParameter("lastName", user.getLastName());
+        request.setParameter("middleName", user.getMiddleName());
+        request.setParameter("phoneNumber", user.getPhoneNumber());
         CommandType.userService = userService;
         when(userService.updateUserProfile(anyObject())).thenReturn(true);
         CommandType.UPDATE_PROFILE.receiveCommand().execute(request);
@@ -181,23 +181,23 @@ public class ActionCommandTest {
     @Test
     public void updateProfileErrorTest() throws CommandException, ServiceException {
         request.getSession().setAttribute("user", user);
-        request.setParameter("first_name", "");
-        request.setParameter("last_name", user.getLastName());
-        request.setParameter("middle_name", user.getMiddleName());
-        request.setParameter("phone_number", user.getPhoneNumber());
+        request.setParameter("firstName", "");
+        request.setParameter("lastName", user.getLastName());
+        request.setParameter("middleName", user.getMiddleName());
+        request.setParameter("phoneNumber", user.getPhoneNumber());
         CommandType.userService = userService;
         when(userService.updateUserProfile(anyObject())).thenReturn(true);
         CommandType.UPDATE_PROFILE.receiveCommand().execute(request);
-        assertNotNull(request.getSession().getAttribute("update_profile_error"));
+        assertNotNull(request.getSession().getAttribute("updateProfileError"));
     }
 
     @Test
     public void updateUserPasswordTest() throws CommandException, ServiceException {
         String newPassword = "newPassword";
         request.getSession().setAttribute("user", user);
-        request.setParameter("current_password", user.getPassword());
-        request.setParameter("new_password", newPassword);
-        request.setParameter("repeat_new_password", newPassword);
+        request.setParameter("currentPassword", user.getPassword());
+        request.setParameter("newPassword", newPassword);
+        request.setParameter("repeatNewPassword", newPassword);
         CommandType.userService = userService;
         when(userService.changeUserPassword(user.getEmail(), user.getPassword(), newPassword)).thenReturn(true);
         user.setPassword(newPassword);

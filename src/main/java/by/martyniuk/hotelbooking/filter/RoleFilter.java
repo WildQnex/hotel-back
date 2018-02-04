@@ -1,6 +1,7 @@
 package by.martyniuk.hotelbooking.filter;
 
 import by.martyniuk.hotelbooking.command.CommandType;
+import by.martyniuk.hotelbooking.constant.CommandConstant;
 import by.martyniuk.hotelbooking.entity.Role;
 import by.martyniuk.hotelbooking.entity.User;
 
@@ -41,13 +42,13 @@ public class RoleFilter implements Filter {
         HttpSession session = httpServletRequest.getSession();
 
         CommandType commandType;
-        if (CommandType.ifPresent(httpServletRequest.getParameter("action"))) {
-            commandType = CommandType.valueOf(httpServletRequest.getParameter("action").toUpperCase());
+        if (CommandType.ifPresent(httpServletRequest.getParameter(CommandConstant.ACTION))) {
+            commandType = CommandType.valueOf(httpServletRequest.getParameter(CommandConstant.ACTION).toUpperCase());
         } else {
             commandType = CommandType.DEFAULT;
         }
 
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute(CommandConstant.USER);
 
         boolean isContinue = true;
 
@@ -70,7 +71,7 @@ public class RoleFilter implements Filter {
         if (isContinue) {
             chain.doFilter(request, response);
         } else {
-            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/index.jsp");
+            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + CommandConstant.INDEX);
         }
 
     }

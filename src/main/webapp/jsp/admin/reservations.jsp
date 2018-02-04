@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="ct" uri="error" %>
+<%@ taglib prefix="ct" uri="http://martyniuk.by" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="text" var="bndl"/>
 
@@ -25,7 +25,7 @@
 
 <main>
     <div class="container">
-        <ct:showError scope="${sessionScope}" key="approve_reservation_error"/>
+        <ct:showMessage color="red" key="approveReservationError"/>
 
         <ul class="collapsible popout" data-collapsible="accordion">
             <c:forEach items="${reservations}" var="reservation">
@@ -40,12 +40,12 @@
                         <div class="row">Order status: ${reservation.status}</div>
                         <div class="divider"></div>
                         <div class="row"></div>
-                        <input name="action" type="hidden" value="approve_reservation">
+                        <input name="action" type="hidden" value="approveReservation">
                         <div class="row">
                             <div class="input-field col s6 m4 offset-m4 offset-s3">
-                                <select id="apartment_id">
+                                <select id="apartmentId">
                                     <option value="" disabled>Choose apartment</option>
-                                    <option selected name="apartment_id"
+                                    <option selected name="apartmentId"
                                             value="${reservation.apartment.id}">${reservation.apartment.number}</option>
                                     <c:forEach items="${freeApartments.get(reservation)}" var="apartment">
                                         <option value="${apartment.id}">${apartment.number}</option>
@@ -57,8 +57,8 @@
                         <div class="row">
                             <div class="col s6 m3 offset-m2">
                                 <a id="approve"
-                                   href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=approved&apartment_id=">
-                                    <button id="approve_button" onclick="$(this).setApprovedId();"
+                                   href="booking?action=approve_reservation&reservationId=${reservation.id}&status=approved&apartmentId=">
+                                    <button id="approveButton" onclick="$(this).setApprovedId();"
                                             class="btn waves-effect waves-light center">
                                         Approve
                                     </button>
@@ -66,8 +66,8 @@
                             </div>
                             <div class="col s6 m3 offset-m2">
                                 <a id="decline"
-                                   href="booking?action=approve_reservation&reservation_id=${reservation.id}&status=declined&apartment_id=${reservation.apartment.id}">
-                                    <button id="decline_button" class="btn waves-effect waves-light center">
+                                   href="booking?action=approve_reservation&reservationId=${reservation.id}&status=declined&apartmentId=${reservation.apartment.id}">
+                                    <button id="declineButton" class="btn waves-effect waves-light center">
                                         Decline
                                     </button>
                                 </a>

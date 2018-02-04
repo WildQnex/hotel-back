@@ -1,5 +1,6 @@
 package by.martyniuk.hotelbooking.filter;
 
+import by.martyniuk.hotelbooking.constant.CommandConstant;
 import by.martyniuk.hotelbooking.constant.PagePath;
 
 import javax.servlet.Filter;
@@ -10,29 +11,26 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-@WebFilter(filterName = "PageFilter", urlPatterns = {"/"})
+@WebFilter(filterName = "PageFilter", urlPatterns = {"/*"})
 public class PageFilter implements Filter {
 
-    private static final Pattern URL_PATTERN = Pattern.compile("(/booking)|(/index.jsp)|(/)");
+    private static final Pattern URL_PATTERN = Pattern.compile("(/css/.*)|(/js/.*)|(/img/.*)|(/fonts/.*)|(/booking)|(/index\\.jsp)|(/)");
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        System.out.println(request.getRequestURI());
         if (URL_PATTERN.matcher(request.getRequestURI()).matches()) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            request.setAttribute("error_message", "Page not found");
+            request.setAttribute(CommandConstant.ERROR_MESSAGE, "Page not found");
             request.getRequestDispatcher(PagePath.ERROR.getPage()).forward(servletRequest, servletResponse);
         }
 

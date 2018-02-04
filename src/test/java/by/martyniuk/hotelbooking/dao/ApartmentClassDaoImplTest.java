@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
+import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 
@@ -34,17 +35,18 @@ public class ApartmentClassDaoImplTest {
         properties.load(ConnectionPool.class.getResourceAsStream("/db.properties"));
         Reader reader = new InputStreamReader(ConnectionPoolTest.class.getResourceAsStream("/Insert.sql"));
         DriverManager.registerDriver(new Driver());
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/?useUnicode=true&serverTimezone=GMT",
+        connection = DriverManager.getConnection(properties.getProperty("jdbc.url"),
                 properties.getProperty("jdbc.username"), properties.getProperty("jdbc.password"));
         scriptRunner = new ScriptRunner(connection, false, true);
         scriptRunner.runScript(reader);
-        ConnectionPool.getInstance().initConnectionPool(5, "jdbc:mysql://localhost:3306/hotel_booking_test?useUnicode=true&serverTimezone=GMT");
         apartmentClass = new ApartmentClass(1, "Single", 1, 1, new BigDecimal("100.00"), new BigDecimal("45.00"),
                 "A comfortable classic room with a single bed for one person.", "img/single.jpg");
+        ConnectionPool.isTest = true;
     }
 
     @AfterClass
     public void tearDown() throws Exception {
+        ConnectionPool.isTest = false;
         Reader reader = new InputStreamReader(ConnectionPoolTest.class.getResourceAsStream("/Drop.sql"));
         scriptRunner.runScript(reader);
         connection.close();
