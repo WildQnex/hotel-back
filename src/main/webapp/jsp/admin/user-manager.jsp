@@ -24,22 +24,10 @@
 
 <main>
     <div class="container">
-        <%--<form class="col s12" name="login" action="booking" method="POST">--%>
-        <%--<div class="row"></div>--%>
-        <%--<div class="row">--%>
-        <%--<div class="input-field col s3 m3">--%>
-        <%--<input id="password" type="text" class="validate" name="email">--%>
-        <%--<label for="password">E-mail</label>--%>
-        <%--</div>--%>
-        <%--<button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light" type="submit">--%>
-        <%--Найти--%>
-        <%--</button>--%>
-        <%--</div>--%>
-        <%--</form>--%>
     </div>
     <div id="reservations" class="container">
         <div class="container">
-            <ul class="collapsible popout" data-collapsible="accordion">
+            <ul class="collapsible popout s12" data-collapsible="accordion">
                 <c:forEach items="${users}" var="user">
                     <li>
                         <div class="collapsible-header">
@@ -47,14 +35,22 @@
                             Active: ${user.active}
                         </div>
                         <div class="collapsible-body">
-                                <%--<div class="row"><strong>Order made on</strong> ${reservation.orderTime.toLocalDate()}--%>
-                                <%--<strong>  at </strong> ${reservation.orderTime.toLocalTime()}</div>--%>
-                                <%--<div class="row"><strong>Apartment number:</strong> ${reservation.apartment.number}</div>--%>
-                                <%--<div class="row"><strong>Person amount:</strong> ${reservation.personAmount}</div>--%>
-                                <%--<div class="row"><strong>Cost per person:</strong> ${reservation.costPerPerson} $</div>--%>
-                                <%--<div class="row"><strong>Cost per night:</strong> ${reservation.costPerNight} $</div>--%>
-                                <%--<div class="row"><strong>Total cost:</strong> ${reservation.totalCost} $</div>--%>
-                                <%--<div class="row"><strong>Order status:</strong> ${reservation.status}</div>--%>
+                            <div class="row">
+                                <div class="col m4 offset-m1">
+                                    <a href="booking?action=admin_show_user_profile&id=${user.id}">
+                                        <button class="btn waves-effect waves-light" type="submit">
+                                            <fmt:message key="user.edit.profile" bundle="${bndl}"/>
+                                        </button>
+                                    </a>
+                                </div>
+                                <div class="col m4 offset-m3">
+                                    <a href="booking?action=admin_show_user_reservations&id=${user.id}">
+                                        <button class="btn waves-effect waves-light" type="submit">
+                                            <fmt:message key="user.show.reservation" bundle="${bndl}"/>
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </li>
                 </c:forEach>
@@ -88,7 +84,7 @@
 
 <script>
     $(window).on("load", function () {
-        if ($('#login-error').length == 1) {
+        if ($('#loginError').length == 1) {
             $('#modal').modal('open');
         }
     });

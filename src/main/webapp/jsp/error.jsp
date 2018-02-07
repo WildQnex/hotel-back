@@ -21,18 +21,33 @@
 
 <body>
 
+<div class="navbar-fixed">
+    <nav class="white" role="navigation">
+
+        <div class="nav-wrapper container ">
+            <a href="booking?action=forward&page=main"
+               class="brand-logo amber-text text-lighten-3 text-border"><fmt:message key="header.logo"
+                                                                                     bundle="${bndl}"/></a>
+        </div>
+
+    </nav>
+</div>
 
 <main class="red-text">
 
-    <ct:showMessage color="red" key="errorMessage"/>
-    <div class="center">
-        <a id="logo-container" href="booking?action=forward&page=main"
+    <h1 class="row"></h1>
+    <h1 class="row"></h1>
+    <h5><strong><ct:showMessage color="red" key="errorMessage"/></strong></h5>
+    <h4 class="center">
+        <a href="booking?action=forward&page=main"
            class="brand-logo center amber-text text-lighten-3 text-border">
             На главную
         </a>
-    </div>
+    </h4>
 </main>
 
+
+<jsp:include page="footer.jsp"/>
 
 </body>
 
@@ -41,26 +56,6 @@
 <script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
-
-<script>
-    $('.modal').modal({
-            dismissible: true, // Modal can be dismissed by clicking outside of the modal
-            opacity: .5, // Opacity of modal background
-            inDuration: 300, // Transition in duration
-            outDuration: 200, // Transition out duration
-            startingTop: '4%', // Starting top style attribute
-            endingTop: '10%', // Ending top style attribute
-        }
-    );
-</script>
-
-<script>
-    $(window).on("load", function () {
-        if ($('#login-error').length == 1) {
-            $('#modal').modal('open');
-        }
-    });
-</script>
 
 
 </html>

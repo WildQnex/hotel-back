@@ -18,15 +18,40 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+/**
+ * The Class AuthorizationServiceImplTest.
+ */
 public class AuthorizationServiceImplTest {
 
+    /**
+     * The user dao.
+     */
     private UserDao userDao;
+
+    /**
+     * The authorization service.
+     */
     private AuthorizationService authorizationService = new AuthorizationServiceImpl();
+
+    /**
+     * The user.
+     */
     private User user;
+
+    /**
+     * The correct password.
+     */
     private String correctPassword;
+
+    /**
+     * The incorrect password.
+     */
     private String incorrectPassword;
 
 
+    /**
+     * Sets the up.
+     */
     @BeforeClass
     public void setUp() {
         userDao = mock(UserDao.class);
@@ -37,6 +62,12 @@ public class AuthorizationServiceImplTest {
     }
 
 
+    /**
+     * Authorization test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void authorizationTest() throws DaoException, ServiceException {
         AuthorizationServiceImpl.userDao = userDao;
@@ -44,6 +75,12 @@ public class AuthorizationServiceImplTest {
         assertEquals(authorizationService.login(user.getEmail(), correctPassword), Optional.of(user));
     }
 
+    /**
+     * Authorization incorrect password test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void authorizationIncorrectPasswordTest() throws DaoException, ServiceException {
         AuthorizationServiceImpl.userDao = userDao;
@@ -51,6 +88,12 @@ public class AuthorizationServiceImplTest {
         assertEquals(authorizationService.login(user.getEmail(), incorrectPassword), Optional.empty());
     }
 
+    /**
+     * Authorization incorrect mail test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void authorizationIncorrectMailTest() throws DaoException, ServiceException {
         AuthorizationServiceImpl.userDao = userDao;
@@ -58,6 +101,12 @@ public class AuthorizationServiceImplTest {
         assertEquals(authorizationService.login(user.getEmail(), correctPassword), Optional.empty());
     }
 
+    /**
+     * Register test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void registerTest() throws DaoException, ServiceException {
         AuthorizationServiceImpl.userDao = userDao;

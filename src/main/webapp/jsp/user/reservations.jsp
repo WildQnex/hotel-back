@@ -94,7 +94,7 @@
 
 <script>
     $(window).on("load", function () {
-        if ($('#login-error').length == 1) {
+        if ($('#loginError').length == 1) {
             $('#modal').modal('open');
         }
     });

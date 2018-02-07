@@ -14,16 +14,36 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+/**
+ * The Class PageFilter.
+ */
 @WebFilter(filterName = "PageFilter", urlPatterns = {"/*"})
 public class PageFilter implements Filter {
 
+    /**
+     * The Constant URL_PATTERN.
+     */
     private static final Pattern URL_PATTERN = Pattern.compile("(/css/.*)|(/js/.*)|(/img/.*)|(/fonts/.*)|(/booking)|(/index\\.jsp)|(/)");
 
+    /**
+     * Inits the.
+     *
+     * @param filterConfig the filter config
+     */
     @Override
     public void init(FilterConfig filterConfig) {
 
     }
 
+    /**
+     * Do filter.
+     *
+     * @param servletRequest  the servlet request
+     * @param servletResponse the servlet response
+     * @param filterChain     the filter chain
+     * @throws IOException      Signals that an I/O exception has occurred.
+     * @throws ServletException the servlet exception
+     */
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -37,6 +57,9 @@ public class PageFilter implements Filter {
     }
 
 
+    /**
+     * Destroy.
+     */
     @Override
     public void destroy() {
 

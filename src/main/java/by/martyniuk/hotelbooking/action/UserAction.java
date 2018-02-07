@@ -13,6 +13,7 @@ import by.martyniuk.hotelbooking.util.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -21,7 +22,36 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+
+/**
+ * The Class UserAction.
+ */
 public class UserAction {
+
+    /**
+     * Show user profile.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
+    public static String showUserProfile(HttpServletRequest request) throws CommandException {
+        try {
+            Optional<User> user = CommandType.userService.findUserByMail(((User) request.getSession().getAttribute(CommandConstant.USER)).getEmail());
+            user.ifPresent(user1 -> request.getSession().setAttribute(CommandConstant.USER, user1));
+            return PagePath.USER.getPage();
+        } catch (ServiceException e) {
+            throw new CommandException(e);
+        }
+    }
+
+    /**
+     * Book apartment.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String bookApartment(HttpServletRequest request) throws CommandException {
         try {
             HttpSession session = request.getSession();
@@ -74,6 +104,12 @@ public class UserAction {
         }
     }
 
+    /**
+     * Logout.
+     *
+     * @param request the request
+     * @return the string
+     */
     public static String logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.removeAttribute(CommandConstant.USER);
@@ -81,6 +117,13 @@ public class UserAction {
         return request.getHeader(CommandConstant.REFERER);
     }
 
+    /**
+     * Show personal reservations.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String showPersonalReservations(HttpServletRequest request) throws CommandException {
         try {
             List<Reservation> reservations = CommandType.reservationService.readAllReservationByUserId(((User) request.getSession().getAttribute(CommandConstant.USER)).getId());
@@ -92,6 +135,35 @@ public class UserAction {
         }
     }
 
+    /**
+     * Deposit money.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
+    public static String depositMoney(HttpServletRequest request) throws CommandException {
+        try {
+            User user = (User) request.getSession().getAttribute(CommandConstant.USER);
+
+            if (!CommandType.userService.depositMoney(user.getId(), new BigDecimal(request.getParameter(CommandConstant.CURRENCY)))) {
+                request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, ResourceManager.getResourceBundle().getString("error.update.balance"));
+            }
+
+            request.setAttribute(CommandConstant.REDIRECT, true);
+            return request.getHeader(CommandConstant.REFERER);
+        } catch (ServiceException e) {
+            throw new CommandException(e);
+        }
+    }
+
+    /**
+     * Update user profile.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String updateUserProfile(HttpServletRequest request) throws CommandException {
         try {
             User user = (User) request.getSession().getAttribute(CommandConstant.USER);
@@ -118,6 +190,13 @@ public class UserAction {
         }
     }
 
+    /**
+     * Update user password.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String updateUserPassword(HttpServletRequest request) throws CommandException {
         try {
             String currentPassword = request.getParameter(CommandConstant.CURRENT_PASSWORD);

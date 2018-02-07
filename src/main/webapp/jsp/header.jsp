@@ -117,7 +117,7 @@
 </header>
 
 <ul id='dropdown-user' class='dropdown-content'>
-    <li><a href="booking?action=forward&page=user">Профиль</a></li>
+    <li><a href="booking?action=show_user_profile">Профиль</a></li>
     <li><a href="booking?action=show_personal_reservations">Заказы</a></li>
     <li class="divider"></li>
     <li><a href="booking?action=logout"><fmt:message key="header.logout"

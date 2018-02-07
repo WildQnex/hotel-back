@@ -19,18 +19,32 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/**
+ * The Class ProxyConnection.
+ */
 public class ProxyConnection implements Connection {
 
+    /**
+     * The connection.
+     */
     private Connection connection;
 
+    /**
+     * Instantiates a new proxy connection.
+     *
+     * @param connection the connection
+     */
     ProxyConnection(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Really close.
+     */
     void reallyClose() {
         try {
             connection.close();
-        } catch (SQLException e) {
+        } catch (SQLException ignore) {
 
         }
     }

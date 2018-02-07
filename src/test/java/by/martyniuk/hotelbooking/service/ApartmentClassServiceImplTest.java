@@ -18,14 +18,39 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
+/**
+ * The Class ApartmentClassServiceImplTest.
+ */
 public class ApartmentClassServiceImplTest {
 
+    /**
+     * The apartment class dao.
+     */
     private ApartmentClassDao apartmentClassDao;
+
+    /**
+     * The apartment class service impl.
+     */
     private ApartmentClassServiceImpl apartmentClassServiceImpl = new ApartmentClassServiceImpl();
+
+    /**
+     * The apartment class one.
+     */
     private ApartmentClass apartmentClassOne;
+
+    /**
+     * The apartment class two.
+     */
     private ApartmentClass apartmentClassTwo;
+
+    /**
+     * The apartment class list.
+     */
     private List<ApartmentClass> apartmentClassList;
 
+    /**
+     * Sets the up.
+     */
     @BeforeMethod
     public void setUp() {
         apartmentClassDao = mock(ApartmentClassDao.class);
@@ -38,10 +63,19 @@ public class ApartmentClassServiceImplTest {
         apartmentClassList.add(apartmentClassTwo);
     }
 
+    /**
+     * Tear down.
+     */
     @AfterMethod
     public void tearDown() {
     }
 
+    /**
+     * Find apartment class by id test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void findApartmentClassByIdTest() throws DaoException, ServiceException {
         ApartmentClassServiceImpl.apartmentClassDao = apartmentClassDao;
@@ -49,6 +83,12 @@ public class ApartmentClassServiceImplTest {
         assertEquals(apartmentClassServiceImpl.findApartmentClassById(apartmentClassOne.getId()), Optional.of(apartmentClassOne));
     }
 
+    /**
+     * Find apartment class by id exception test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test(expectedExceptions = ServiceException.class)
     public void findApartmentClassByIdExceptionTest() throws DaoException, ServiceException {
         ApartmentClassServiceImpl.apartmentClassDao = apartmentClassDao;
@@ -56,6 +96,12 @@ public class ApartmentClassServiceImplTest {
         apartmentClassServiceImpl.findApartmentClassById(apartmentClassOne.getId());
     }
 
+    /**
+     * Find apartment classes test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void findApartmentClassesTest() throws DaoException, ServiceException {
         ApartmentClassServiceImpl.apartmentClassDao = apartmentClassDao;

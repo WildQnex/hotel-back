@@ -14,15 +14,32 @@ import javax.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.Optional;
 
+/**
+ * The Class CommonAction.
+ */
 public class CommonAction {
-    public static String setLocale(HttpServletRequest request) throws CommandException {
+
+    /**
+     * Sets the locale.
+     *
+     * @param request the request
+     * @return the string
+     */
+    public static String setLocale(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        ResourceManager.currentLocale = Locale.forLanguageTag(request.getParameter(CommandConstant.VALUE).replace('_','-'));
+        ResourceManager.currentLocale = Locale.forLanguageTag(request.getParameter(CommandConstant.VALUE).replace('_', '-'));
         session.setAttribute(CommandConstant.LOCALE, request.getParameter(CommandConstant.VALUE));
         request.setAttribute(CommandConstant.REDIRECT, true);
         return request.getHeader(CommandConstant.REFERER);
     }
 
+    /**
+     * Forward.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String forward(HttpServletRequest request) throws CommandException {
         if (!PagePath.isPresent(request.getParameter(CommandConstant.PAGE))) {
             throw new CommandException("Page not found");
@@ -30,6 +47,13 @@ public class CommonAction {
         return PagePath.valueOf(request.getParameter(CommandConstant.PAGE).toUpperCase()).getPage();
     }
 
+    /**
+     * Show apartment class.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String showApartmentClass(HttpServletRequest request) throws CommandException {
         try {
             String stringId = request.getParameter(CommandConstant.ID);
@@ -54,6 +78,13 @@ public class CommonAction {
         }
     }
 
+    /**
+     * Show apartment classes.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String showApartmentClasses(HttpServletRequest request) throws CommandException {
         try {
             request.setAttribute(CommandConstant.APARTMENT_CLASSES, CommandType.apartmentClassService.findAllApartmentClasses());
@@ -63,6 +94,13 @@ public class CommonAction {
         }
     }
 
+    /**
+     * Command not found.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String commandNotFound(HttpServletRequest request) throws CommandException {
         throw new CommandException("Command operation not found");
     }

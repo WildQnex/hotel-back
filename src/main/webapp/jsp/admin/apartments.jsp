@@ -28,49 +28,52 @@
             <c:forEach items="${apartments}" var="apartment">
             <li>
                 <div class="collapsible-header">
-                    <i class="material-icons">blur_on</i>№ ${apartment.number} Class
+                    <i class="material-icons">blur_on</i>№ ${apartment.number} <fmt:message key="apartment.class"
+                                                                                            bundle="${bndl}"/>
                     : ${apartment.apartmentClass.type}
                 </div>
 
                 <div class="collapsible-body">
                     <form class="col s12" name="book" action="booking" method="POST">
-                        <input name="action" value="editApartment" type="hidden"/>
+                        <input name="action" value="edit_apartment" type="hidden"/>
                         <input name="type" value="update" type="hidden"/>
                         <input name="apartmentId" value="${apartment.id}" type="hidden">
                         <div class="row">
                             <div class="input-field col s6">
                                 <input id="number" name="number" type="text" class="validate"
-                                       value="${apartment.number}">
-                                <label for="number">Apartment Number</label>
+                                       pattern="[\w\d()]{1,20}" value="${apartment.number}">
+                                <label for="number"><fmt:message key="apartment.number" bundle="${bndl}"/></label>
                             </div>
                             <div class="input-field col s6">
-                                <input id="floor" name="floor" type="text" class="validate" value="${apartment.floor}">
-                                <label for="floor">Floor</label>
+                                <input id="floor" name="floor" type="text" class="validate"
+                                       pattern="[1-9]" value="${apartment.floor}">
+                                <label for="floor"><fmt:message key="apartment.floor" bundle="${bndl}"/></label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s6 m4 offset-m4 offset-s3">
                                 <select id="class" name="class">
-                                    <option value="" disabled>Choose apartment class</option>
+                                    <option value="" disabled><fmt:message key="apartment.choose.class"
+                                                                           bundle="${bndl}"/></option>
                                     <option selected name="class"
                                             value="${apartment.apartmentClass.id}">${apartment.apartmentClass.type}</option>
                                     <c:forEach items="${apartmentClasses}" var="apartmentClass">
                                         <option value="${apartmentClass.id}">${apartmentClass.type}</option>
                                     </c:forEach>
                                 </select>
-                                <label>Apartment Class</label>
+                                <label><fmt:message key="apartment.class" bundle="${bndl}"/></label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col s6 m3 offset-m2">
                                 <button class="btn waves-effect waves-light" type="submit">
-                                    Edit
+                                    <fmt:message key="apartment.edit" bundle="${bndl}"/>
                                 </button>
                             </div>
                             <div class="col s6 m3 offset-m2">
                                 <a href="booking?action=edit_apartment&apartmentId=${apartment.id}&type=delete">
                                     <button class="btn waves-effect waves-light" type="button">
-                                        Delete
+                                        <fmt:message key="apartment.delete" bundle="${bndl}"/>
                                     </button>
                                 </a>
                             </div>
@@ -84,7 +87,7 @@
             <div class="row center">
                 <a class="modal-trigger" href="#modalApartment">
                     <button class="btn waves-effect waves-light center">
-                        Add apartment
+                        <fmt:message key="apartment.add" bundle="${bndl}"/>
                     </button>
                 </a>
             </div>
@@ -102,41 +105,43 @@
         <form class="col s12" action="booking" method="POST">
 
             <div class="row">
-                <div class="col s6 offset-s3 center"><span class="flow-text">Add apartment</span>
+                <div class="col s6 offset-s3 center"><span class="flow-text"><fmt:message key="apartment.add"
+                                                                                          bundle="${bndl}"/></span>
                 </div>
             </div>
 
-            <input name="action" type="hidden" value="addApartment">
+            <input name="action" type="hidden" value="add_apartment">
 
             <div class="row">
                 <div class="input-field col s8 m6 offset-m3 offset-s2">
-                    <input id="apartmentNumber" type="text" name="apartmentNumber" class="validate">
-                    <label for="apartmentNumber">Number</label>
+                    <input id="apartmentNumber" type="text" name="apartmentNumber" pattern="[\w\d()]{1,20}"
+                           class="validate">
+                    <label for="apartmentNumber"><fmt:message key="apartment.number" bundle="${bndl}"/></label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="input-field col s8 m6 offset-m3 offset-s2">
-                    <input id="apartmentFloor" type="text" class="validate" name="apartmentFloor">
-                    <label for="apartmentFloor">Floor</label>
+                    <input id="apartmentFloor" type="text" class="validate" pattern="[1-9]" name="apartmentFloor">
+                    <label for="apartmentFloor"><fmt:message key="apartment.floor" bundle="${bndl}"/></label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="input-field col s8 m6 offset-m3 offset-s2">
                     <select name="apartmentClass">
-                        <option value="" disabled>Choose apartment class</option>
+                        <option value="" disabled><fmt:message key="apartment.choose.class" bundle="${bndl}"/></option>
                         <c:forEach items="${apartmentClasses}" var="apartmentClass">
                             <option selected value="${apartmentClass.id}">${apartmentClass.type}</option>
                         </c:forEach>
                     </select>
-                    <label>Apartment Class</label>
+                    <label><fmt:message key="apartment.class" bundle="${bndl}"/></label>
                 </div>
             </div>
 
             <div class="row">
                 <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
-                    Create
+                    <fmt:message key="apartment.create" bundle="${bndl}"/>
                 </button>
             </div>
         </form>
@@ -174,7 +179,7 @@
 
 <script>
     $(window).on("load", function () {
-        if ($('#login-error').length == 1) {
+        if ($('#loginError').length == 1) {
             $('#modal').modal('open');
         }
     });

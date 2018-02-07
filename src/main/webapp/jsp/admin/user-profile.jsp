@@ -29,23 +29,24 @@
         <ct:showMessage color="red" key="updateProfileError"/>
 
         <form class="col s12" name="book" action="booking" method="POST">
-            <input type="hidden" name="action" value="update_profile">
+            <input type="hidden" name="action" value="admin_update_user_profile">
+            <input type="hidden" name="id" value="${userProfile.id}">
             <div class="row">
                 <div class="input-field col s4 m4">
                     <input id="firstName" type="text" name="firstName" class="validate" required
-                           pattern="[a-zA-Zа-яА-Я]{2,45}" value="${user.firstName}"
+                           pattern="[a-zA-Zа-яА-Я]{2,45}" value="${userProfile.firstName}"
                            title="<fmt:message key="user.name" bundle="${bndl}"/>">
                     <label for="firstName"><fmt:message key="user.name" bundle="${bndl}"/></label>
                 </div>
                 <div class="input-field col s4 m4">
                     <input id="lastName" type="text" name="lastName" class="validate" required
-                           pattern="[a-zA-Zа-яА-Я]{2,45}" value="${user.lastName}"
+                           pattern="[a-zA-Zа-яА-Я]{2,45}" value="${userProfile.lastName}"
                            title="<fmt:message key="user.name.last" bundle="${bndl}"/>">
                     <label for="lastName"><fmt:message key="user.name.last" bundle="${bndl}"/></label>
                 </div>
                 <div class="input-field col s4 m4">
                     <input id="middleName" type="text" name="middleName" class="validate"
-                           pattern="[a-zA-Zа-яА-Я]{0,45}" value="${user.middleName}"
+                           pattern="[a-zA-Zа-яА-Я]{0,45}" value="${userProfile.middleName}"
                            title="<fmt:message key="user.name.middle" bundle="${bndl}"/>">
                     <label for="middleName"><fmt:message key="user.name.middle" bundle="${bndl}"/> *</label>
                 </div>
@@ -53,16 +54,28 @@
             <div class="row">
                 <div class="input-field col s4 m4">
                     <label for="balance"><fmt:message key="user.balance" bundle="${bndl}"/></label>
-                    <input disabled name="balance" id="balance" type="number" value="${user.balance}">
+                    <input disabled name="balance" id="balance" type="number" value="${userProfile.balance}">
                 </div>
                 <div class="input-field col s4 m4">
-                    <input id="email" type="email" name="email" class="validate" value="${user.email}"
+                    <input id="email" type="email" name="email" class="validate" value="${userProfile.email}"
                            disabled title="<fmt:message key="user.email" bundle="${bndl}"/>">
                     <label for="email"><fmt:message key="user.email" bundle="${bndl}"/></label>
                 </div>
                 <div class="input-field col s4 m4">
+                    <select id="role" name="role">
+                        <option value="" disabled><fmt:message key="user.role" bundle="${bndl}"/></option>
+                        <c:choose>
+                            <c:when test="${userProfile.role.toString().equalsIgnoreCase('Admin')}">
+                                <option value="user"><fmt:message key="user.user" bundle="${bndl}"/></option>
+                                <option selected value="admin"><fmt:message key="user.admin" bundle="${bndl}"/></option>
+                            </c:when>
+                            <c:otherwise>
+                                <option selected value="user"><fmt:message key="user.user" bundle="${bndl}"/></option>
+                                <option value="admin"><fmt:message key="user.admin" bundle="${bndl}"/></option>
+                            </c:otherwise>
+                        </c:choose>
+                    </select>
                     <label for="role"><fmt:message key="user.role" bundle="${bndl}"/></label>
-                    <input disabled name="role" id="role" type="text" value="${user.role}">
                 </div>
             </div>
             <div class="row">
@@ -70,7 +83,7 @@
                     <input id="phoneNumber" type="text" name="phoneNumber" class="validate" maxlength="18" required
                            pattern="((\+)?\d+?-?\d+-?\d+)|((\+\d+)?(\(\d{3}\))\d{7})|
                                ((\+\d+)?(\(\d{3}\))(\(\d{3}\))?-?\d)|((\+-?(\d){3,18}))"
-                           value="${user.phoneNumber}" title="<fmt:message key="user.phone" bundle="${bndl}"/>">
+                           value="${userProfile.phoneNumber}" title="<fmt:message key="user.phone" bundle="${bndl}"/>">
                     <label for="phoneNumber"><fmt:message key="user.phone" bundle="${bndl}"/></label>
                 </div>
             </div>
@@ -78,52 +91,6 @@
                 <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center"
                         type="submit">
                     <fmt:message key="profile.change" bundle="${bndl}"/>
-                </button>
-            </div>
-        </form>
-        <form class="col s12" action="booking" method="POST">
-            <input type="hidden" name="action" value="update_password">
-            <div class="row"></div>
-            <div class="row">
-                <div class="input-field col s4">
-                    <input id="currentPassword" type="password" name="currentPassword" class="validate" required
-                           minlength="6"
-                           maxlength="60" title="<fmt:message key="user.password.current" bundle="${bndl}"/>">
-                    <label for="currentPassword"><fmt:message key="user.password.current" bundle="${bndl}"/></label>
-                </div>
-                <div class="input-field col s4">
-                    <input id="newPassword" type="password" name="newPassword" class="validate" required minlength="6"
-                           maxlength="60" title="<fmt:message key="user.password" bundle="${bndl}"/>">
-                    <label for="newPassword"><fmt:message key="user.password" bundle="${bndl}"/></label>
-                </div>
-                <div class="input-field col s4">
-                    <input id="repeatNewPassword" type="password" name="repeatNewPassword" class="validate" required
-                           minlength="6"
-                           maxlength="60" title="<fmt:message key="user.password.repeat" bundle="${bndl}"/>">
-                    <label for="repeatNewPassword"><fmt:message key="user.password.repeat" bundle="${bndl}"/></label>
-                </div>
-            </div>
-            <div class="row">
-                <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center"
-                        type="submit">
-                    <fmt:message key="profile.password.change" bundle="${bndl}"/>
-                </button>
-            </div>
-        </form>
-        <form class="col s12" action="booking" method="POST">
-            <input type="hidden" name="action" value="add_money">
-            <div class="row"></div>
-            <div class="row">
-                <div class="input-field col s4 offset-s4">
-                    <input id="currency" type="text" name="currency" class="validate" required
-                           pattern="\d{1,10}" title="<fmt:message key="user.currency" bundle="${bndl}"/>">
-                    <label for="currency"><fmt:message key="user.currency" bundle="${bndl}"/></label>
-                </div>
-            </div>
-            <div class="row">
-                <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center"
-                        type="submit">
-                    <fmt:message key="profile.add.money" bundle="${bndl}"/>
                 </button>
             </div>
         </form>
@@ -171,6 +138,10 @@
 </script>
 
 <script>
+    $(document).ready(function () {
+        $('select').material_select();
+    });
+
     $(window).on("load", function () {
         if ($('#loginError').length == 1) {
             $('#modal').modal('open');

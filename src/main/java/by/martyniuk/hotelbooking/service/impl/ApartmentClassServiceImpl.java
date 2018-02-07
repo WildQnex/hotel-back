@@ -10,8 +10,14 @@ import by.martyniuk.hotelbooking.service.ApartmentClassService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class ApartmentClassServiceImpl.
+ */
 public class ApartmentClassServiceImpl implements ApartmentClassService {
 
+    /**
+     * The apartment class dao.
+     */
     public static ApartmentClassDao apartmentClassDao = new ApartmentClassDaoImpl();
 
 

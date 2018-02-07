@@ -30,18 +30,59 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
+/**
+ * The Class ActionCommandTest.
+ */
 public class ActionCommandTest {
 
+    /**
+     * The apartment service.
+     */
     private ApartmentService apartmentService;
+
+    /**
+     * The apartment class service.
+     */
     private ApartmentClassService apartmentClassService;
+
+    /**
+     * The authorization service.
+     */
     private AuthorizationService authorizationService;
+
+    /**
+     * The reservation service.
+     */
     private ReservationService reservationService;
+
+    /**
+     * The user service.
+     */
     private UserService userService;
+
+    /**
+     * The request.
+     */
     private MockHttpServletRequest request;
+
+    /**
+     * The user.
+     */
     private User user;
+
+    /**
+     * The reservations.
+     */
     private List<Reservation> reservations;
+
+    /**
+     * The apartment class.
+     */
     private ApartmentClass apartmentClass;
 
+    /**
+     * Sets the up.
+     */
     @BeforeMethod
     public void setUp() {
         apartmentService = mock(ApartmentService.class);
@@ -59,6 +100,12 @@ public class ActionCommandTest {
     }
 
 
+    /**
+     * Login test.
+     *
+     * @throws ServiceException the service exception
+     * @throws CommandException the command exception
+     */
     @Test
     public void loginTest() throws ServiceException, CommandException {
         request.setParameter("email", user.getEmail());
@@ -69,6 +116,12 @@ public class ActionCommandTest {
         assertEquals(request.getSession().getAttribute("user"), user);
     }
 
+    /**
+     * Login error test.
+     *
+     * @throws ServiceException the service exception
+     * @throws CommandException the command exception
+     */
     @Test
     public void loginErrorTest() throws ServiceException, CommandException {
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -80,6 +133,11 @@ public class ActionCommandTest {
         assertNotNull(request.getSession().getAttribute("loginError"));
     }
 
+    /**
+     * Logout test.
+     *
+     * @throws CommandException the command exception
+     */
     @Test
     public void logoutTest() throws CommandException {
         request.getSession().setAttribute("user", user);
@@ -87,6 +145,11 @@ public class ActionCommandTest {
         assertNull(request.getSession().getAttribute("user"));
     }
 
+    /**
+     * Sets the locale test.
+     *
+     * @throws CommandException the command exception
+     */
     @Test
     public void setLocaleTest() throws CommandException {
         String oldLocale = "ru_RU";
@@ -97,6 +160,11 @@ public class ActionCommandTest {
         assertEquals(request.getSession().getAttribute("locale"), newLocale);
     }
 
+    /**
+     * Forward test.
+     *
+     * @throws CommandException the command exception
+     */
     @Test
     public void forwardTest() throws CommandException {
         request.setParameter("page", PagePath.MAIN.toString());
@@ -104,12 +172,23 @@ public class ActionCommandTest {
         assertEquals(CommandType.FORWARD.receiveCommand().execute(request), PagePath.MAIN.getPage());
     }
 
+    /**
+     * Forward error test.
+     *
+     * @throws CommandException the command exception
+     */
     @Test(expectedExceptions = CommandException.class)
     public void forwardErrorTest() throws CommandException {
         request.setParameter("page", "");
         CommandType.FORWARD.receiveCommand().execute(request);
     }
 
+    /**
+     * Register test.
+     *
+     * @throws CommandException the command exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void registerTest() throws CommandException, ServiceException {
         request.setParameter("firstName", user.getFirstName());
@@ -125,6 +204,12 @@ public class ActionCommandTest {
         assertNull(request.getSession().getAttribute("registerError"));
     }
 
+    /**
+     * Register validation test.
+     *
+     * @throws CommandException the command exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void registerValidationTest() throws CommandException, ServiceException {
         request.setParameter("firstName", user.getFirstName());
@@ -138,6 +223,12 @@ public class ActionCommandTest {
         assertNotNull(request.getSession().getAttribute("registerError"));
     }
 
+    /**
+     * Show apartment class test.
+     *
+     * @throws CommandException the command exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void showApartmentClassTest() throws CommandException, ServiceException {
         request.setParameter("id", "2");
@@ -147,6 +238,12 @@ public class ActionCommandTest {
         assertEquals(request.getAttribute("apartmentClass"), apartmentClass);
     }
 
+    /**
+     * Show apartment class error test.
+     *
+     * @throws CommandException the command exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void showApartmentClassErrorTest() throws CommandException, ServiceException {
         CommandType.apartmentClassService = apartmentClassService;
@@ -155,6 +252,12 @@ public class ActionCommandTest {
         assertNotNull(request.getSession().getAttribute("apartmentClassesError"));
     }
 
+    /**
+     * Show persona reservations test.
+     *
+     * @throws CommandException the command exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void showPersonaReservationsTest() throws CommandException, ServiceException {
         request.getSession().setAttribute("user", user);
@@ -164,6 +267,12 @@ public class ActionCommandTest {
         assertEquals(request.getAttribute("reservations"), reservations);
     }
 
+    /**
+     * Update profile test.
+     *
+     * @throws CommandException the command exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void updateProfileTest() throws CommandException, ServiceException {
         String name = "name";
@@ -178,6 +287,12 @@ public class ActionCommandTest {
         assertEquals(((User) request.getSession().getAttribute("user")).getFirstName(), name);
     }
 
+    /**
+     * Update profile error test.
+     *
+     * @throws CommandException the command exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void updateProfileErrorTest() throws CommandException, ServiceException {
         request.getSession().setAttribute("user", user);
@@ -191,6 +306,12 @@ public class ActionCommandTest {
         assertNotNull(request.getSession().getAttribute("updateProfileError"));
     }
 
+    /**
+     * Update user password test.
+     *
+     * @throws CommandException the command exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void updateUserPasswordTest() throws CommandException, ServiceException {
         String newPassword = "newPassword";

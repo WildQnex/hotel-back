@@ -22,11 +22,24 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class ReservationServiceImpl.
+ */
 public class ReservationServiceImpl implements ReservationService {
 
+    /**
+     * The reservation dao.
+     */
     public static ReservationDao reservationDao = new ReservationDaoImpl();
+
+    /**
+     * The apartment dao.
+     */
     public static ApartmentDao apartmentDao = new ApartmentDaoImpl();
 
+    /**
+     * The Constant LOGGER.
+     */
     private static final Logger LOGGER = LogManager.getLogger(ActionCommandFactory.class);
 
 

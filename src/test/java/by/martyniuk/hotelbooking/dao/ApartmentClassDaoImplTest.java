@@ -17,17 +17,39 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
-import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 
+/**
+ * The Class ApartmentClassDaoImplTest.
+ */
 public class ApartmentClassDaoImplTest {
 
+    /**
+     * The script runner.
+     */
     private ScriptRunner scriptRunner;
+
+    /**
+     * The connection.
+     */
     private Connection connection;
+
+    /**
+     * The apartment class dao.
+     */
     private ApartmentClassDao apartmentClassDao;
+
+    /**
+     * The apartment class.
+     */
     private ApartmentClass apartmentClass;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @BeforeClass
     public void setUp() throws Exception {
         apartmentClassDao = new ApartmentClassDaoImpl();
@@ -44,6 +66,11 @@ public class ApartmentClassDaoImplTest {
         ConnectionPool.isTest = true;
     }
 
+    /**
+     * Tear down.
+     *
+     * @throws Exception the exception
+     */
     @AfterClass
     public void tearDown() throws Exception {
         ConnectionPool.isTest = false;
@@ -52,11 +79,21 @@ public class ApartmentClassDaoImplTest {
         connection.close();
     }
 
+    /**
+     * Find apartment class by id test.
+     *
+     * @throws DaoException the dao exception
+     */
     @Test
     public void findApartmentClassByIdTest() throws DaoException {
         assertEquals(apartmentClassDao.findApartmentClassById(1L).get(), apartmentClass);
     }
 
+    /**
+     * Find all apartment test.
+     *
+     * @throws DaoException the dao exception
+     */
     @Test
     public void findAllApartmentTest() throws DaoException {
         assertEquals(apartmentClassDao.findAllApartmentClasses().size(), 9);

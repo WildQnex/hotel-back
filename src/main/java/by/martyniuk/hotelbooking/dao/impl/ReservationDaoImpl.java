@@ -25,7 +25,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class ReservationDaoImpl.
+ */
 public class ReservationDaoImpl implements ReservationDao {
+
 
     @Override
     public boolean addReservation(Apartment apartment, User user, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalCost, int personsAmount) throws DaoException {
@@ -91,6 +95,7 @@ public class ReservationDaoImpl implements ReservationDao {
             }
         }
     }
+
 
     @Override
     public boolean isApartmentAvailable(long apartmentId, LocalDate checkInDate, LocalDate checkOutDate) throws DaoException {
@@ -177,6 +182,13 @@ public class ReservationDaoImpl implements ReservationDao {
         }
     }
 
+    /**
+     * Gets the reservation.
+     *
+     * @param resultSet the result set
+     * @return the reservation
+     * @throws SQLException the SQL exception
+     */
     private Reservation getReservation(ResultSet resultSet) throws SQLException {
         User user = new User(resultSet.getLong("id_user"), resultSet.getString("first_name"),
                 resultSet.getString("middle_name"), resultSet.getString("last_name"),

@@ -18,11 +18,26 @@ import java.util.Properties;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+/**
+ * The Class ConnectionPoolTest.
+ */
 public class ConnectionPoolTest {
 
+    /**
+     * The script runner.
+     */
     private ScriptRunner scriptRunner;
+
+    /**
+     * The connection.
+     */
     private Connection connection;
 
+    /**
+     * Sets the up.
+     *
+     * @throws Exception the exception
+     */
     @BeforeClass
     public void setUp() throws Exception {
         Properties properties = new Properties();
@@ -36,6 +51,11 @@ public class ConnectionPoolTest {
         ConnectionPool.isTest = true;
     }
 
+    /**
+     * Tear down.
+     *
+     * @throws Exception the exception
+     */
     @AfterClass
     public void tearDown() throws Exception {
         ConnectionPool.isTest = false;
@@ -44,6 +64,11 @@ public class ConnectionPoolTest {
         connection.close();
     }
 
+    /**
+     * Gets the connection test.
+     *
+     * @return the connection test
+     */
     @Test
     public void getConnectionTest() {
         Connection connectionOne = ConnectionPool.getInstance().getConnection();
@@ -53,6 +78,9 @@ public class ConnectionPoolTest {
         ConnectionPool.getInstance().returnConnection(connectionTwo);
     }
 
+    /**
+     * Return connection test.
+     */
     @Test
     public void returnConnectionTest() {
         Connection connection = ConnectionPool.getInstance().getConnection();
@@ -60,6 +88,9 @@ public class ConnectionPoolTest {
         assertEquals(0, ConnectionPool.getInstance().getAmountBusyConnections());
     }
 
+    /**
+     * Connection not null test.
+     */
     @Test
     public void connectionNotNullTest() {
         Connection connection = ConnectionPool.getInstance().getConnection();
@@ -67,6 +98,11 @@ public class ConnectionPoolTest {
         ConnectionPool.getInstance().returnConnection(connection);
     }
 
+    /**
+     * Connection work test.
+     *
+     * @throws SQLException the SQL exception
+     */
     @Test
     public void connectionWorkTest() throws SQLException {
         Connection connection = ConnectionPool.getInstance().getConnection();

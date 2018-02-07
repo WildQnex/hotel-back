@@ -8,7 +8,6 @@ import by.martyniuk.hotelbooking.entity.Reservation;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.service.impl.ApartmentServiceImpl;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -27,19 +26,64 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+/**
+ * The Class ApartmentServiceImplTest.
+ */
 public class ApartmentServiceImplTest {
 
+    /**
+     * The apartment dao.
+     */
     private ApartmentDao apartmentDao;
+
+    /**
+     * The reservation dao.
+     */
     private ReservationDao reservationDao;
+
+    /**
+     * The apartment service.
+     */
     private ApartmentServiceImpl apartmentService = new ApartmentServiceImpl();
+
+    /**
+     * The apartment one.
+     */
     private Apartment apartmentOne;
+
+    /**
+     * The apartment two.
+     */
     private Apartment apartmentTwo;
+
+    /**
+     * The apartment class one.
+     */
     private ApartmentClass apartmentClassOne;
+
+    /**
+     * The apartment class two.
+     */
     private ApartmentClass apartmentClassTwo;
+
+    /**
+     * The apartment list.
+     */
     private List<Apartment> apartmentList;
+
+    /**
+     * The apartment list class one.
+     */
     private List<Apartment> apartmentListClassOne;
+
+    /**
+     * The apartment list class two.
+     */
     private List<Apartment> apartmentListClassTwo;
 
+    /**
+     * Sets the up.
+     */
     @BeforeMethod
     public void setUp() {
         apartmentDao = mock(ApartmentDao.class);
@@ -59,10 +103,12 @@ public class ApartmentServiceImplTest {
         apartmentListClassTwo.add(apartmentTwo);
     }
 
-    @AfterMethod
-    public void tearDown() throws Exception {
-    }
-
+    /**
+     * Insert apartment test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void insertApartmentTest() throws DaoException, ServiceException {
         ApartmentServiceImpl.apartmentDao = apartmentDao;
@@ -70,6 +116,12 @@ public class ApartmentServiceImplTest {
         assertTrue(apartmentService.insertApartment(apartmentOne));
     }
 
+    /**
+     * Update apartment test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void updateApartmentTest() throws DaoException, ServiceException {
         ApartmentServiceImpl.apartmentDao = apartmentDao;
@@ -77,6 +129,12 @@ public class ApartmentServiceImplTest {
         assertTrue(apartmentService.updateApartment(apartmentOne));
     }
 
+    /**
+     * Delete apartment test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void deleteApartmentTest() throws DaoException, ServiceException {
         ApartmentServiceImpl.apartmentDao = apartmentDao;
@@ -84,6 +142,13 @@ public class ApartmentServiceImplTest {
         assertTrue(apartmentService.deleteApartment(apartmentOne.getId()));
     }
 
+    /**
+     * Gets the apartment test.
+     *
+     * @return the apartment test
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void getApartmentTest() throws DaoException, ServiceException {
         ApartmentServiceImpl.apartmentDao = apartmentDao;
@@ -91,6 +156,12 @@ public class ApartmentServiceImplTest {
         assertEquals(apartmentService.getApartment(apartmentOne.getId()), Optional.of(apartmentOne));
     }
 
+    /**
+     * Find all apartments test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void findAllApartmentsTest() throws DaoException, ServiceException {
         ApartmentServiceImpl.apartmentDao = apartmentDao;
@@ -98,6 +169,12 @@ public class ApartmentServiceImplTest {
         assertEquals(apartmentService.findAllApartments(), apartmentList);
     }
 
+    /**
+     * Find free apartments for reservations test.
+     *
+     * @throws DaoException     the dao exception
+     * @throws ServiceException the service exception
+     */
     @Test
     public void findFreeApartmentsForReservationsTest() throws DaoException, ServiceException {
         ApartmentServiceImpl.apartmentDao = apartmentDao;

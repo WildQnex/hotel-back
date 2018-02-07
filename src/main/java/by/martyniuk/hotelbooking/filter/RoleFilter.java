@@ -19,22 +19,49 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
+/**
+ * The Class RoleFilter.
+ */
 @WebFilter(filterName = "RoleFilter", urlPatterns = {"/booking"})
 public class RoleFilter implements Filter {
 
+    /**
+     * The admin's commands
+     */
     private Set<CommandType> admin = EnumSet.of(CommandType.ADD_APARTMENT, CommandType.APPROVE_RESERVATION, CommandType.EDIT_APARTMENT,
-            CommandType.SHOW_ADMIN_PAGE, CommandType.SHOW_APARTMENT_EDITOR, CommandType.SHOW_USER_MANAGER);
+            CommandType.SHOW_ADMIN_PAGE, CommandType.SHOW_APARTMENT_EDITOR, CommandType.SHOW_USER_MANAGER, CommandType.ADMIN_SHOW_USER_PROFILE,
+            CommandType.ADMIN_UPDATE_USER_PROFILE);
 
+    /**
+     * The user's commands.
+     */
     private Set<CommandType> user = EnumSet.of(CommandType.BOOK_APARTMENT, CommandType.LOGOUT, CommandType.SHOW_PERSONAL_RESERVATIONS,
-            CommandType.UPDATE_PROFILE, CommandType.UPDATE_PASSWORD);
+            CommandType.UPDATE_PROFILE, CommandType.UPDATE_PASSWORD, CommandType.SHOW_USER_PROFILE, CommandType.ADD_MONEY);
 
+    /**
+     * The guest's commands.
+     */
     private Set<CommandType> guest = EnumSet.of(CommandType.LOGIN, CommandType.REGISTER);
 
+    /**
+     * Inits the.
+     *
+     * @param filterConfig the filter config
+     */
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 
+    /**
+     * Do filter.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param chain    the chain
+     * @throws IOException      Signals that an I/O exception has occurred.
+     * @throws ServletException the servlet exception
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -76,6 +103,9 @@ public class RoleFilter implements Filter {
 
     }
 
+    /**
+     * Destroy.
+     */
     @Override
     public void destroy() {
 

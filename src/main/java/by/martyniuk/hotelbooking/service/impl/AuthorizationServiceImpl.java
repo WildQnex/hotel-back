@@ -12,8 +12,14 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+/**
+ * The Class AuthorizationServiceImpl.
+ */
 public class AuthorizationServiceImpl implements AuthorizationService {
 
+    /**
+     * The user dao.
+     */
     public static UserDao userDao = new UserDaoImpl();
 
     @Override

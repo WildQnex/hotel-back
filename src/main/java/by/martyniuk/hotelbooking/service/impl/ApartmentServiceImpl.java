@@ -19,11 +19,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The Class ApartmentServiceImpl.
+ */
 public class ApartmentServiceImpl implements ApartmentService {
 
+    /**
+     * The Constant LOGGER.
+     */
     private static final Logger LOGGER = LogManager.getLogger(ApartmentServiceImpl.class);
 
+    /**
+     * The apartment dao.
+     */
     public static ApartmentDao apartmentDao = new ApartmentDaoImpl();
+
+    /**
+     * The reservation dao.
+     */
     public static ReservationDao reservationDao = new ReservationDaoImpl();
 
     @Override

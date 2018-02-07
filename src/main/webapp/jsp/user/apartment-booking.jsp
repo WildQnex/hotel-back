@@ -56,21 +56,22 @@
             <c:when test="${not empty user}">
                 <div class="row"></div>
                 <form class="col s12" name="book" action="booking" method="POST">
-                    <input type="hidden" name="action" value="bookApartment">
-                    <input type="hidden" name="apartmentId" value="${apartmentClass.id}">
+                    <input type="hidden" name="action" value="book_apartment">
+                    <input type="hidden" name="apartmentClassId" value="${apartmentClass.id}">
                     <div class="row">
                         <div class="input-field col s4 m4">
                             <label for="checkInDate"><fmt:message key="reservation.check.in.date"
-                                                                    bundle="${bndl}"/>:</label>
+                                                                  bundle="${bndl}"/>:</label>
                             <input name="checkInDate" id="checkInDate" type="text" class="datepicker" required>
                         </div>
                         <div class="input-field col s4 m4">
-                            <label for="checkOutDate"><fmt:message key="reservation.check.out.date" bundle="${bndl}"/>:</label>
+                            <label for="checkOutDate"><fmt:message key="reservation.check.out.date"
+                                                                   bundle="${bndl}"/>:</label>
                             <input name="checkOutDate" id="checkOutDate" type="text" class="datepicker" required>
                         </div>
                         <div class="input-field col s4 m4">
                             <label for="personAmount"><fmt:message key="reservation.person.amount"
-                                                                    bundle="${bndl}"/>:</label>
+                                                                   bundle="${bndl}"/>:</label>
                             <input name="personAmount" id="personAmount" type="text" pattern="[1-9]" class="validate"
                                    required maxlength="1">
                         </div>
@@ -117,7 +118,7 @@
 
 <script>
     $(window).on("load", function () {
-        if ($('#login-error').length == 1) {
+        if ($('#loginError').length == 1) {
             $('#modal').modal('open');
         }
     });

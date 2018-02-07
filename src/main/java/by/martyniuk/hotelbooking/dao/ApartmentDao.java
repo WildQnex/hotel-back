@@ -6,6 +6,9 @@ import by.martyniuk.hotelbooking.exception.DaoException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Interface ApartmentDao.
+ */
 public interface ApartmentDao {
     List<Apartment> findAllApartments() throws DaoException;
 

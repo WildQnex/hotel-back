@@ -30,28 +30,35 @@
         <ul class="collapsible popout" data-collapsible="accordion">
             <c:forEach items="${reservations}" var="reservation">
                 <li>
-                    <div class="collapsible-header"><i class="material-icons">blur_on</i>Order № ${reservation.id}</div>
+                    <div class="collapsible-header"><i class="material-icons">blur_on</i><fmt:message
+                            key="reservation.order" bundle="${bndl}"/> № ${reservation.id}</div>
                     <div class="collapsible-body">
-                        <div class="row">Reservation period: ${reservation.checkInDate}
+                        <div class="row"><fmt:message key="reservation.period"
+                                                      bundle="${bndl}"/>: ${reservation.checkInDate}
                             - ${reservation.checkOutDate}</div>
-                        <div class="row">Order made on ${reservation.orderTime.toLocalDate()}
-                            in ${reservation.orderTime.toLocalTime()}</div>
-                        <div class="row">Total cost: ${reservation.totalCost}</div>
-                        <div class="row">Order status: ${reservation.status}</div>
+                        <div class="row"><fmt:message key="reservation.order.made.on"
+                                                      bundle="${bndl}"/> ${reservation.orderTime.toLocalDate()}
+                            <fmt:message key="reservation.order.made.at"
+                                         bundle="${bndl}"/> ${reservation.orderTime.toLocalTime()}</div>
+                        <div class="row"><fmt:message key="apartment.total.cost"
+                                                      bundle="${bndl}"/>: ${reservation.totalCost}</div>
+                        <div class="row"><fmt:message key="reservation.order.status"
+                                                      bundle="${bndl}"/>: ${reservation.status}</div>
                         <div class="divider"></div>
                         <div class="row"></div>
                         <input name="action" type="hidden" value="approveReservation">
                         <div class="row">
                             <div class="input-field col s6 m4 offset-m4 offset-s3">
                                 <select id="apartmentId">
-                                    <option value="" disabled>Choose apartment</option>
+                                    <option value="" disabled><fmt:message key="apartment.choose"
+                                                                           bundle="${bndl}"/></option>
                                     <option selected name="apartmentId"
                                             value="${reservation.apartment.id}">${reservation.apartment.number}</option>
                                     <c:forEach items="${freeApartments.get(reservation)}" var="apartment">
                                         <option value="${apartment.id}">${apartment.number}</option>
                                     </c:forEach>
                                 </select>
-                                <label>Apartment Number</label>
+                                <label><fmt:message key="apartment.number" bundle="${bndl}"/></label>
                             </div>
                         </div>
                         <div class="row">
@@ -60,7 +67,7 @@
                                    href="booking?action=approve_reservation&reservationId=${reservation.id}&status=approved&apartmentId=">
                                     <button id="approveButton" onclick="$(this).setApprovedId();"
                                             class="btn waves-effect waves-light center">
-                                        Approve
+                                        <fmt:message key="apartment.approve" bundle="${bndl}"/>
                                     </button>
                                 </a>
                             </div>
@@ -68,7 +75,7 @@
                                 <a id="decline"
                                    href="booking?action=approve_reservation&reservationId=${reservation.id}&status=declined&apartmentId=${reservation.apartment.id}">
                                     <button id="declineButton" class="btn waves-effect waves-light center">
-                                        Decline
+                                        <fmt:message key="apartment.decline" bundle="${bndl}"/>
                                     </button>
                                 </a>
                             </div>
@@ -105,7 +112,7 @@
 
 <script>
     $(window).on("load", function () {
-        if ($('#login-error').length == 1) {
+        if ($('#loginError').length == 1) {
             $('#modal').modal('open');
         }
     });

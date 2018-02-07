@@ -5,7 +5,6 @@ import by.martyniuk.hotelbooking.constant.CommandConstant;
 import by.martyniuk.hotelbooking.constant.PagePath;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.CommandException;
-import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.resource.ResourceManager;
 import by.martyniuk.hotelbooking.util.Validator;
@@ -14,7 +13,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
+/**
+ * The Class GuestAction.
+ */
 public class GuestAction {
+
+    /**
+     * Login.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String login(HttpServletRequest request) throws CommandException {
         try {
             HttpSession session = request.getSession();
@@ -33,6 +43,13 @@ public class GuestAction {
         }
     }
 
+    /**
+     * Register.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String register(HttpServletRequest request) throws CommandException {
         try {
             User user = new User();

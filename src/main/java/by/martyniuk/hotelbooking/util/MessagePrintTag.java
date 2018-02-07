@@ -4,18 +4,44 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.IOException;
 
+/**
+ * The Class MessagePrintTag.
+ */
 public class MessagePrintTag extends BodyTagSupport {
 
+    /**
+     * The key.
+     */
     private String key;
+
+    /**
+     * The color.
+     */
     private String color;
 
+    /**
+     * Sets the key.
+     *
+     * @param key the new key
+     */
     public void setKey(String key) {
         this.key = key;
     }
+
+    /**
+     * Sets the color.
+     *
+     * @param color the new color
+     */
     public void setColor(String color) {
         this.color = color;
     }
 
+    /**
+     * Do start tag.
+     *
+     * @return the int
+     */
     @Override
     public int doStartTag() {
         try {
@@ -25,7 +51,7 @@ public class MessagePrintTag extends BodyTagSupport {
                 JspWriter out = this.pageContext.getOut();
                 out.write("<div class=\"row\"></div>");
                 out.write("<div class=\"row\">");
-                out.write("<div class=\"col s8 m6 offset-m3 offset-s2 center " + color + "-text\">" + error + "</div>");
+                out.write("<div id=\"loginError\" class=\"col s8 m6 offset-m3 offset-s2 center " + color + "-text\">" + error + "</div>");
                 out.write("</div>");
                 out.write("<div class=\"row\"></div>");
             }

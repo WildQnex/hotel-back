@@ -8,17 +8,34 @@ import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class UserServiceImpl.
+ */
 public class UserServiceImpl implements UserService {
 
+    /**
+     * The user dao.
+     */
     public static UserDao userDao = new UserDaoImpl();
 
     @Override
     public boolean updateUserProfile(User user) throws ServiceException {
         try {
             userDao.updateUserData(user);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean depositMoney(long userId, BigDecimal money) throws ServiceException {
+        try {
+            userDao.depositMoney(userId, money);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -44,6 +61,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUserById(long userId) throws ServiceException {
+        try {
+            return userDao.findUserById(userId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public boolean changeUserPassword(String mail, String currentPassword, String newPassword) throws ServiceException {
         try {
             Optional<User> optionalUser = userDao.findUserByMail(mail);
@@ -51,8 +77,7 @@ public class UserServiceImpl implements UserService {
                 return false;
             }
             User user = optionalUser.get();
-            user.setPassword(newPassword);
-            return userDao.updateUserPassword(user.getId(), newPassword);
+            return userDao.updateUserPassword(user.getId(), BCrypt.hashpw(newPassword, BCrypt.gensalt()));
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

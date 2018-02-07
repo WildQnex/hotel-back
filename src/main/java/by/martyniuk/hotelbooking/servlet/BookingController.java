@@ -3,7 +3,6 @@ package by.martyniuk.hotelbooking.servlet;
 import by.martyniuk.hotelbooking.command.ActionCommand;
 import by.martyniuk.hotelbooking.constant.CommandConstant;
 import by.martyniuk.hotelbooking.exception.CommandException;
-import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.factory.ActionCommandFactory;
 import by.martyniuk.hotelbooking.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
@@ -17,26 +16,59 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * The Class BookingController.
+ */
 @WebServlet("/booking")
 public class BookingController extends HttpServlet {
 
+    /**
+     * The Constant LOGGER.
+     */
     private static final Logger LOGGER = LogManager.getLogger(BookingController.class);
 
+    /**
+     * Inits the.
+     */
     @Override
     public void init() {
     }
 
+    /**
+     * Do post.
+     *
+     * @param request  the request
+     * @param response the response
+     * @throws IOException      Signals that an I/O exception has occurred.
+     * @throws ServletException the servlet exception
+     */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doAction(request, response);
     }
 
+    /**
+     * Do get.
+     *
+     * @param request  the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException      Signals that an I/O exception has occurred.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doAction(request, response);
     }
 
-    private void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    /**
+     * Do action.
+     *
+     * @param request  the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException      Signals that an I/O exception has occurred.
+     */
+    private void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ActionCommand command = ActionCommandFactory.getActionCommand(request.getParameter(CommandConstant.ACTION));
         try {
             String page = command.execute(request);
@@ -52,6 +84,9 @@ public class BookingController extends HttpServlet {
         }
     }
 
+    /**
+     * Destroy.
+     */
     @Override
     public void destroy() {
         ConnectionPool.getInstance().destroy();

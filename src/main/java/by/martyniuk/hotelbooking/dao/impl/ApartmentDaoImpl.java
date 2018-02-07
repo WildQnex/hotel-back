@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Class ApartmentDaoImpl.
+ */
 public class ApartmentDaoImpl implements ApartmentDao {
 
     @Override
