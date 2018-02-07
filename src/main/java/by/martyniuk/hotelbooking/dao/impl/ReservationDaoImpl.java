@@ -122,7 +122,6 @@ public class ReservationDaoImpl implements ReservationDao {
     public Optional<Reservation> readReservationById(long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement ps = connection.prepareStatement(SqlQuery.SQL_SELECT_RESERVATION_BY_ID);
-            System.out.println(id);
             ps.setLong(1, id);
             ResultSet resultSet = ps.executeQuery();
             Optional<Reservation> reservationOptional = Optional.empty();

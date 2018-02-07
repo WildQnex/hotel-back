@@ -289,4 +289,9 @@ public class CommandConstant {
      * The Constant Role.
      */
     public static final String ROLE = "role";
+
+    /**
+     * The Constant Active.
+     */
+    public static final String ACTIVE = "active";
 }

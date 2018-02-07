@@ -33,7 +33,7 @@
                             <i class="material-icons">blur_on</i><fmt:message key="reservation.order"
                                                                               bundle="${bndl}"/> ${reservation.checkInDate}
                             - ${reservation.checkOutDate} <fmt:message key="reservation.status" bundle="${bndl}"/>
-                            : ${reservation.status}
+                            : <fmt:message key="reservation.status.${reservation.status}" bundle="${bndl}"/>
                         </div>
                         <div class="collapsible-body">
                             <div class="row"><strong><fmt:message key="reservation.order.made.on"
@@ -59,7 +59,7 @@
                                 $
                             </div>
                             <div class="row"><strong><fmt:message key="reservation.order.status"
-                                                                  bundle="${bndl}"/>:</strong> ${reservation.status}
+                                                                  bundle="${bndl}"/>:</strong> <fmt:message key="reservation.status.${reservation.status}" bundle="${bndl}"/>
                             </div>
                         </div>
                     </li>

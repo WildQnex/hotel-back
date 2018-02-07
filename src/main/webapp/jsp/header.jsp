@@ -6,7 +6,7 @@
 <fmt:setBundle basename="text" var="bndl"/>
 
 <header>
-    <div class="navbar-fixed">
+    <div class="navbar-fixed ">
         <nav class="white" role="navigation">
 
             <div class="nav-wrapper container ">
@@ -30,12 +30,9 @@
 
 
                     <c:if test="${empty user}">
-                        <li><a class="modal-trigger" href="#modal"><fmt:message key="login.button"
-                                                                                bundle="${bndl}"/></a>
+                        <li><a class="modal-trigger" href="#modal"><fmt:message key="login.button" bundle="${bndl}"/></a>
                         </li>
-                        <li><a href="booking?action=forward&page=register"><fmt:message
-                                key="register.button"
-                                bundle="${bndl}"/></a>
+                        <li><a href="booking?action=forward&page=register"><fmt:message key="register.button" bundle="${bndl}"/></a>
                         </li>
                     </c:if>
 
@@ -48,7 +45,8 @@
                         <c:if test="${user.role.toString().equalsIgnoreCase('Admin')}">
                             <li><a class='dropdown-button' href='#' data-beloworigin="true"
                                    data-activates='dropdown-admin'>
-                                Admin<i class="material-icons right">arrow_drop_down</i>
+                                <fmt:message key="header.admin.menu" bundle="${bndl}"/>
+                                <i class="material-icons right">arrow_drop_down</i>
                             </a></li>
                         </c:if>
 
@@ -105,7 +103,7 @@
 
 
                 <div class="row">
-                    <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
+                    <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center" type="submit">
                         <fmt:message key="login.button" bundle="${bndl}"/>
                     </button>
                 </div>
@@ -117,27 +115,26 @@
 </header>
 
 <ul id='dropdown-user' class='dropdown-content'>
-    <li><a href="booking?action=show_user_profile">Профиль</a></li>
-    <li><a href="booking?action=show_personal_reservations">Заказы</a></li>
+    <li><a href="booking?action=show_user_profile" class="amber-text"><fmt:message key="header.profile" bundle="${bndl}"/></a></li>
+    <li><a href="booking?action=show_personal_reservations" class="amber-text"><fmt:message key="header.orders" bundle="${bndl}"/></a></li>
     <li class="divider"></li>
-    <li><a href="booking?action=logout"><fmt:message key="header.logout"
-                                                     bundle="${bndl}"/></a>
+    <li><a href="booking?action=logout" class="amber-text text-lighten-1"><fmt:message key="header.logout" bundle="${bndl}"/></a>
     </li>
 </ul>
 <ul id='dropdown-admin' class='dropdown-content'>
-    <li><a href="booking?action=show_admin_page">Заказы</a></li>
-    <li><a href="booking?action=show_apartment_editor">Номера</a></li>
-    <li><a href="booking?action=show_user_manager">Users</a></li>
+    <li><a href="booking?action=show_admin_page" class="amber-text"><fmt:message key="header.orders" bundle="${bndl}"/></a></li>
+    <li><a href="booking?action=show_apartment_editor" class="amber-text"><fmt:message key="header.apartments" bundle="${bndl}"/></a></li>
+    <li><a href="booking?action=show_user_manager" class="amber-text"><fmt:message key="header.users" bundle="${bndl}"/></a></li>
 </ul>
 
 <ul id='dropdown-language' class='dropdown-content'>
-    <li><a href="booking?action=set_locale&value=ru_RU">Русский</a></li>
+    <li><a href="booking?action=set_locale&value=ru_RU" class="amber-text">Русский</a></li>
     <li class="divider"></li>
-    <li><a href="booking?action=set_locale&value=en_US">English</a></li>
+    <li><a href="booking?action=set_locale&value=en_US" class="amber-text">English</a></li>
 </ul>
 
 <ul id='dropdown-language-mobile' class='dropdown-content'>
-    <li><a href="booking?action=set_locale&value=ru_RU">Русский</a></li>
+    <li><a href="booking?action=set_locale&value=ru_RU" class="amber-text">Русский</a></li>
     <li class="divider"></li>
-    <li><a href="booking?action=set_locale&value=en_US">English</a></li>
+    <li><a href="booking?action=set_locale&value=en_US" class="amber-text">English</a></li>
 </ul>

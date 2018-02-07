@@ -86,9 +86,28 @@
                            value="${userProfile.phoneNumber}" title="<fmt:message key="user.phone" bundle="${bndl}"/>">
                     <label for="phoneNumber"><fmt:message key="user.phone" bundle="${bndl}"/></label>
                 </div>
+
+                <div class="input-field col s4 m4">
+                    <select id="active" name="active">
+                        <option value="" disabled><fmt:message key="user.activity" bundle="${bndl}"/></option>
+                        <c:choose>
+                            <c:when test="${userProfile.active}">
+                                <option selected value="true"><fmt:message key="user.active.true" bundle="${bndl}"/></option>
+                                <option value="false"><fmt:message key="user.active.false"
+                                                                            bundle="${bndl}"/></option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="true"><fmt:message key="user.active.true"
+                                                                           bundle="${bndl}"/></option>
+                                <option selected value="false"><fmt:message key="user.active.false" bundle="${bndl}"/></option>
+                            </c:otherwise>
+                        </c:choose>
+                    </select>
+                    <label for="role"><fmt:message key="user.activity" bundle="${bndl}"/></label>
+                </div>
             </div>
             <div class="row">
-                <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center"
+                <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 amber accent-4 waves-effect waves-light center"
                         type="submit">
                     <fmt:message key="profile.change" bundle="${bndl}"/>
                 </button>

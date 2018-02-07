@@ -31,21 +31,30 @@
                 <c:forEach items="${users}" var="user">
                     <li>
                         <div class="collapsible-header">
-                            <i class="material-icons">blur_on</i>User: ${user.firstName} ${user.middleName} ${user.lastName}
-                            Active: ${user.active}
+                            <c:choose>
+                                <c:when test="${user.active}">
+                                    <i class="material-icons green-text">blur_on</i>
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="material-icons red-text">blur_on</i>
+                                </c:otherwise>
+                            </c:choose>
+                                ${user.firstName} ${user.middleName} ${user.lastName}
+
+
                         </div>
                         <div class="collapsible-body">
                             <div class="row">
                                 <div class="col m4 offset-m1">
                                     <a href="booking?action=admin_show_user_profile&id=${user.id}">
-                                        <button class="btn waves-effect waves-light" type="submit">
+                                        <button class="btn amber accent-4 waves-effect waves-light">
                                             <fmt:message key="user.edit.profile" bundle="${bndl}"/>
                                         </button>
                                     </a>
                                 </div>
                                 <div class="col m4 offset-m3">
                                     <a href="booking?action=admin_show_user_reservations&id=${user.id}">
-                                        <button class="btn waves-effect waves-light" type="submit">
+                                        <button class="btn amber accent-4 waves-effect waves-light">
                                             <fmt:message key="user.show.reservation" bundle="${bndl}"/>
                                         </button>
                                     </a>
@@ -55,6 +64,11 @@
                     </li>
                 </c:forEach>
             </ul>
+            <div class="center">
+                <i class="material-icons green-text">blur_on</i> - <fmt:message key="user.active" bundle="${bndl}"/>,
+                <i class="material-icons red-text">blur_on</i> - <fmt:message key="user.banned" bundle="${bndl}"/>
+            </div>
+
         </div>
     </div>
 </main>

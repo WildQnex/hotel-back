@@ -66,13 +66,13 @@
                         </div>
                         <div class="row">
                             <div class="col s6 m3 offset-m2">
-                                <button class="btn waves-effect waves-light" type="submit">
+                                <button class="btn waves-effect amber accent-4 waves-light" type="submit">
                                     <fmt:message key="apartment.edit" bundle="${bndl}"/>
                                 </button>
                             </div>
                             <div class="col s6 m3 offset-m2">
                                 <a href="booking?action=edit_apartment&apartmentId=${apartment.id}&type=delete">
-                                    <button class="btn waves-effect waves-light" type="button">
+                                    <button class="btn amber accent-4 waves-effect waves-light" type="button">
                                         <fmt:message key="apartment.delete" bundle="${bndl}"/>
                                     </button>
                                 </a>
@@ -86,7 +86,7 @@
             <div class="row"></div>
             <div class="row center">
                 <a class="modal-trigger" href="#modalApartment">
-                    <button class="btn waves-effect waves-light center">
+                    <button class="btn amber accent-4 waves-effect waves-light center">
                         <fmt:message key="apartment.add" bundle="${bndl}"/>
                     </button>
                 </a>
@@ -140,7 +140,7 @@
             </div>
 
             <div class="row">
-                <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
+                <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center" type="submit">
                     <fmt:message key="apartment.create" bundle="${bndl}"/>
                 </button>
             </div>

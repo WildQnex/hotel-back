@@ -88,7 +88,7 @@
                 <ct:showMessage color="red" key="registerError"/>
 
                 <div class="row">
-                    <button class="col s6 m2 offset-s3 offset-m5 btn waves-effect waves-light center" type="submit">
+                    <button class="col s6 m2 offset-s3 offset-m5 btn amber accent-4 waves-effect waves-light center" type="submit">
                         <fmt:message key="register.button" bundle="${bndl}"/>
                     </button>
                 </div>

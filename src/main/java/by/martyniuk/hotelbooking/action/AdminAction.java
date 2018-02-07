@@ -101,8 +101,10 @@ public class AdminAction {
             }
 
             user.setRole(Role.valueOf(role.toUpperCase()));
-            if (CommandType.userService.updateUserProfile(user)) {
-                request.getSession().setAttribute(CommandConstant.USER, user);
+            user.setActive(Boolean.parseBoolean(request.getParameter(CommandConstant.ACTIVE)));
+
+            if (!CommandType.userService.updateUserProfile(user)) {
+                request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, ResourceManager.getResourceBundle().getString("error.personal.data"));
             }
 
             request.setAttribute(CommandConstant.REDIRECT, true);

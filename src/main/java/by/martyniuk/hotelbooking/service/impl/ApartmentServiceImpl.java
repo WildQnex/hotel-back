@@ -78,15 +78,12 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public Map<Reservation, List<Apartment>> findFreeApartmentsForReservations(List<Reservation> reservations) throws ServiceException {
         Map<Reservation, List<Apartment>> freeApartments = new HashMap<>();
-        System.out.println(reservations);
         try {
             for (Reservation reservation : reservations) {
                 List<Apartment> apartments = apartmentDao.findApartmentListByClassId(reservation.getApartment().getApartmentClass().getId());
-                System.out.println(apartments);
                 freeApartments.put(reservation, apartments.stream()
                         .filter(apartment -> {
                             try {
-                                System.out.println(apartment);
                                 return reservationDao.isApartmentAvailable(apartment.getId(), reservation.getCheckInDate(), reservation.getCheckOutDate());
                             } catch (DaoException e) {
                                 LOGGER.log(Level.ERROR, e);

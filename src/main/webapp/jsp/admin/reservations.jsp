@@ -42,11 +42,10 @@
                                          bundle="${bndl}"/> ${reservation.orderTime.toLocalTime()}</div>
                         <div class="row"><fmt:message key="apartment.total.cost"
                                                       bundle="${bndl}"/>: ${reservation.totalCost}</div>
-                        <div class="row"><fmt:message key="reservation.order.status"
-                                                      bundle="${bndl}"/>: ${reservation.status}</div>
+                        <div class="row"><fmt:message key="reservation.order.status" bundle="${bndl}"/>:
+                            <fmt:message key="reservation.status.${reservation.status}" bundle="${bndl}"/></div>
                         <div class="divider"></div>
                         <div class="row"></div>
-                        <input name="action" type="hidden" value="approveReservation">
                         <div class="row">
                             <div class="input-field col s6 m4 offset-m4 offset-s3">
                                 <select id="apartmentId">
@@ -66,7 +65,7 @@
                                 <a id="approve"
                                    href="booking?action=approve_reservation&reservationId=${reservation.id}&status=approved&apartmentId=">
                                     <button id="approveButton" onclick="$(this).setApprovedId();"
-                                            class="btn waves-effect waves-light center">
+                                            class="btn amber accent-4 waves-effect waves-light center">
                                         <fmt:message key="apartment.approve" bundle="${bndl}"/>
                                     </button>
                                 </a>
@@ -74,7 +73,7 @@
                             <div class="col s6 m3 offset-m2">
                                 <a id="decline"
                                    href="booking?action=approve_reservation&reservationId=${reservation.id}&status=declined&apartmentId=${reservation.apartment.id}">
-                                    <button id="declineButton" class="btn waves-effect waves-light center">
+                                    <button id="declineButton" class="btn amber accent-4 waves-effect waves-light center">
                                         <fmt:message key="apartment.decline" bundle="${bndl}"/>
                                     </button>
                                 </a>

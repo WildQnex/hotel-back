@@ -61,7 +61,6 @@ public class GuestAction {
             user.setLastName(request.getParameter(CommandConstant.LAST_NAME));
             user.setEmail(request.getParameter(CommandConstant.EMAIL));
             user.setPhoneNumber(request.getParameter(CommandConstant.PHONE_NUMBER));
-            System.out.println(user);
             if (!(Validator.validatePasswords(password, repeatPassword) && Validator.validateUser(user))) {
                 request.getSession().setAttribute(CommandConstant.REGISTER_ERROR, ResourceManager.getResourceBundle().getString("error.personal.data"));
                 return PagePath.REGISTER.getPage();
