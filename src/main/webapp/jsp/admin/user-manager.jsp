@@ -39,11 +39,18 @@
                                     <i class="material-icons red-text">blur_on</i>
                                 </c:otherwise>
                             </c:choose>
-                                ${user.firstName} ${user.middleName} ${user.lastName}
+                            <strong>${user.firstName} ${user.middleName} ${user.lastName}</strong>
 
 
                         </div>
                         <div class="collapsible-body">
+                            <div class="row">
+                                <strong><fmt:message key="user.email" bundle="${bndl}"/>:</strong> ${user.email}
+                            </div>
+                            <div class="row">
+                                <strong><fmt:message key="user.phone" bundle="${bndl}"/>:</strong> ${user.phoneNumber}
+                            </div>
+                            <div class="row"></div>
                             <div class="row">
                                 <div class="col m4 offset-m1">
                                     <a href="booking?action=admin_show_user_profile&id=${user.id}">

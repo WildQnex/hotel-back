@@ -82,6 +82,10 @@
                 </div>
 
                 <div class="row red-text">
+                    <fmt:message key="register.note.password" bundle="${bndl}"/>
+                </div>
+
+                <div class="row red-text">
                     * - <fmt:message key="register.note" bundle="${bndl}"/>
                 </div>
 

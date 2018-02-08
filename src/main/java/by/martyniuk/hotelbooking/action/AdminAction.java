@@ -41,7 +41,7 @@ public class AdminAction {
             int floor = Integer.parseInt(request.getParameter(CommandConstant.APARTMENT_FLOOR));
             Optional<ApartmentClass> apartmentClass = CommandType.apartmentClassService.findApartmentClassById(Long.parseLong(apartmentClassId));
             if (!apartmentClass.isPresent()) {
-                request.getSession().setAttribute(CommandConstant.ADD_APARTMENT_ERROR, ResourceManager.getResourceBundle().getString("error.apartment.id"));
+                request.getSession().setAttribute(CommandConstant.ADD_APARTMENT_ERROR, ResourceManager.getResourceBundle().getString("error.incorrect.apartment.id"));
                 request.setAttribute(CommandConstant.REDIRECT, true);
                 return request.getHeader(CommandConstant.REFERER);
             }
@@ -54,6 +54,13 @@ public class AdminAction {
         }
     }
 
+    /**
+     * Shows the user profile.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String showUserProfile(HttpServletRequest request) throws CommandException {
         try {
             String stringId = request.getParameter(CommandConstant.ID);
@@ -67,12 +74,19 @@ public class AdminAction {
         }
     }
 
+    /**
+     * Edit the user profile.
+     *
+     * @param request the request
+     * @return the string
+     * @throws CommandException the command exception
+     */
     public static String editUserProfile(HttpServletRequest request) throws CommandException {
         try {
             String stringId = request.getParameter(CommandConstant.ID);
 
             if (!Validator.validateId(stringId)) {
-                request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, "Incorrect user ID");
+                request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, ResourceManager.getResourceBundle().getString("error.user.id"));
                 request.setAttribute(CommandConstant.REDIRECT, true);
                 return request.getHeader(CommandConstant.REFERER);
             }
@@ -80,7 +94,7 @@ public class AdminAction {
             Optional<User> optionalUser = CommandType.userService.findUserById(Long.parseLong(stringId));
 
             if (!optionalUser.isPresent()) {
-                request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, "User not found");
+                request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, ResourceManager.getResourceBundle().getString("error.user.not.found"));
                 request.setAttribute(CommandConstant.REDIRECT, true);
                 return request.getHeader(CommandConstant.REFERER);
             }
@@ -183,7 +197,7 @@ public class AdminAction {
     public static String approveReservation(HttpServletRequest request) throws CommandException {
         try {
             if (!Validator.validateId(request.getParameter(CommandConstant.RESERVATION_ID))) {
-                request.getSession().setAttribute(CommandConstant.APPROVE_RESERVATION_ERROR, ResourceManager.getResourceBundle().getString("error.apartment.id"));
+                request.getSession().setAttribute(CommandConstant.APPROVE_RESERVATION_ERROR, ResourceManager.getResourceBundle().getString("error.incorrect.apartment.id"));
                 request.setAttribute(CommandConstant.REDIRECT, true);
                 return request.getContextPath() + CommandConstant.SHOW_ADMIN_PAGE_ACTION;
             }
