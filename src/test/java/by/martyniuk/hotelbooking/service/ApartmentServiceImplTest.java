@@ -111,7 +111,7 @@ public class ApartmentServiceImplTest {
      */
     @Test
     public void insertApartmentTest() throws DaoException, ServiceException {
-        ApartmentServiceImpl.apartmentDao = apartmentDao;
+        apartmentService.setApartmentDao(apartmentDao);
         when(apartmentDao.addApartment(apartmentOne)).thenReturn(true);
         assertTrue(apartmentService.insertApartment(apartmentOne));
     }
@@ -124,7 +124,7 @@ public class ApartmentServiceImplTest {
      */
     @Test
     public void updateApartmentTest() throws DaoException, ServiceException {
-        ApartmentServiceImpl.apartmentDao = apartmentDao;
+        apartmentService.setApartmentDao(apartmentDao);
         when(apartmentDao.updateApartment(apartmentOne)).thenReturn(true);
         assertTrue(apartmentService.updateApartment(apartmentOne));
     }
@@ -137,7 +137,7 @@ public class ApartmentServiceImplTest {
      */
     @Test
     public void deleteApartmentTest() throws DaoException, ServiceException {
-        ApartmentServiceImpl.apartmentDao = apartmentDao;
+        apartmentService.setApartmentDao(apartmentDao);
         when(apartmentDao.deleteApartment(apartmentOne.getId())).thenReturn(true);
         assertTrue(apartmentService.deleteApartment(apartmentOne.getId()));
     }
@@ -151,7 +151,7 @@ public class ApartmentServiceImplTest {
      */
     @Test
     public void getApartmentTest() throws DaoException, ServiceException {
-        ApartmentServiceImpl.apartmentDao = apartmentDao;
+        apartmentService.setApartmentDao(apartmentDao);
         when(apartmentDao.findApartmentById(apartmentOne.getId())).thenReturn(Optional.of(apartmentOne));
         assertEquals(apartmentService.getApartment(apartmentOne.getId()), Optional.of(apartmentOne));
     }
@@ -164,7 +164,7 @@ public class ApartmentServiceImplTest {
      */
     @Test
     public void findAllApartmentsTest() throws DaoException, ServiceException {
-        ApartmentServiceImpl.apartmentDao = apartmentDao;
+        apartmentService.setApartmentDao(apartmentDao);
         when(apartmentDao.findAllApartments()).thenReturn(apartmentList);
         assertEquals(apartmentService.findAllApartments(), apartmentList);
     }
@@ -177,8 +177,8 @@ public class ApartmentServiceImplTest {
      */
     @Test
     public void findFreeApartmentsForReservationsTest() throws DaoException, ServiceException {
-        ApartmentServiceImpl.apartmentDao = apartmentDao;
-        ApartmentServiceImpl.reservationDao = reservationDao;
+        apartmentService.setApartmentDao(apartmentDao);
+        apartmentService.setReservationDao(reservationDao);
         when(apartmentDao.findApartmentListByClassId(apartmentClassOne.getId())).thenReturn(apartmentListClassOne);
         when(apartmentDao.findApartmentListByClassId(apartmentClassTwo.getId())).thenReturn(apartmentListClassTwo);
         when(reservationDao.isApartmentAvailable(eq(apartmentOne.getId()), anyObject(), anyObject())).thenReturn(true);

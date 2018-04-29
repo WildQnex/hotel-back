@@ -39,7 +39,7 @@ public class UserServiceImplTest {
     /**
      * The user service.
      */
-    private UserService userService;
+    private UserServiceImpl userService;
 
     /**
      * The user list.
@@ -65,7 +65,7 @@ public class UserServiceImplTest {
         user = new User(1, "Vadim", "Alekseevich", "Martyniuk", new BigDecimal(0),
                 "mail@gmail.com", "+375251712452", "$2a$10$dli9pv2bKHf9.OfGatlFrOFJaWRYR14C94VBX1jL33ckdbIiTEg9u", Role.ADMIN, true);
         userDao = mock(UserDao.class);
-        UserServiceImpl.userDao = userDao;
+        userService.setUserDao(userDao);
         userList = new ArrayList<>();
         userList.add(user);
         userList.add(user);

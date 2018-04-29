@@ -1,23 +1,13 @@
 package by.martyniuk.hotelbooking.dao.impl;
 
 import by.martyniuk.hotelbooking.dao.ReservationDao;
-import by.martyniuk.hotelbooking.entity.Apartment;
-import by.martyniuk.hotelbooking.entity.ApartmentClass;
-import by.martyniuk.hotelbooking.entity.Reservation;
-import by.martyniuk.hotelbooking.entity.Role;
-import by.martyniuk.hotelbooking.entity.Status;
-import by.martyniuk.hotelbooking.entity.User;
+import by.martyniuk.hotelbooking.entity.*;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.pool.ConnectionPool;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +18,7 @@ import java.util.Optional;
 /**
  * The Class ReservationDaoImpl.
  */
+@Repository
 public class ReservationDaoImpl implements ReservationDao {
 
 

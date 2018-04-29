@@ -31,7 +31,7 @@ public class AuthorizationServiceImplTest {
     /**
      * The authorization service.
      */
-    private AuthorizationService authorizationService = new AuthorizationServiceImpl();
+    private AuthorizationServiceImpl authorizationService = new AuthorizationServiceImpl();
 
     /**
      * The user.
@@ -70,7 +70,7 @@ public class AuthorizationServiceImplTest {
      */
     @Test
     public void authorizationTest() throws DaoException, ServiceException {
-        AuthorizationServiceImpl.userDao = userDao;
+        authorizationService.setUserDao(userDao);
         when(userDao.findUserByMail(user.getEmail())).thenReturn(Optional.of(user));
         assertEquals(authorizationService.login(user.getEmail(), correctPassword), Optional.of(user));
     }
@@ -83,7 +83,7 @@ public class AuthorizationServiceImplTest {
      */
     @Test
     public void authorizationIncorrectPasswordTest() throws DaoException, ServiceException {
-        AuthorizationServiceImpl.userDao = userDao;
+        authorizationService.setUserDao(userDao);
         when(userDao.findUserByMail(user.getEmail())).thenReturn(Optional.of(user));
         assertEquals(authorizationService.login(user.getEmail(), incorrectPassword), Optional.empty());
     }
@@ -96,7 +96,7 @@ public class AuthorizationServiceImplTest {
      */
     @Test
     public void authorizationIncorrectMailTest() throws DaoException, ServiceException {
-        AuthorizationServiceImpl.userDao = userDao;
+        authorizationService.setUserDao(userDao);
         when(userDao.findUserByMail(user.getEmail())).thenReturn(Optional.empty());
         assertEquals(authorizationService.login(user.getEmail(), correctPassword), Optional.empty());
     }
@@ -109,7 +109,7 @@ public class AuthorizationServiceImplTest {
      */
     @Test
     public void registerTest() throws DaoException, ServiceException {
-        AuthorizationServiceImpl.userDao = userDao;
+        authorizationService.setUserDao(userDao);
         when(userDao.findUserByMail(user.getEmail())).thenReturn(Optional.empty());
         when(userDao.addUser(anyObject())).thenReturn(true);
         assertTrue(authorizationService.register(user));

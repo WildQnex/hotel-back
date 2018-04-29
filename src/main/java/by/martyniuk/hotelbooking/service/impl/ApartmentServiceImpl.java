@@ -2,8 +2,6 @@ package by.martyniuk.hotelbooking.service.impl;
 
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
 import by.martyniuk.hotelbooking.dao.ReservationDao;
-import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
-import by.martyniuk.hotelbooking.dao.impl.ReservationDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.Reservation;
 import by.martyniuk.hotelbooking.exception.DaoException;
@@ -12,6 +10,8 @@ import by.martyniuk.hotelbooking.service.ApartmentService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 /**
  * The Class ApartmentServiceImpl.
  */
+@Service
 public class ApartmentServiceImpl implements ApartmentService {
 
     /**
@@ -32,12 +33,21 @@ public class ApartmentServiceImpl implements ApartmentService {
     /**
      * The apartment dao.
      */
-    public static ApartmentDao apartmentDao = new ApartmentDaoImpl();
-
+    private ApartmentDao apartmentDao;
     /**
      * The reservation dao.
      */
-    public static ReservationDao reservationDao = new ReservationDaoImpl();
+    private ReservationDao reservationDao;
+
+    @Autowired
+    public void setApartmentDao(ApartmentDao apartmentDao) {
+        this.apartmentDao = apartmentDao;
+    }
+
+    @Autowired
+    public void setReservationDao(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @Override
     public boolean insertApartment(Apartment apartment) throws ServiceException {

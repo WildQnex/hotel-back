@@ -47,7 +47,7 @@ public class ReservationServiceImplTest {
     /**
      * The reservation service.
      */
-    private ReservationService reservationService = new ReservationServiceImpl();
+    private ReservationServiceImpl reservationService = new ReservationServiceImpl();
 
     /**
      * The user.
@@ -92,8 +92,8 @@ public class ReservationServiceImplTest {
     public void setUp() {
         reservationDao = mock(ReservationDao.class);
         apartmentDao = mock(ApartmentDao.class);
-        ReservationServiceImpl.reservationDao = reservationDao;
-        ReservationServiceImpl.apartmentDao = apartmentDao;
+        reservationService.setReservationDao(reservationDao);
+        reservationService.setApartmentDao(apartmentDao);
         user = new User(1, "Vadim", "Alekseevich", "Martyniuk", new BigDecimal(0),
                 "mail@gmail.com", "+375251712452", "$2a$10$dli9pv2bKHf9.OfGatlFrOFJaWRYR14C94VBX1jL33ckdbIiTEg9u", Role.ADMIN, true);
         apartmentClass = new ApartmentClass(1, "first", 2, 3, new BigDecimal(100), new BigDecimal(50),

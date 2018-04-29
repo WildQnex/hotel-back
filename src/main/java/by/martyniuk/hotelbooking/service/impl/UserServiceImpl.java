@@ -1,12 +1,13 @@
 package by.martyniuk.hotelbooking.service.impl;
 
 import by.martyniuk.hotelbooking.dao.UserDao;
-import by.martyniuk.hotelbooking.dao.impl.UserDaoImpl;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,12 +16,18 @@ import java.util.Optional;
 /**
  * The Class UserServiceImpl.
  */
+@Service
 public class UserServiceImpl implements UserService {
 
     /**
      * The user dao.
      */
-    public static UserDao userDao = new UserDaoImpl();
+    private UserDao userDao;
+
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public boolean updateUserProfile(User user) throws ServiceException {

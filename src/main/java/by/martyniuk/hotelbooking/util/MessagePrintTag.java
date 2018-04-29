@@ -51,7 +51,7 @@ public class MessagePrintTag extends BodyTagSupport {
                 JspWriter out = this.pageContext.getOut();
                 out.write("<div class=\"row\"></div>");
                 out.write("<div class=\"row\">");
-                out.write("<div id=\""+ key +"\" class=\"col s8 m6 offset-m3 offset-s2 center " + color + "-text\">" + error + "</div>");
+                out.write("<div id=\"" + key + "\" class=\"col s8 m6 offset-m3 offset-s2 center " + color + "-text\">" + error + "</div>");
                 out.write("</div>");
                 out.write("<div class=\"row\"></div>");
             }

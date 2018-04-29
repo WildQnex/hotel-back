@@ -5,12 +5,9 @@ import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.ApartmentClass;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.pool.ConnectionPool;
+import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +15,7 @@ import java.util.Optional;
 /**
  * The Class ApartmentDaoImpl.
  */
+@Repository
 public class ApartmentDaoImpl implements ApartmentDao {
 
     @Override

@@ -4,192 +4,74 @@ import by.martyniuk.hotelbooking.action.AdminAction;
 import by.martyniuk.hotelbooking.action.CommonAction;
 import by.martyniuk.hotelbooking.action.GuestAction;
 import by.martyniuk.hotelbooking.action.UserAction;
-import by.martyniuk.hotelbooking.service.ApartmentClassService;
-import by.martyniuk.hotelbooking.service.ApartmentService;
-import by.martyniuk.hotelbooking.service.AuthorizationService;
-import by.martyniuk.hotelbooking.service.ReservationService;
-import by.martyniuk.hotelbooking.service.UserService;
-import by.martyniuk.hotelbooking.service.impl.ApartmentClassServiceImpl;
-import by.martyniuk.hotelbooking.service.impl.ApartmentServiceImpl;
-import by.martyniuk.hotelbooking.service.impl.AuthorizationServiceImpl;
-import by.martyniuk.hotelbooking.service.impl.ReservationServiceImpl;
-import by.martyniuk.hotelbooking.service.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Enum CommandType.
  */
-public enum CommandType {
+@Component
+public class CommandType {
 
-    /**
-     * The add apartment.
-     */
-    ADD_APARTMENT(AdminAction::addApartment),
+    private AdminAction adminAction;
 
-    /**
-     * The book apartment.
-     */
-    BOOK_APARTMENT(UserAction::bookApartment),
+    private CommonAction commonAction;
 
-    /**
-     * The login.
-     */
-    LOGIN(GuestAction::login),
+    private GuestAction guestAction;
 
-    /**
-     * The logout.
-     */
-    LOGOUT(UserAction::logout),
+    private UserAction userAction;
 
-    /**
-     * The set locale.
-     */
-    SET_LOCALE(CommonAction::setLocale),
+    private Map<String, ActionCommand> commands;
 
-    /**
-     * The forward.
-     */
-    FORWARD(CommonAction::forward),
-
-    /**
-     * The register.
-     */
-    REGISTER(GuestAction::register),
-
-    /**
-     * The show apartment class.
-     */
-    SHOW_APARTMENT_CLASS(CommonAction::showApartmentClass),
-
-    /**
-     * The show personal reservations.
-     */
-    SHOW_PERSONAL_RESERVATIONS(UserAction::showPersonalReservations),
-
-    /**
-     * The update profile.
-     */
-    UPDATE_PROFILE(UserAction::updateUserProfile),
-
-    /**
-     * The update password.
-     */
-    UPDATE_PASSWORD(UserAction::updateUserPassword),
-
-    /**
-     * The show admin page.
-     */
-    SHOW_ADMIN_PAGE(AdminAction::showAdminPage),
-
-    /**
-     * The show apartment classes.
-     */
-    SHOW_APARTMENT_CLASSES(CommonAction::showApartmentClasses),
-
-    /**
-     * The show apartment editor.
-     */
-    SHOW_APARTMENT_EDITOR(AdminAction::showApartmentEditor),
-
-    /**
-     * The approve reservation.
-     */
-    APPROVE_RESERVATION(AdminAction::approveReservation),
-
-    /**
-     * The edit apartment.
-     */
-    EDIT_APARTMENT(AdminAction::editApartment),
-
-    /**
-     * The default.
-     */
-    DEFAULT(CommonAction::commandNotFound),
-
-    /**
-     * The show user manager.
-     */
-    SHOW_USER_MANAGER(AdminAction::showUserManager),
-
-    /**
-     * The add money.
-     */
-    ADD_MONEY(UserAction::depositMoney),
-
-    /**
-     * The show user profile.
-     */
-    SHOW_USER_PROFILE(UserAction::showUserProfile),
-
-    /**
-     * The show user profile to admin.
-     */
-    ADMIN_SHOW_USER_PROFILE(AdminAction::showUserProfile),
-
-    /**
-     * The show user reservations to admin.
-     */
-    ADMIN_SHOW_USER_RESERVATIONS(AdminAction::showUserReservations),
-
-    ADMIN_UPDATE_USER_PROFILE(AdminAction::editUserProfile);
-
-    /**
-     * Instantiates a new command type.
-     *
-     * @param action the action
-     */
-    CommandType(ActionCommand action) {
-        this.action = action;
+    {
+        commands = new HashMap<>();
+        commands.put("ADD_APARTMENT", request -> adminAction.addApartment(request));
+        commands.put("BOOK_APARTMENT", request -> userAction.bookApartment(request));
+        commands.put("LOGIN", request -> guestAction.login(request));
+        commands.put("LOGOUT", request -> userAction.logout(request));
+        commands.put("SET_LOCALE", request -> commonAction.setLocale(request));
+        commands.put("FORWARD", request -> commonAction.forward(request));
+        commands.put("REGISTER", request -> guestAction.register(request));
+        commands.put("SHOW_APARTMENT_CLASS", request -> commonAction.showApartmentClass(request));
+        commands.put("SHOW_PERSONAL_RESERVATIONS", request -> userAction.showPersonalReservations(request));
+        commands.put("UPDATE_PROFILE", request -> userAction.updateUserProfile(request));
+        commands.put("UPDATE_PASSWORD", request -> userAction.updateUserPassword(request));
+        commands.put("SHOW_ADMIN_PAGE", request -> adminAction.showAdminPage(request));
+        commands.put("SHOW_APARTMENT_CLASSES", request -> commonAction.showApartmentClasses(request));
+        commands.put("SHOW_APARTMENT_EDITOR", request -> adminAction.showApartmentEditor(request));
+        commands.put("APPROVE_RESERVATION", request -> adminAction.approveReservation(request));
+        commands.put("EDIT_APARTMENT", request -> adminAction.editApartment(request));
+        commands.put("DEFAULT", request -> commonAction.commandNotFound(request));
+        commands.put("SHOW_USER_MANAGER", request -> adminAction.showUserManager(request));
+        commands.put("ADD_MONEY", request -> userAction.depositMoney(request));
+        commands.put("SHOW_USER_PROFILE", request -> adminAction.showUserProfile(request));
+        commands.put("ADMIN_SHOW_USER_PROFILE", request -> adminAction.showUserProfile(request));
+        commands.put("ADMIN_SHOW_USER_RESERVATIONS", request -> adminAction.showUserReservations(request));
+        commands.put("ADMIN_UPDATE_USER_PROFILE", request -> adminAction.editUserProfile(request));
     }
 
-    /**
-     * The commands.
-     */
-    private static List<String> commands = Arrays.stream(CommandType.values())
-            .map(Enum::toString)
-            .collect(Collectors.toList());
-
-    /**
-     * The apartment service.
-     */
-    public static ApartmentService apartmentService = new ApartmentServiceImpl();
-
-    /**
-     * The apartment class service.
-     */
-    public static ApartmentClassService apartmentClassService = new ApartmentClassServiceImpl();
-
-    /**
-     * The authorization service.
-     */
-    public static AuthorizationService authorizationService = new AuthorizationServiceImpl();
-
-    /**
-     * The reservation service.
-     */
-    public static ReservationService reservationService = new ReservationServiceImpl();
-
-    /**
-     * The user service.
-     */
-    public static UserService userService = new UserServiceImpl();
-
-    /**
-     * The action.
-     */
-    private ActionCommand action;
+    @Autowired
+    public CommandType(AdminAction adminAction, CommonAction commonAction, GuestAction guestAction, UserAction userAction) {
+        this.adminAction = adminAction;
+        this.commonAction = commonAction;
+        this.guestAction = guestAction;
+        this.userAction = userAction;
+    }
 
     /**
      * Receive command.
      *
      * @return the action command
      */
-    public ActionCommand receiveCommand() {
-        return action;
+    public ActionCommand receiveCommand(String command) {
+        if (!ifPresent(command)) {
+            return commands.get("DEFAULT");
+        }
+        return commands.get(command);
     }
 
     /**
@@ -198,8 +80,8 @@ public enum CommandType {
      * @param command the command
      * @return true, if present
      */
-    public static boolean ifPresent(String command) {
-        return command != null && (commands.contains(command.toUpperCase()));
+    public boolean ifPresent(String command) {
+        return command != null && ((new ArrayList<>(commands.keySet())).contains(command.toUpperCase()));
     }
 
 }

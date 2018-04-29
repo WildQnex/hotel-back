@@ -1,30 +1,41 @@
 package by.martyniuk.hotelbooking.action;
 
-import by.martyniuk.hotelbooking.command.CommandType;
 import by.martyniuk.hotelbooking.constant.CommandConstant;
 import by.martyniuk.hotelbooking.constant.PagePath;
-import by.martyniuk.hotelbooking.entity.Apartment;
-import by.martyniuk.hotelbooking.entity.ApartmentClass;
-import by.martyniuk.hotelbooking.entity.Reservation;
-import by.martyniuk.hotelbooking.entity.Role;
-import by.martyniuk.hotelbooking.entity.Status;
-import by.martyniuk.hotelbooking.entity.User;
+import by.martyniuk.hotelbooking.entity.*;
 import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.resource.ResourceManager;
+import by.martyniuk.hotelbooking.service.ApartmentClassService;
+import by.martyniuk.hotelbooking.service.ApartmentService;
+import by.martyniuk.hotelbooking.service.ReservationService;
+import by.martyniuk.hotelbooking.service.UserService;
 import by.martyniuk.hotelbooking.util.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static by.martyniuk.hotelbooking.command.CommandType.apartmentService;
-
 /**
  * The Class AdminAction.
  */
+@Component
 public class AdminAction {
+
+    @Autowired
+    private ApartmentClassService apartmentClassService;
+
+    @Autowired
+    private ApartmentService apartmentService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     /**
      * Adds the apartment.
@@ -33,13 +44,13 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String addApartment(HttpServletRequest request) throws CommandException {
+    public String addApartment(HttpServletRequest request) throws CommandException {
         try {
             String number = request.getParameter(CommandConstant.APARTMENT_NUMBER);
             String apartmentClassId = request.getParameter(CommandConstant.APARTMENT_CLASS);
 
             int floor = Integer.parseInt(request.getParameter(CommandConstant.APARTMENT_FLOOR));
-            Optional<ApartmentClass> apartmentClass = CommandType.apartmentClassService.findApartmentClassById(Long.parseLong(apartmentClassId));
+            Optional<ApartmentClass> apartmentClass = apartmentClassService.findApartmentClassById(Long.parseLong(apartmentClassId));
             if (!apartmentClass.isPresent()) {
                 request.getSession().setAttribute(CommandConstant.ADD_APARTMENT_ERROR, ResourceManager.getResourceBundle().getString("error.incorrect.apartment.id"));
                 request.setAttribute(CommandConstant.REDIRECT, true);
@@ -61,11 +72,11 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showUserProfile(HttpServletRequest request) throws CommandException {
+    public String showUserProfile(HttpServletRequest request) throws CommandException {
         try {
             String stringId = request.getParameter(CommandConstant.ID);
             if (Validator.validateId(stringId)) {
-                Optional<User> user = CommandType.userService.findUserById(Long.parseLong(stringId));
+                Optional<User> user = userService.findUserById(Long.parseLong(stringId));
                 user.ifPresent(u -> request.setAttribute(CommandConstant.USER_PROFILE, u));
             }
             return PagePath.ADMIN_USER_PROFILE.getPage();
@@ -81,7 +92,7 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String editUserProfile(HttpServletRequest request) throws CommandException {
+    public String editUserProfile(HttpServletRequest request) throws CommandException {
         try {
             String stringId = request.getParameter(CommandConstant.ID);
 
@@ -91,7 +102,7 @@ public class AdminAction {
                 return request.getHeader(CommandConstant.REFERER);
             }
 
-            Optional<User> optionalUser = CommandType.userService.findUserById(Long.parseLong(stringId));
+            Optional<User> optionalUser = userService.findUserById(Long.parseLong(stringId));
 
             if (!optionalUser.isPresent()) {
                 request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, ResourceManager.getResourceBundle().getString("error.user.not.found"));
@@ -117,7 +128,7 @@ public class AdminAction {
             user.setRole(Role.valueOf(role.toUpperCase()));
             user.setActive(Boolean.parseBoolean(request.getParameter(CommandConstant.ACTIVE)));
 
-            if (!CommandType.userService.updateUserProfile(user)) {
+            if (!userService.updateUserProfile(user)) {
                 request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, ResourceManager.getResourceBundle().getString("error.personal.data"));
             }
 
@@ -135,11 +146,11 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showUserReservations(HttpServletRequest request) throws CommandException {
+    public String showUserReservations(HttpServletRequest request) throws CommandException {
         try {
             String stringId = request.getParameter(CommandConstant.ID);
             if (Validator.validateId(stringId)) {
-                List<Reservation> reservations = CommandType.reservationService.readAllReservationByUserId(Long.parseLong(stringId));
+                List<Reservation> reservations = reservationService.readAllReservationByUserId(Long.parseLong(stringId));
                 request.setAttribute(CommandConstant.RESERVATIONS, reservations);
             }
             return PagePath.USER_RESERVATION.getPage();
@@ -155,10 +166,10 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showAdminPage(HttpServletRequest request) throws CommandException {
+    public String showAdminPage(HttpServletRequest request) throws CommandException {
         try {
 
-            List<Reservation> reservations = CommandType.reservationService.readAllReservationByStatus(Status.WAITING_FOR_APPROVE);
+            List<Reservation> reservations = reservationService.readAllReservationByStatus(Status.WAITING_FOR_APPROVE);
             Map<Reservation, List<Apartment>> freeApartments = apartmentService.findFreeApartmentsForReservations(reservations);
 
             request.setAttribute(CommandConstant.RESERVATIONS, reservations);
@@ -177,10 +188,10 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showApartmentEditor(HttpServletRequest request) throws CommandException {
+    public String showApartmentEditor(HttpServletRequest request) throws CommandException {
         try {
             request.setAttribute(CommandConstant.APARTMENTS, apartmentService.findAllApartments());
-            request.setAttribute(CommandConstant.APARTMENT_CLASSES, CommandType.apartmentClassService.findAllApartmentClasses());
+            request.setAttribute(CommandConstant.APARTMENT_CLASSES, apartmentClassService.findAllApartmentClasses());
             return PagePath.APARTMENTS.getPage();
         } catch (ServiceException e) {
             throw new CommandException(e);
@@ -194,7 +205,7 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String approveReservation(HttpServletRequest request) throws CommandException {
+    public String approveReservation(HttpServletRequest request) throws CommandException {
         try {
             if (!Validator.validateId(request.getParameter(CommandConstant.RESERVATION_ID))) {
                 request.getSession().setAttribute(CommandConstant.APPROVE_RESERVATION_ERROR, ResourceManager.getResourceBundle().getString("error.incorrect.apartment.id"));
@@ -212,7 +223,7 @@ public class AdminAction {
             long apartmentId = Long.parseLong(request.getParameter(CommandConstant.APARTMENT_ID));
             Status status = Status.valueOf(request.getParameter(CommandConstant.STATUS).toUpperCase());
 
-            if (!CommandType.reservationService.updateReservationStatus(reservationId, apartmentId, status)) {
+            if (!reservationService.updateReservationStatus(reservationId, apartmentId, status)) {
                 request.getSession().setAttribute(CommandConstant.APPROVE_RESERVATION_ERROR, ResourceManager.getResourceBundle().getString("error.reservation.approve"));
             }
 
@@ -230,7 +241,7 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String editApartment(HttpServletRequest request) throws CommandException {
+    public String editApartment(HttpServletRequest request) throws CommandException {
         try {
             boolean result = false;
             if (request.getParameter(CommandConstant.TYPE).equalsIgnoreCase(CommandConstant.DELETE)) {
@@ -244,7 +255,7 @@ public class AdminAction {
                 }
                 Apartment apartment = apartmentOptional.get();
                 apartment.setNumber(number);
-                Optional<ApartmentClass> apartmentClass = CommandType.apartmentClassService.findApartmentClassById(Long.parseLong(request.getParameter(CommandConstant.CLASS)));
+                Optional<ApartmentClass> apartmentClass = apartmentClassService.findApartmentClassById(Long.parseLong(request.getParameter(CommandConstant.CLASS)));
                 if (!apartmentClass.isPresent()) {
                     request.getSession().setAttribute(CommandConstant.EDIT_APARTMENT_ERROR, ResourceManager.getResourceBundle().getString("error.apartment.class"));
                     request.setAttribute(CommandConstant.REDIRECT, true);
@@ -274,9 +285,9 @@ public class AdminAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showUserManager(HttpServletRequest request) throws CommandException {
+    public String showUserManager(HttpServletRequest request) throws CommandException {
         try {
-            request.setAttribute(CommandConstant.USERS, CommandType.userService.findAllUsers());
+            request.setAttribute(CommandConstant.USERS, userService.findAllUsers());
             return PagePath.USER_MANAGER.getPage();
         } catch (ServiceException e) {
             throw new CommandException(e);

@@ -78,7 +78,7 @@ public class ApartmentClassServiceImplTest {
      */
     @Test
     public void findApartmentClassByIdTest() throws DaoException, ServiceException {
-        ApartmentClassServiceImpl.apartmentClassDao = apartmentClassDao;
+        apartmentClassServiceImpl.setApartmentClassDao(apartmentClassDao);
         when(apartmentClassDao.findApartmentClassById(apartmentClassOne.getId())).thenReturn(Optional.of(apartmentClassOne));
         assertEquals(apartmentClassServiceImpl.findApartmentClassById(apartmentClassOne.getId()), Optional.of(apartmentClassOne));
     }
@@ -91,7 +91,7 @@ public class ApartmentClassServiceImplTest {
      */
     @Test(expectedExceptions = ServiceException.class)
     public void findApartmentClassByIdExceptionTest() throws DaoException, ServiceException {
-        ApartmentClassServiceImpl.apartmentClassDao = apartmentClassDao;
+        apartmentClassServiceImpl.setApartmentClassDao(apartmentClassDao);
         when(apartmentClassDao.findApartmentClassById(apartmentClassOne.getId())).thenThrow(new DaoException());
         apartmentClassServiceImpl.findApartmentClassById(apartmentClassOne.getId());
     }
@@ -104,7 +104,7 @@ public class ApartmentClassServiceImplTest {
      */
     @Test
     public void findApartmentClassesTest() throws DaoException, ServiceException {
-        ApartmentClassServiceImpl.apartmentClassDao = apartmentClassDao;
+        apartmentClassServiceImpl.setApartmentClassDao(apartmentClassDao);
         when(apartmentClassDao.findAllApartmentClasses()).thenReturn(apartmentClassList);
         assertEquals(apartmentClassServiceImpl.findAllApartmentClasses(), apartmentClassList);
     }

@@ -2,19 +2,18 @@ package by.martyniuk.hotelbooking.service.impl;
 
 import by.martyniuk.hotelbooking.dao.ApartmentDao;
 import by.martyniuk.hotelbooking.dao.ReservationDao;
-import by.martyniuk.hotelbooking.dao.impl.ApartmentDaoImpl;
-import by.martyniuk.hotelbooking.dao.impl.ReservationDaoImpl;
 import by.martyniuk.hotelbooking.entity.Apartment;
 import by.martyniuk.hotelbooking.entity.Reservation;
 import by.martyniuk.hotelbooking.entity.Status;
 import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.DaoException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
-import by.martyniuk.hotelbooking.factory.ActionCommandFactory;
 import by.martyniuk.hotelbooking.service.ReservationService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,22 +24,33 @@ import java.util.Optional;
 /**
  * The Class ReservationServiceImpl.
  */
+@Service
 public class ReservationServiceImpl implements ReservationService {
 
     /**
      * The reservation dao.
      */
-    public static ReservationDao reservationDao = new ReservationDaoImpl();
+    private ReservationDao reservationDao;
 
     /**
      * The apartment dao.
      */
-    public static ApartmentDao apartmentDao = new ApartmentDaoImpl();
+    private ApartmentDao apartmentDao;
+
+    @Autowired
+    public void setReservationDao(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
+
+    @Autowired
+    public void setApartmentDao(ApartmentDao apartmentDao) {
+        this.apartmentDao = apartmentDao;
+    }
 
     /**
      * The Constant LOGGER.
      */
-    private static final Logger LOGGER = LogManager.getLogger(ActionCommandFactory.class);
+    private static final Logger LOGGER = LogManager.getLogger(ReservationServiceImpl.class);
 
 
     @Override

@@ -30,8 +30,6 @@ public class ValidatorTest {
 
     /**
      * Sets the up.
-     *
-     * @throws Exception the exception
      */
     @BeforeClass
     public void setUp() {

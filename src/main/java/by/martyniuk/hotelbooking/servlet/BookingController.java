@@ -1,17 +1,24 @@
 package by.martyniuk.hotelbooking.servlet;
 
 import by.martyniuk.hotelbooking.command.ActionCommand;
+import by.martyniuk.hotelbooking.command.CommandType;
+import by.martyniuk.hotelbooking.config.Application;
+import by.martyniuk.hotelbooking.config.BeanConfig;
 import by.martyniuk.hotelbooking.constant.CommandConstant;
 import by.martyniuk.hotelbooking.exception.CommandException;
-import by.martyniuk.hotelbooking.factory.ActionCommandFactory;
-import by.martyniuk.hotelbooking.pool.ConnectionPool;
+import by.martyniuk.hotelbooking.service.DocumentService;
+import by.martyniuk.hotelbooking.service.impl.DocumentServiceImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,30 +26,26 @@ import java.io.IOException;
 /**
  * The Class BookingController.
  */
-@WebServlet("/booking")
-public class BookingController extends HttpServlet {
+@Controller
+public class BookingController {
 
     /**
      * The Constant LOGGER.
      */
     private static final Logger LOGGER = LogManager.getLogger(BookingController.class);
 
-    /**
-     * Inits the.
-     */
-    @Override
-    public void init() {
+    @Autowired
+    private CommandType commandType;
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ModelAndView post() {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("index");
+        return model;
+
     }
 
-    /**
-     * Do post.
-     *
-     * @param request  the request
-     * @param response the response
-     * @throws IOException      Signals that an I/O exception has occurred.
-     * @throws ServletException the servlet exception
-     */
-    @Override
+    @RequestMapping(value = "/booking", method = RequestMethod.POST)
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doAction(request, response);
     }
@@ -55,7 +58,7 @@ public class BookingController extends HttpServlet {
      * @throws ServletException the servlet exception
      * @throws IOException      Signals that an I/O exception has occurred.
      */
-    @Override
+    @RequestMapping(value = "/booking", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doAction(request, response);
     }
@@ -69,7 +72,7 @@ public class BookingController extends HttpServlet {
      * @throws IOException      Signals that an I/O exception has occurred.
      */
     private void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ActionCommand command = ActionCommandFactory.getActionCommand(request.getParameter(CommandConstant.ACTION));
+        ActionCommand command = commandType.receiveCommand(request.getParameter(CommandConstant.ACTION).toUpperCase());
         try {
             String page = command.execute(request);
             if (request.getAttribute(CommandConstant.REDIRECT) != null) {
@@ -84,11 +87,4 @@ public class BookingController extends HttpServlet {
         }
     }
 
-    /**
-     * Destroy.
-     */
-    @Override
-    public void destroy() {
-        ConnectionPool.getInstance().destroy();
-    }
 }

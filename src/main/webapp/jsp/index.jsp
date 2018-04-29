@@ -3,4 +3,4 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
-<jsp:forward page="jsp/main.jsp"/>
+<jsp:forward page="main.jsp"/>

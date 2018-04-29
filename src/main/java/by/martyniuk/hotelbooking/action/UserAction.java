@@ -1,6 +1,5 @@
 package by.martyniuk.hotelbooking.action;
 
-import by.martyniuk.hotelbooking.command.CommandType;
 import by.martyniuk.hotelbooking.constant.CommandConstant;
 import by.martyniuk.hotelbooking.constant.PagePath;
 import by.martyniuk.hotelbooking.entity.ApartmentClass;
@@ -9,7 +8,12 @@ import by.martyniuk.hotelbooking.entity.User;
 import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.resource.ResourceManager;
+import by.martyniuk.hotelbooking.service.ApartmentClassService;
+import by.martyniuk.hotelbooking.service.ReservationService;
+import by.martyniuk.hotelbooking.service.UserService;
 import by.martyniuk.hotelbooking.util.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,7 +30,17 @@ import java.util.Optional;
 /**
  * The Class UserAction.
  */
+@Component
 public class UserAction {
+
+    @Autowired
+    private ApartmentClassService apartmentClassService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     /**
      * Show user profile.
@@ -35,9 +49,9 @@ public class UserAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showUserProfile(HttpServletRequest request) throws CommandException {
+    public String showUserProfile(HttpServletRequest request) throws CommandException {
         try {
-            Optional<User> user = CommandType.userService.findUserByMail(((User) request.getSession().getAttribute(CommandConstant.USER)).getEmail());
+            Optional<User> user = userService.findUserByMail(((User) request.getSession().getAttribute(CommandConstant.USER)).getEmail());
             user.ifPresent(user1 -> request.getSession().setAttribute(CommandConstant.USER, user1));
             return PagePath.USER.getPage();
         } catch (ServiceException e) {
@@ -52,7 +66,7 @@ public class UserAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String bookApartment(HttpServletRequest request) throws CommandException {
+    public String bookApartment(HttpServletRequest request) throws CommandException {
         try {
             HttpSession session = request.getSession();
             String checkIn = request.getParameter(CommandConstant.CHECK_IN_DATE);
@@ -68,7 +82,7 @@ public class UserAction {
             int personAmount = Integer.parseInt(stringPersonAmount);
             long apartmentClassId = Long.parseLong(request.getParameter(CommandConstant.APARTMENT_CLASS_ID));
 
-            Optional<ApartmentClass> apartmentClass = CommandType.apartmentClassService.findApartmentClassById(apartmentClassId);
+            Optional<ApartmentClass> apartmentClass = apartmentClassService.findApartmentClassById(apartmentClassId);
             if (apartmentClass.isPresent()) {
                 if (apartmentClass.get().getMaxCapacity() < personAmount) {
                     session.setAttribute(CommandConstant.BOOKING_ERROR, ResourceManager.getResourceBundle().getString("error.person.amount"));
@@ -91,7 +105,7 @@ public class UserAction {
                 return request.getHeader(CommandConstant.REFERER);
             }
 
-            if (!CommandType.reservationService.bookApartment((User) session.getAttribute(CommandConstant.USER), apartmentClassId,
+            if (!reservationService.bookApartment((User) session.getAttribute(CommandConstant.USER), apartmentClassId,
                     checkInDate, checkOutDate, personAmount)) {
                 session.setAttribute(CommandConstant.BOOKING_ERROR, ResourceManager.getResourceBundle().getString("error.apartment.booked"));
             } else {
@@ -110,7 +124,7 @@ public class UserAction {
      * @param request the request
      * @return the string
      */
-    public static String logout(HttpServletRequest request) {
+    public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.removeAttribute(CommandConstant.USER);
         request.setAttribute(CommandConstant.REDIRECT, true);
@@ -124,9 +138,9 @@ public class UserAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showPersonalReservations(HttpServletRequest request) throws CommandException {
+    public String showPersonalReservations(HttpServletRequest request) throws CommandException {
         try {
-            List<Reservation> reservations = CommandType.reservationService.readAllReservationByUserId(((User) request.getSession().getAttribute(CommandConstant.USER)).getId());
+            List<Reservation> reservations = reservationService.readAllReservationByUserId(((User) request.getSession().getAttribute(CommandConstant.USER)).getId());
 
             request.setAttribute(CommandConstant.RESERVATIONS, reservations);
             return PagePath.USER_RESERVATION.getPage();
@@ -142,11 +156,11 @@ public class UserAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String depositMoney(HttpServletRequest request) throws CommandException {
+    public String depositMoney(HttpServletRequest request) throws CommandException {
         try {
             User user = (User) request.getSession().getAttribute(CommandConstant.USER);
 
-            if (!CommandType.userService.depositMoney(user.getId(), new BigDecimal(request.getParameter(CommandConstant.CURRENCY)))) {
+            if (!userService.depositMoney(user.getId(), new BigDecimal(request.getParameter(CommandConstant.CURRENCY)))) {
                 request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, ResourceManager.getResourceBundle().getString("error.update.balance"));
             }
 
@@ -164,7 +178,7 @@ public class UserAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String updateUserProfile(HttpServletRequest request) throws CommandException {
+    public String updateUserProfile(HttpServletRequest request) throws CommandException {
         try {
             User user = (User) request.getSession().getAttribute(CommandConstant.USER);
 
@@ -179,7 +193,7 @@ public class UserAction {
                 return request.getHeader(CommandConstant.REFERER);
             }
 
-            if (CommandType.userService.updateUserProfile(user)) {
+            if (userService.updateUserProfile(user)) {
                 request.getSession().setAttribute(CommandConstant.USER, user);
             }
 
@@ -197,7 +211,7 @@ public class UserAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String updateUserPassword(HttpServletRequest request) throws CommandException {
+    public String updateUserPassword(HttpServletRequest request) throws CommandException {
         try {
             String currentPassword = request.getParameter(CommandConstant.CURRENT_PASSWORD);
             String newPassword = request.getParameter(CommandConstant.NEW_PASSWORD);
@@ -211,13 +225,13 @@ public class UserAction {
                 return request.getHeader(CommandConstant.REFERER);
             }
 
-            if (!CommandType.userService.changeUserPassword(user.getEmail(), currentPassword, newPassword)) {
+            if (!userService.changeUserPassword(user.getEmail(), currentPassword, newPassword)) {
                 request.getSession().setAttribute(CommandConstant.UPDATE_PROFILE_ERROR, ResourceManager.getResourceBundle().getString("error.current.password"));
                 request.setAttribute(CommandConstant.REDIRECT, true);
                 return request.getHeader(CommandConstant.REFERER);
             }
 
-            CommandType.userService.findUserByMail(user.getEmail())
+            userService.findUserByMail(user.getEmail())
                     .ifPresent(u -> request.getSession().setAttribute(CommandConstant.USER, u));
 
             request.setAttribute(CommandConstant.REDIRECT, true);

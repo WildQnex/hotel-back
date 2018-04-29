@@ -1,13 +1,15 @@
 package by.martyniuk.hotelbooking.action;
 
-import by.martyniuk.hotelbooking.command.CommandType;
 import by.martyniuk.hotelbooking.constant.CommandConstant;
 import by.martyniuk.hotelbooking.constant.PagePath;
 import by.martyniuk.hotelbooking.entity.ApartmentClass;
 import by.martyniuk.hotelbooking.exception.CommandException;
 import by.martyniuk.hotelbooking.exception.ServiceException;
 import by.martyniuk.hotelbooking.resource.ResourceManager;
+import by.martyniuk.hotelbooking.service.ApartmentClassService;
 import by.martyniuk.hotelbooking.util.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,7 +19,12 @@ import java.util.Optional;
 /**
  * The Class CommonAction.
  */
+@Component
 public class CommonAction {
+
+
+    @Autowired
+    private ApartmentClassService apartmentClassService;
 
     /**
      * Sets the locale.
@@ -25,7 +32,7 @@ public class CommonAction {
      * @param request the request
      * @return the string
      */
-    public static String setLocale(HttpServletRequest request) {
+    public String setLocale(HttpServletRequest request) {
         HttpSession session = request.getSession();
         ResourceManager.currentLocale = Locale.forLanguageTag(request.getParameter(CommandConstant.VALUE).replace('_', '-'));
         session.setAttribute(CommandConstant.LOCALE, request.getParameter(CommandConstant.VALUE));
@@ -40,7 +47,7 @@ public class CommonAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String forward(HttpServletRequest request) throws CommandException {
+    public String forward(HttpServletRequest request) throws CommandException {
         if (!PagePath.isPresent(request.getParameter(CommandConstant.PAGE))) {
             throw new CommandException("Page not found");
         }
@@ -54,7 +61,7 @@ public class CommonAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showApartmentClass(HttpServletRequest request) throws CommandException {
+    public String showApartmentClass(HttpServletRequest request) throws CommandException {
         try {
             String stringId = request.getParameter(CommandConstant.ID);
             if (!Validator.validateId(stringId)) {
@@ -64,7 +71,7 @@ public class CommonAction {
             }
             long id = Long.parseLong(stringId);
 
-            Optional<ApartmentClass> apartmentClassOptional = CommandType.apartmentClassService.findApartmentClassById(id);
+            Optional<ApartmentClass> apartmentClassOptional = apartmentClassService.findApartmentClassById(id);
             if (!apartmentClassOptional.isPresent()) {
                 request.setAttribute(CommandConstant.REDIRECT, true);
                 request.getSession().setAttribute(CommandConstant.APARTMENT_CLASSES_ERROR, ResourceManager.getResourceBundle().getString("error.apartment.class"));
@@ -85,9 +92,9 @@ public class CommonAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String showApartmentClasses(HttpServletRequest request) throws CommandException {
+    public String showApartmentClasses(HttpServletRequest request) throws CommandException {
         try {
-            request.setAttribute(CommandConstant.APARTMENT_CLASSES, CommandType.apartmentClassService.findAllApartmentClasses());
+            request.setAttribute(CommandConstant.APARTMENT_CLASSES, apartmentClassService.findAllApartmentClasses());
             return PagePath.CLASSES.getPage();
         } catch (ServiceException e) {
             throw new CommandException(e);
@@ -101,7 +108,7 @@ public class CommonAction {
      * @return the string
      * @throws CommandException the command exception
      */
-    public static String commandNotFound(HttpServletRequest request) throws CommandException {
+    public String commandNotFound(HttpServletRequest request) throws CommandException {
         throw new CommandException("Command operation not found");
     }
 
