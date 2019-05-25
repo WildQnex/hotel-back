@@ -46,4 +46,31 @@ public class ApartmentClassServiceImpl implements ApartmentClassService {
         }
     }
 
+
+    @Override
+    public boolean updateApartmentClass(ApartmentClass apartmentClass) throws ServiceException {
+        try {
+            return apartmentClassDao.updateApartmentClass(apartmentClass);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean addApartmentClass(ApartmentClass apartmentClass) throws ServiceException {
+        try {
+            return apartmentClassDao.addApartmentClass(apartmentClass);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteApartmentClass(long id) throws ServiceException {
+        try {
+            return apartmentClassDao.deleteApartmentClass(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

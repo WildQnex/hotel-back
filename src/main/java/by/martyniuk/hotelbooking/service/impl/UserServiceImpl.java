@@ -90,4 +90,36 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public boolean updateUser(User user) throws ServiceException {
+        try {
+            return userDao.updateUser(user);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean addUser(User user) throws ServiceException {
+        try {
+            return userDao.addUser(user);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteUser(long id) throws ServiceException {
+        try {
+            Optional<User> user = userDao.findUserById(id);
+            if (user.isPresent()) {
+                user.get().setActive(false);
+                userDao.updateUser(user.get());
+                return true;
+            }
+            return false;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

@@ -48,6 +48,8 @@
                                 <fmt:message key="header.admin.menu" bundle="${bndl}"/>
                                 <i class="material-icons right">arrow_drop_down</i>
                             </a></li>
+                            <li><a href="http://localhost:4200/heroes"><fmt:message key="admin.panel.button" bundle="${bndl}"/></a>
+                            </li>
                         </c:if>
 
                     </c:if>
@@ -125,6 +127,7 @@
     <li><a href="booking?action=show_admin_page" class="amber-text"><fmt:message key="header.orders" bundle="${bndl}"/></a></li>
     <li><a href="booking?action=show_apartment_editor" class="amber-text"><fmt:message key="header.apartments" bundle="${bndl}"/></a></li>
     <li><a href="booking?action=show_user_manager" class="amber-text"><fmt:message key="header.users" bundle="${bndl}"/></a></li>
+    <li><a href="booking?action=forward&page=document" class="amber-text"><fmt:message key="header.documents" bundle="${bndl}"/></a></li>
 </ul>
 
 <ul id='dropdown-language' class='dropdown-content'>

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/certificate")
+@RequestMapping("/api/v1/certificates/")
 public class RestDocController {
 
     @Autowired

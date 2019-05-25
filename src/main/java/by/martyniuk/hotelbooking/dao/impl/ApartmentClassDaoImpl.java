@@ -54,4 +54,49 @@ public class ApartmentClassDaoImpl implements ApartmentClassDao {
         }
     }
 
+    @Override
+    public boolean updateApartmentClass(ApartmentClass apartmentClass) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection()) {
+            PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_UPDATE_APARTMENT_CLASS);
+            ps.setString(1, apartmentClass.getType());
+            ps.setInt(2, apartmentClass.getRoomsAmount());
+            ps.setInt(3, apartmentClass.getMaxCapacity());
+            ps.setBigDecimal(4, apartmentClass.getCostPerNight());
+            ps.setBigDecimal(5, apartmentClass.getCostPerPerson());
+            ps.setString(6, apartmentClass.getDescription());
+            ps.setString(7, apartmentClass.getImagePath());
+            ps.setLong(8, apartmentClass.getId());
+            return ps.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public boolean addApartmentClass(ApartmentClass apartmentClass) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection()) {
+            PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_ADD_APARTMENT_CLASS);
+            ps.setString(1, apartmentClass.getType());
+            ps.setInt(2, apartmentClass.getRoomsAmount());
+            ps.setInt(3, apartmentClass.getMaxCapacity());
+            ps.setBigDecimal(4, apartmentClass.getCostPerNight());
+            ps.setBigDecimal(5, apartmentClass.getCostPerPerson());
+            ps.setString(6, apartmentClass.getDescription());
+            ps.setString(7, apartmentClass.getImagePath());
+            return ps.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteApartmentClass(long id) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection()) {
+            PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_DELETE_APARTMENT_CLASS);
+            ps.setLong(1, id);
+            return ps.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }

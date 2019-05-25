@@ -3,7 +3,7 @@ package by.martyniuk.hotelbooking.exception;
 /**
  * The Class ServiceException.
  */
-public class ServiceException extends Exception {
+public class ServiceException extends RuntimeException {
 
     /**
      * Instantiates a new service exception.

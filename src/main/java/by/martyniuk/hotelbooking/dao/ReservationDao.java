@@ -85,4 +85,8 @@ public interface ReservationDao {
      * @throws DaoException the dao exception
      */
     Optional<Reservation> readReservationById(long id) throws DaoException;
+
+    boolean updateReservation(Reservation reservation) throws DaoException;
+
+    boolean deleteReservation(long id) throws DaoException;
 }

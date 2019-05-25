@@ -18,6 +18,13 @@ class SqlQuery {
             " `description`, `image_path` FROM `apartment_class` " +
             " WHERE `id_apartment_class` = ?";
 
+    static final String SQL_DELETE_APARTMENT_CLASS = "DELETE FROM `apartment_class` WHERE `id_apartment_class` = ?";
+
+    static final String SQL_UPDATE_APARTMENT_CLASS = "UPDATE `apartment_class` SET `type` = ?, `rooms_amount` = ?, `max_capacity` = ?, `cost_per_night` = ?, `cost_per_person` = ?, `description` = ?, `image_path` = ? WHERE `id_apartment_class` = ?";
+
+    static final String SQL_ADD_APARTMENT_CLASS = "INSERT INTO `hotel_booking`.`apartment_class` (`type`, `rooms_amount`, `max_capacity`, `cost_per_night`, `cost_per_person`, `description`, `image_path`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+
     //-----------------
 
     /**
@@ -157,6 +164,14 @@ class SqlQuery {
             " `status_id_fk` = (SELECT `id_status` FROM `status` WHERE UPPER(`status`) LIKE UPPER(?)) " +
             " WHERE `id_reservation` = ?";
 
+    static final String SQL_UPDATE_RESERVATION = "UPDATE `reservation` SET `check_in_date` = ?, `check_out_date` = ?," +
+            " `order_time` = ?, `order_time` = ?, `person_amount` = ?, `cost_per_person` = ?, cost_per_night = ?," +
+            " `total_cost` = ?, `user_id_fk` = ?, `apartment_id_fk` = ?, " +
+            " `status_id_fk` = (SELECT `id_status` FROM `status` WHERE UPPER(`status`) LIKE UPPER(?)) " +
+            " WHERE `id_reservation` = ?";
+
+    static final String SQL_DELETE_RESERVATION = "DELETE FROM `reservation` WHERE `id_reservation` = ?";
+
     //---------------
 
 
@@ -190,8 +205,12 @@ class SqlQuery {
     /**
      * The Constant SQL_UPDATE_USER.
      */
-    static final String SQL_UPDATE_USER = "UPDATE `user` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, " +
+    static final String SQL_UPDATE_USER_DATA = "UPDATE `user` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, " +
             "`email` = ?, `phone_number` = ?, `password` = ?, `active` = ?, " +
+            "`role_id_fk` = (SELECT `id_role` FROM `role` WHERE UPPER(`role`) LIKE UPPER(?)) WHERE `id_user` = ?";
+
+    static final String SQL_UPDATE_USER = "UPDATE `user` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, " +
+            "`email` = ?, `phone_number` = ?, `password` = ?, `balance` = ?, `active` = ?, " +
             "`role_id_fk` = (SELECT `id_role` FROM `role` WHERE UPPER(`role`) LIKE UPPER(?)) WHERE `id_user` = ?";
 
     /**

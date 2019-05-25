@@ -104,7 +104,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean updateUserData(User user) throws DaoException {
         try (Connection cn = ConnectionPool.getInstance().getConnection();
-             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_UPDATE_USER)) {
+             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_UPDATE_USER_DATA)) {
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getMiddleName());
             ps.setString(3, user.getLastName());
@@ -114,6 +114,26 @@ public class UserDaoImpl implements UserDao {
             ps.setInt(7, (user.isActive()) ? 1 : 0);
             ps.setString(8, user.getRole().toString());
             ps.setLong(9, user.getId());
+            return (ps.executeUpdate() != 0);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public boolean updateUser(User user) throws DaoException {
+        try (Connection cn = ConnectionPool.getInstance().getConnection();
+             PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_UPDATE_USER)) {
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getMiddleName());
+            ps.setString(3, user.getLastName());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getPhoneNumber());
+            ps.setString(6, user.getPassword());
+            ps.setBigDecimal(7, user.getBalance());
+            ps.setInt(8, (user.isActive()) ? 1 : 0);
+            ps.setString(9, user.getRole().toString());
+            ps.setLong(10, user.getId());
             return (ps.executeUpdate() != 0);
         } catch (SQLException e) {
             throw new DaoException(e);

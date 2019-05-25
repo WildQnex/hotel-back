@@ -77,8 +77,10 @@ public enum PagePath {
     /**
      * The admin's user profile.
      */
-    ADMIN_USER_PROFILE("jsp/admin/user-profile.jsp");
+    ADMIN_USER_PROFILE("jsp/admin/user-profile.jsp"),
 
+
+    DOCUMENT("jsp/document.jsp");
     /**
      * The page.
      */

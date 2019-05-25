@@ -56,6 +56,8 @@ public interface UserDao {
      */
     boolean updateUserData(User user) throws DaoException;
 
+    boolean updateUser(User user) throws DaoException;
+
     /**
      * Update user password.
      *

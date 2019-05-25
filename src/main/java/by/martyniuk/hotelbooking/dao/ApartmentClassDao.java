@@ -27,4 +27,10 @@ public interface ApartmentClassDao {
      * @throws DaoException the dao exception
      */
     Optional<ApartmentClass> findApartmentClassById(long id) throws DaoException;
+
+    boolean updateApartmentClass(ApartmentClass apartmentClass) throws DaoException;
+
+    boolean addApartmentClass(ApartmentClass apartmentClass) throws DaoException;
+
+    boolean deleteApartmentClass(long id) throws DaoException;
 }

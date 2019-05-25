@@ -67,4 +67,10 @@ public interface UserService {
      * @throws ServiceException the service exception
      */
     boolean depositMoney(long userId, BigDecimal money) throws ServiceException;
+
+    boolean updateUser(User user) throws ServiceException;
+
+    boolean addUser(User user) throws ServiceException;
+
+    boolean deleteUser(long id) throws ServiceException;
 }

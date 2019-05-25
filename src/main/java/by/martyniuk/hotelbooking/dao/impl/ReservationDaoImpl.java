@@ -242,5 +242,37 @@ public class ReservationDaoImpl implements ReservationDao {
         }
     }
 
+
+    @Override
+    public boolean updateReservation(Reservation reservation) throws DaoException {
+        Connection cn = ConnectionPool.getInstance().getConnection();
+        try (PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_UPDATE_RESERVATION)) {
+            ps.setDate(1, Date.valueOf(reservation.getCheckInDate()), Calendar.getInstance());
+            ps.setDate(2, Date.valueOf(reservation.getCheckOutDate()), Calendar.getInstance());
+            ps.setTimestamp(3, Timestamp.valueOf(reservation.getOrderTime()));
+            ps.setInt(4, reservation.getPersonAmount());
+            ps.setBigDecimal(5, reservation.getApartment().getApartmentClass().getCostPerPerson());
+            ps.setBigDecimal(6, reservation.getApartment().getApartmentClass().getCostPerNight());
+            ps.setBigDecimal(7, reservation.getTotalCost());
+            ps.setLong(8, reservation.getUser().getId());
+            ps.setLong(9, reservation.getApartment().getId());
+            ps.setString(10, reservation.getStatus().toString());
+            ps.setLong(11, reservation.getId());
+            return ps.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteReservation(long id) throws DaoException {
+        Connection cn = ConnectionPool.getInstance().getConnection();
+        try (PreparedStatement ps = cn.prepareStatement(SqlQuery.SQL_DELETE_RESERVATION)) {
+            ps.setLong(1, id);
+            return ps.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }
 

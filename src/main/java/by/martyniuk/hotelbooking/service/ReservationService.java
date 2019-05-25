@@ -7,11 +7,20 @@ import by.martyniuk.hotelbooking.exception.ServiceException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The Interface ReservationService.
  */
 public interface ReservationService {
+
+    Optional<Reservation> readReservation(long id);
+
+    List<Reservation> readAllReservations();
+
+    boolean deleteReservation(long id);
+
+    boolean updateReservation(Reservation reservation);
 
     /**
      * Book apartment.

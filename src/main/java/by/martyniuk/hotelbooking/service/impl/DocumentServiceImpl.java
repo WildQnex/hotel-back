@@ -75,7 +75,7 @@ public class DocumentServiceImpl implements DocumentService {
                     Paragraph paragr = new Paragraph()
                             .setFont(font)
                             .setFontSize(20)
-                            .add(String.format("Сертификат о том что %s %s был в отеле Европа c %s по %s", reservation.getUser().getFirstName(), reservation.getUser().getLastName(), reservation.getCheckInDate(), reservation.getCheckOutDate()));
+                            .add(String.format("       Сертификат о том что %s %s был в отеле Европа c %s по %s", reservation.getUser().getFirstName(), reservation.getUser().getLastName(), reservation.getCheckInDate(), reservation.getCheckOutDate()));
                     doc.add(paragr);
                 });
             } catch (ServiceException | IOException e) {
@@ -87,7 +87,7 @@ public class DocumentServiceImpl implements DocumentService {
     public Resource generateXLSCertificate() {
         return createXLS((sheet, style) -> {
             try {
-                List<Reservation> listReservations = reservationService.readAllReservationByStatus(Status.APPROVED);
+                List<User> userList = userService.findAllUsers();
                 HSSFRow[] rows = new HSSFRow[5];
                 for (int i = 0; i < rows.length; i++) {
                     rows[i] = sheet.createRow(i);
@@ -96,16 +96,18 @@ public class DocumentServiceImpl implements DocumentService {
                 int i = 0;
                 createCell(rows[i++], 0, "Имя", style);
                 createCell(rows[i++], 0, "Фамилия", style);
-                createCell(rows[i++], 0, "Начало пребывания", style);
-                createCell(rows[i++], 0, "Конец пребывания", style);
+                createCell(rows[i++], 0, "Телефон", style);
+                createCell(rows[i++], 0, "Почта", style);
+                createCell(rows[i++], 0, "Баланс", style);
 
-
-                for (Reservation reservation : listReservations) {
+                int j = 1;
+                for (User user : userList) {
                     i = 0;
-                    createCell(rows[i++], 1, reservation.getUser().getFirstName(), style);
-                    createCell(rows[i++], 1, reservation.getUser().getLastName(), style);
-                    createCell(rows[i++], 1, reservation.getCheckInDate().toString(), style);
-                    createCell(rows[i++], 1, reservation.getCheckOutDate().toString(), style);
+                    createCell(rows[i++], j, user.getFirstName(), style);
+                    createCell(rows[i++], j, user.getLastName(), style);
+                    createCell(rows[i++], j, user.getPhoneNumber(), style);
+                    createCell(rows[i++], j, user.getEmail(), style);
+                    createCell(rows[i++], j++, user.getBalance().toString(), style);
                 }
 
                 sheet.autoSizeColumn(0);

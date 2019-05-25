@@ -130,4 +130,39 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public Optional<Reservation> readReservation(long id) {
+        try {
+            return reservationDao.readReservationById(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Reservation> readAllReservations() {
+        try {
+            return reservationDao.readAllReservations();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteReservation(long id) {
+        try {
+            return reservationDao.deleteReservation(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean updateReservation(Reservation reservation) {
+        try {
+            return reservationDao.updateReservation(reservation);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }    }
 }

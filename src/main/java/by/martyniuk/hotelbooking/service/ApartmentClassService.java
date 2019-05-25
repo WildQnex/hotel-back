@@ -27,4 +27,10 @@ public interface ApartmentClassService {
      * @throws ServiceException the service exception
      */
     List<ApartmentClass> findAllApartmentClasses() throws ServiceException;
+
+    boolean updateApartmentClass(ApartmentClass apartmentClass) throws ServiceException;
+
+    boolean addApartmentClass(ApartmentClass apartmentClass) throws ServiceException;
+
+    boolean deleteApartmentClass(long id) throws ServiceException;
 }
